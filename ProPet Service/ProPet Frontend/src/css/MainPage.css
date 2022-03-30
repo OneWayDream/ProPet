@@ -1,0 +1,10 @@
+.mainPageBtn {
+  margin: 30px;
+  font-size: 1.5vw;
+  width: 15vw;
+  line-height: 5vw;
+  border-radius: 100px;
+  background: linear-gradient(180deg, rgba(255,116,116,1) 13%, rgba(255,255,255,1) 100%);
+  border: none;
+  display: inline-block;
+}

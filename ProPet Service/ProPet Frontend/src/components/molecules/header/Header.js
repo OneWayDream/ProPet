@@ -12,24 +12,24 @@ const StyledMenu = styled.div((props) => `
 `);
 
 const StyledHeader = styled.div(() => `
-	padding: 5% 15%;
+  font-size: 1.5vw;
+	padding-bottom: 7vw;
 `);
 
 
-const Header = (props) => {
-	const { menuProps, menuItemProps } = props;
+const Header = () => {
 	const border = '3px solid green'
-	const height = '100px'
+	const height = '6vw'
 	const border_radius = '100px'
 	return (
 		<StyledHeader>
 			<StyledMenu>
 				<a href='/'><Image image={logo} height={height} border={border} border_radius={border_radius}/></a>
-				<MenuItem href='/' menuItemProps={menuItemProps}>Главная</MenuItem>
-				<MenuItem href='/search' menuItemProps={menuItemProps}>Поиск зооняни</MenuItem>
-				<MenuItem href='/about' menuItemProps={menuItemProps}>О сервисе</MenuItem>
-				<MenuItem href='/contacts' menuItemProps={menuItemProps}>Контакты</MenuItem>
-				<Image image={profile_logo} height={height} border={border} border_radius={border_radius}/>
+				<MenuItem href='/'>Главная</MenuItem>
+				<MenuItem href='/search'>Поиск зооняни</MenuItem>
+				<MenuItem href='/about'>О сервисе</MenuItem>
+				<MenuItem href='/contacts'>Контакты</MenuItem>
+				<a href='/login'><Image image={profile_logo} height={height} border={border} border_radius={border_radius}/></a>
 			</StyledMenu>
 		</StyledHeader>
 	);

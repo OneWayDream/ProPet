@@ -2,5 +2,5 @@ body {
   background-image: url(/src/img/background.png);
   background-size: 1000px;
   background-repeat: repeat;
-  font-size: 25px;
+  padding: 3% 15%;
 };
