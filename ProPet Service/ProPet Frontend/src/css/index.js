@@ -1,2 +1,2 @@
 export * from './MainPage.css'
-// export * from './Header.css'
+export * from './Profile.css'
