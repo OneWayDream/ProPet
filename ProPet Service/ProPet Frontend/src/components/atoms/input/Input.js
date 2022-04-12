@@ -8,6 +8,8 @@ const StyledDiv = styled.div((props) => `
   padding: 20px;
   margin: 15px;
   width: 27vw;
+  // min-width: 40%
+  // width: 70%;
   display: flex;
 `)
 

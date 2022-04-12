@@ -14,18 +14,20 @@ const SignInPage = () => {
   const[username, setUsername] = useState('');
   const[password, setPassword] = useState('');
   
-  const body =
+  const body = <>
     <form>
       <div className="signInContainer">
         <div style={{ fontSize: '2vw', paddingBottom: '5px' }}>
-          Have an account?
+          Войдите в аккаунт
         </div>
-        <Input image={ProfilePic} width='2vw' placeholder='Username' onChange={setUsername}/>
-        <Input image={Key} width='2vw' placeholder='Password' type='password' onChange={setPassword}/>
-        <a href="/forgot" style={{ color: 'black', fontSize: '1.5vw' }}>I forgot my password</a>
-        <Button style='orange' width='20vw'>Sign In</Button>
+        <Input image={ProfilePic} width='2vw' placeholder='Логин' onChange={setUsername}/>
+        <Input image={Key} width='2vw' placeholder='Пароль' type='password' onChange={setPassword}/>
+        <a href="/forgot" style={{ color: 'black', fontSize: '1.5vw' }}>Я забыл пароль</a>
+        <Button style='orange' width='20vw'>Войти</Button>
       </div>
     </form> 
+    <a href="/signUp" style={{ textDecoration: 'none' }}><div style={{ color: 'rgb(43, 43, 43)', fontSize: '1.5vw',  marginTop: '1.5vw', textAlign: 'center' }}>Нет аккаунта?</div></a>
+    </>
   return <Template body={body} />
 }
 

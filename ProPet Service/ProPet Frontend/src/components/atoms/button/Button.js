@@ -6,7 +6,7 @@ const StyledBytton = styled.button(({color, background, width}) => `
   width: ${width};
   padding: 1.3vw;
   border-radius: 60px;
-  font-size: 2vw;
+  font-size: 1.6vw;
   border: 1px solid black;
   margin-top: 2vw;
 
