@@ -11,8 +11,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>ru.itis</groupId>
-    <artifactId>propet-configuration</artifactId>
+    <groupId>ru.itis.propet</groupId>
+    <artifactId>configuration</artifactId>
     <version>0.0.1</version>
     <name>ProPet Configuration</name>
     <description>ProPet Configuration</description>

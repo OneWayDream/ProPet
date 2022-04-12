@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>ru.itis</groupId>
-        <artifactId>propet-configuration</artifactId>
+        <groupId>ru.itis.propet</groupId>
+        <artifactId>configuration</artifactId>
         <version>0.0.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <artifactId>pro-pet-backend-server</artifactId>
+    <artifactId>backend-server</artifactId>
     <version>0.1</version>
     <name>ProPet Backend Server</name>
     <description>ProPet Backend Server</description>

@@ -1,4 +1,4 @@
-package ru.itis.propetserver;
+package ru.itis.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
