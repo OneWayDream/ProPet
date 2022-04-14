@@ -11,8 +11,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>ru.itis</groupId>
-    <artifactId>propet-configuration</artifactId>
+    <groupId>ru.itis.propet</groupId>
+    <artifactId>configuration</artifactId>
     <version>0.0.1</version>
     <name>ProPet Configuration</name>
     <description>ProPet Configuration</description>
@@ -24,9 +24,18 @@
 
     <properties>
         <java.version>17</java.version>
+        <springdoc.openapi.ui.version>1.6.4</springdoc.openapi.ui.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-rest</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -72,6 +81,11 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.openapi.ui.version}</version>
         </dependency>
     </dependencies>
 
