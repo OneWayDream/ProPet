@@ -33,7 +33,7 @@ public class RegistrationController {
     @PostMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<UserDto> banUserById(@RequestBody RegistrationForm registrationForm){
+    public ResponseEntity<UserDto> registerNewUser(@RequestBody RegistrationForm registrationForm){
         return ResponseEntity.ok(registrationService.registerNewUser(registrationForm));
     }
 

@@ -47,11 +47,43 @@ public class UsersController {
             })
     })
     @GetMapping(
-            value = "/{id}",
+            value = "/by-id/{id}",
             headers = {"JWT"}
     )
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id){
         return ResponseEntity.ok(usersService.findById(id));
+    }
+
+    @Operation(summary = "Getting user by login.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success getting", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(
+                            schema = @Schema(implementation = UserDto.class)
+                    ))
+            })
+    })
+    @GetMapping(
+            value = "/by-login/{login}",
+            headers = {"JWT"}
+    )
+    public ResponseEntity<UserDto> getUserByLogin(@PathVariable String login){
+        return ResponseEntity.ok(usersService.findUserByLogin(login));
+    }
+
+    @Operation(summary = "Getting user by mail.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success getting", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(
+                            schema = @Schema(implementation = UserDto.class)
+                    ))
+            })
+    })
+    @GetMapping(
+            value = "/by-mail/{mail}",
+            headers = {"JWT"}
+    )
+    public ResponseEntity<UserDto> getUserByMail(@PathVariable String mail){
+        return ResponseEntity.ok(usersService.findUserByMail(mail));
     }
 
     @Operation(summary = "Adding a new user.")
@@ -108,11 +140,11 @@ public class UsersController {
             })
     })
     @PostMapping(
-            value = "/activate/{linkId}",
+            value = "/activate/{linkValue}",
             headers = {"JWT"}
     )
-    public ResponseEntity<UserDto> activateAccount(@PathVariable String linkId){
-        return ResponseEntity.ok(usersService.activateUser(linkId));
+    public ResponseEntity<UserDto> activateAccount(@PathVariable String linkValue){
+        return ResponseEntity.ok(usersService.activateUser(linkValue));
     }
 
 
