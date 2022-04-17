@@ -5,6 +5,8 @@ import Input from "../../atoms/input";
 import Template from "../template";
 import ProfilePic from "../../../img/profile_pic.png"
 import Key from "../../../img/key.png"
+import { Link } from "react-router-dom";
+import paths from "../../../configs/paths";
 
 const InputWrapper = styled.input((props) => `
 
@@ -22,11 +24,11 @@ const SignInPage = () => {
         </div>
         <Input image={ProfilePic} width='2vw' placeholder='Логин' onChange={setUsername}/>
         <Input image={Key} width='2vw' placeholder='Пароль' type='password' onChange={setPassword}/>
-        <a href="/forgot" style={{ color: 'black', fontSize: '1.5vw' }}>Я забыл пароль</a>
+        <Link to="/forgot" style={{ color: 'black', fontSize: '1.5vw' }}>Я забыл пароль</Link>
         <Button style='orange' width='20vw'>Войти</Button>
       </div>
     </form> 
-    <a href="/signUp" style={{ textDecoration: 'none' }}><div style={{ color: 'rgb(43, 43, 43)', fontSize: '1.5vw',  marginTop: '1.5vw', textAlign: 'center' }}>Нет аккаунта?</div></a>
+    <Link to={paths.SIGN_UP} style={{ textDecoration: 'none' }}><div style={{ color: 'rgb(43, 43, 43)', fontSize: '1.5vw',  marginTop: '1.5vw', textAlign: 'center' }}>Нет аккаунта?</div></Link>
     </>
   return <Template body={body} />
 }

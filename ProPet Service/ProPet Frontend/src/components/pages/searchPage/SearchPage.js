@@ -24,14 +24,13 @@ const SearchPage = () => {
           Results
         </div>
       </div>
-      <div className="filter">
+      {/* <div className="filter">
         <div onClick={showFilter}>
           <Image image={FilterLogo} width='4vw'/>
         </div>
         <div style={{ backgroundColor: 'red', }}>
-          test
         </div>
-      </div>
+      </div> */}
     </div>
   return <Template body={body}/>
 } 

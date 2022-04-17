@@ -6,6 +6,7 @@ import Key from "../../../img/key.png"
 import Mail from "../../../img/mail.png"
 import Button from "../../atoms/button";
 import Checkbox from "../../atoms/checkbox/";
+import { Link } from "react-router-dom";
 
 const SignUpPage = () => {
   const [username, setUsername] = useState('');
@@ -37,7 +38,7 @@ const SignUpPage = () => {
         <Button style='orange' width='20vw'>Войти</Button>
       </div>
     </form>
-    <a href="/signIn" style={{ textDecoration: 'none' }}><div style={{ color: 'rgb(43, 43, 43)', fontSize: '1.5vw', marginTop: '1.5vw', textAlign: 'center' }}>Уже зарегистрированы?</div></a>
+    <Link to="/signIn" style={{ textDecoration: 'none' }}><div style={{ color: 'rgb(43, 43, 43)', fontSize: '1.5vw', marginTop: '1.5vw', textAlign: 'center' }}>Уже зарегистрированы?</div></Link>
   </>
 
   return <Template body={body} />

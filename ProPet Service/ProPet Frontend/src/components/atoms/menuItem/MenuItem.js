@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const StyledMenuItem = styled.a((props) => `
 	color: ${props.color ? props.color : 'black'};
@@ -13,7 +14,7 @@ const StyledMenuItem = styled.a((props) => `
 
 const MenuItem = (props) => {
 	const { children,  href, ...otherProps} = props;
-	return <StyledMenuItem {...otherProps} href={href}>{children}</StyledMenuItem>
+	return <Link to={href}><StyledMenuItem {...otherProps} href={href}>{children}</StyledMenuItem></Link>
 }
 
 export default MenuItem;

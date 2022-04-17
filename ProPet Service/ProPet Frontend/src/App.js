@@ -5,14 +5,20 @@ import ProfilePage from './components/pages/profilePage';
 import SignInPage from './components/pages/signInPage/';
 import SignUpPage from './components/pages/signUpPage';
 import SearchPage from './components/pages/searchPage';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import paths from './configs/paths';
 
 function App() {
   return (
-    // <MainPage/>
-    // <ProfilePage/>
-    // <SignInPage/>
-    // <SignUpPage/>
-    <SearchPage/>
+    <BrowserRouter>
+      <Routes>
+        <Route path={paths.DEFAULT} element={<MainPage/>}/>
+        <Route path={paths.SIGN_IN} element={<SignInPage/>}/>
+        <Route path={paths.SIGN_UP} element={<SignUpPage/>}/>
+        <Route path={paths.SEARCH} element={<SearchPage/>}/>
+        <Route path={paths.PROFILE} element={<ProfilePage/>}/>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
