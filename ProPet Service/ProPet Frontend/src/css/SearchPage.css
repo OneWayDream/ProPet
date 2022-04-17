@@ -1,0 +1,29 @@
+.searchInput {
+  width: 40vw;
+  padding: 20px;
+  border-radius: 100px;
+  font-size: 1.3vw;
+  background: rgba(255,255,255,0.9);
+  border: none;
+  outline: none;
+  padding-right: 115px;
+}
+
+.submitButton {
+  margin-left: -115px;  
+  height: 100%;
+  width: 7vw;
+  font-size: 1.3vw;
+  color: white;
+  border: none;
+  border-radius: 100px;
+  background: rgba(162, 110, 165, 1);
+}
+
+.submitButton:hover {
+  cursor: pointer;
+}
+
+.searchInput:focus {
+  box-shadow: 0px 0px 20px 10px rgba(162, 110, 165, 0.46);
+}
