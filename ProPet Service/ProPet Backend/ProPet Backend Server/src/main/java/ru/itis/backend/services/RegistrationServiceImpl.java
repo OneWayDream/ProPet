@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import ru.itis.backend.dto.RegistrationForm;
 import ru.itis.backend.dto.UserDto;
 import ru.itis.backend.exceptions.DifferentPasswordsException;
+import ru.itis.backend.exceptions.LoginAlreadyInUseException;
+import ru.itis.backend.exceptions.MailAlreadyInUseException;
 import ru.itis.backend.models.ActivationLink;
 import ru.itis.backend.models.User;
 import ru.itis.backend.models.UserState;
@@ -30,6 +32,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public UserDto registerNewUser(RegistrationForm registrationForm) {
         if (registrationForm.getPassword().equals(registrationForm.getRepeatedPassword())){
+            try {
             User newUser = User.builder()
                     .login(registrationForm.getLogin())
                     .mail(registrationForm.getMail())
@@ -39,16 +42,29 @@ public class RegistrationServiceImpl implements RegistrationService {
                     .registrationDate(new Date(System.currentTimeMillis()))
                     .imageKey("default.png")
                     .build();
-            usersRepository.save(newUser);
-            ActivationLink link = ActivationLink.builder()
-                    .accountId(newUser.getId())
-                    .linkValue(UUID.randomUUID().toString())
-                    .isDeleted(false)
-                    .build();
-            activationLinkRepository.save(link);
-            return UserDto.from(newUser);
+                usersRepository.save(newUser);
+                ActivationLink link = ActivationLink.builder()
+                        .accountId(newUser.getId())
+                        .linkValue(UUID.randomUUID().toString())
+                        .isDeleted(false)
+                        .build();
+                activationLinkRepository.save(link);
+                return UserDto.from(newUser);
+            } catch (Exception ex){
+                try{
+                    String message = ex.getCause().getCause().getMessage();
+                    if (message.contains("account_mail_key")){
+                        throw new MailAlreadyInUseException(ex);
+                    } else if (message.contains("account_login_key")){
+                        throw new LoginAlreadyInUseException(ex);
+                    }
+                } catch (NullPointerException exception){
+                    //ignore
+                }
+                throw ex;
+            }
         } else {
-            throw new DifferentPasswordsException();
+            throw new DifferentPasswordsException("The passwords are different");
         }
 
     }

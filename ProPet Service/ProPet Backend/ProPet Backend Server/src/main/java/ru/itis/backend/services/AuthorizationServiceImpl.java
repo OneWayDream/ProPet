@@ -32,11 +32,11 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                 if (userDto.getHashPassword().equals(passwordEncoder.encode(authorizationForm.getPassword()))){
                     return userDto;
                 } else {
-                    throw new IncorrectPasswordException();
+                    throw new IncorrectPasswordException("Incorrect user data");
                 }
             }
-            case NOT_ACTIVATED -> throw new NotActivatedUserException();
-            case BANNED -> throw new BannedUserException();
+            case NOT_ACTIVATED -> throw new NotActivatedUserException("This user has an account which is not activated");
+            case BANNED -> throw new BannedUserException("This user is banned.");
         }
         return null;
     }
