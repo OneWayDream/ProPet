@@ -62,6 +62,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         }
     }
 
+    @ExceptionHandler(JwtAuthorizationFaultException.class)
+    public ResponseEntity<?> handleJwtAuthorizationFaultException(JwtAuthorizationFaultException exception){
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Something went wrong.");
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> defaultExceptionHandler(Exception exception){
         exception.printStackTrace();
