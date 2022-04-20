@@ -43,7 +43,7 @@ public class User {
     @Column(name = "image_key")
     protected String imageKey = "default.png";
 
-    @OneToMany(targetEntity = PetInfo.class, mappedBy = "user", cascade=CascadeType.ALL)
+    @OneToMany(targetEntity = PetInfo.class, mappedBy = "user", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     protected List<PetInfo> pets;
 
 }

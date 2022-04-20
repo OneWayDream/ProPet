@@ -5,11 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.itis.backend.models.PetInfo;
-import ru.itis.backend.models.User;
 import ru.itis.backend.utils.ImageLoader;
-import ru.itis.backend.utils.ImageType;
-
-import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.stream.Collectors;
 
