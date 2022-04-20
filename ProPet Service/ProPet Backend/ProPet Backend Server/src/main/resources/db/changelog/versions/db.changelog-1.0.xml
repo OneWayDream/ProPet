@@ -11,7 +11,7 @@
     <changeSet id="1" author="OneWayDream">
         <comment>Creating a user's database</comment>
         <createTable tableName="account">
-            <column name="id" type="bigint">
+            <column name="id" type="bigint" autoIncrement="true" incrementBy="1" startWith="1">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="mail" type="varchar">

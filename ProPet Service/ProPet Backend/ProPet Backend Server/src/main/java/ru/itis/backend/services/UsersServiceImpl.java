@@ -7,6 +7,8 @@ import ru.itis.backend.dto.ActivationLinkDto;
 import ru.itis.backend.dto.UserDto;
 import ru.itis.backend.exceptions.EntityNotExistsException;
 import ru.itis.backend.exceptions.EntityNotFoundException;
+import ru.itis.backend.exceptions.LoginAlreadyInUseException;
+import ru.itis.backend.exceptions.MailAlreadyInUseException;
 import ru.itis.backend.models.User;
 import ru.itis.backend.models.UserState;
 import ru.itis.backend.repositories.UsersRepository;
@@ -35,11 +37,14 @@ public class UsersServiceImpl implements UsersService {
     public void delete(UserDto userDto) {
         try{
             User userForDelete = usersRepository.findById(userDto.getId())
-                    .filter(user -> user.getIsDeleted()==null)
+                    .filter(user -> !user.getIsDeleted())
                     .orElseThrow(EntityNotExistsException::new);
             userForDelete.setIsDeleted(true);
             usersRepository.save(userForDelete);
         } catch (Exception ex){
+            if (ex instanceof EntityNotExistsException){
+                throw ex;
+            }
             throw new PersistenceException(ex);
         }
     }
@@ -60,8 +65,22 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public UserDto update(UserDto userDto) {
-        User updatedUser = usersRepository.save(UserDto.to(userDto));
-        return UserDto.from(updatedUser);
+        try{
+            User updatedUser = usersRepository.save(UserDto.to(userDto));
+            return UserDto.from(updatedUser);
+        } catch (Exception ex){
+        try{
+            String message = ex.getCause().getCause().getMessage();
+            if (message.contains("account_mail_key")){
+                throw new MailAlreadyInUseException(ex);
+            } else if (message.contains("account_login_key")){
+                throw new LoginAlreadyInUseException(ex);
+            }
+        } catch (NullPointerException exception){
+            //ignore
+        }
+        throw ex;
+    }
     }
 
     @Override

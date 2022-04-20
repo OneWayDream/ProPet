@@ -5,6 +5,8 @@ import lombok.Data;
 import ru.itis.backend.models.User;
 import ru.itis.backend.models.UserState;
 import ru.itis.backend.utils.ImageLoader;
+import ru.itis.backend.utils.ImageType;
+
 import java.awt.image.BufferedImage;
 import java.util.Date;
 import java.util.List;
@@ -22,10 +24,11 @@ public class UserDto {
     protected UserState state;
     protected Date registrationDate;
     protected String country;
-    protected BufferedImage image;
+    protected String imageKey;
+    protected List<PetInfoDto> pets;
 
     public static UserDto from(User user){
-        return UserDto.builder()
+        return  UserDto.builder()
                 .id(user.getId())
                 .mail(user.getMail())
                 .login(user.getLogin())
@@ -34,7 +37,8 @@ public class UserDto {
                 .state(user.getState())
                 .registrationDate(user.getRegistrationDate())
                 .country(user.getCountry())
-                .image(ImageLoader.loadImageByKey(user.getImageKey()))
+                .imageKey(user.getImageKey())
+                .pets((user.getPets() == null) ? null : PetInfoDto.from(user.getPets()))
                 .build();
     }
 
@@ -49,6 +53,7 @@ public class UserDto {
                 .registrationDate(userDto.getRegistrationDate())
                 .country(userDto.getCountry())
                 .imageKey(ImageLoader.getImageKeyForUser(userDto))
+                .isDeleted(false)
                 .build();
     }
 

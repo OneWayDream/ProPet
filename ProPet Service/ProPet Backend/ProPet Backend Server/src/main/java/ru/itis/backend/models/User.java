@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -41,5 +42,8 @@ public class User {
 
     @Column(name = "image_key")
     protected String imageKey = "default.png";
+
+    @OneToMany(targetEntity = PetInfo.class, mappedBy = "user", cascade=CascadeType.ALL)
+    protected List<PetInfo> pets;
 
 }

@@ -11,7 +11,7 @@
     <changeSet id="5" author="OneWayDream">
         <comment>Creating a table for jwt users</comment>
         <createTable tableName="data_access_user">
-            <column name="id" type="bigint" incrementBy="1" startWith="1">
+            <column name="id" type="bigint" autoIncrement="true" incrementBy="1" startWith="1">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="login" type="varchar">

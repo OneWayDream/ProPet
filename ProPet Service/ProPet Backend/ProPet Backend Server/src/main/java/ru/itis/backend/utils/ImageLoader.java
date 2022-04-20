@@ -2,18 +2,23 @@ package ru.itis.backend.utils;
 
 import org.springframework.stereotype.Component;
 import ru.itis.backend.dto.UserDto;
+import ru.itis.backend.dto.PetInfoDto;
 
 import java.awt.image.BufferedImage;
 
 @Component
 public class ImageLoader {
 
-    public static BufferedImage loadImageByKey(String key) {
+    public static BufferedImage loadImageByKey(String key, ImageType imageType) {
         return null;
     }
 
     public static String getImageKeyForUser(UserDto userDto){
-        return null;
+        return userDto.getImageKey();
+    }
+
+    public static String getImageKeyForPet(PetInfoDto petInfoDto){
+        return petInfoDto.getImageKey();
     }
 
 }

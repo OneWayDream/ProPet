@@ -10,39 +10,40 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.itis.backend.dto.ActivationLinkDto;
-import ru.itis.backend.services.ActivationLinksService;
+import ru.itis.backend.dto.PetInfoDto;
+import ru.itis.backend.dto.UserDto;
+import ru.itis.backend.services.PetInfoService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/activation-link")
+@RequestMapping("/pet-info")
 @RequiredArgsConstructor
-public class ActivationLinksController {
+public class PetInfoController {
 
     @NonNull
-    protected ActivationLinksService activationLinksService;
+    protected PetInfoService petInfoService;
 
-    @Operation(summary = "Getting all activation links.")
+    @Operation(summary = "Getting all pet cards.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success getting", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = ActivationLinkDto.class)
+                            schema = @Schema(implementation = PetInfoDto.class)
                     ))
             })
     })
     @GetMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<List<ActivationLinkDto>> getAllActivationLinks() {
-        return ResponseEntity.ok(activationLinksService.findAll());
+    public ResponseEntity<List<PetInfoDto>> getAllPets() {
+        return ResponseEntity.ok(petInfoService.findAll());
     }
 
-    @Operation(summary = "Getting activation link by id.")
+    @Operation(summary = "Getting pet info by id.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success getting", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = ActivationLinkDto.class)
+                            schema = @Schema(implementation = PetInfoDto.class)
                     ))
             })
     })
@@ -50,57 +51,57 @@ public class ActivationLinksController {
             value = "/by-id/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<ActivationLinkDto> getActivationLinkById(@PathVariable Long id){
-        return ResponseEntity.ok(activationLinksService.findById(id));
+    public ResponseEntity<PetInfoDto> getPetInfoById(@PathVariable Long id){
+        return ResponseEntity.ok(petInfoService.findById(id));
     }
 
-    @Operation(summary = "Getting activation link by account id.")
+    @Operation(summary = "Getting all pet cards by user's id.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success getting", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = ActivationLinkDto.class)
+                            schema = @Schema(implementation = PetInfoDto.class)
                     ))
             })
     })
     @GetMapping(
-            value = "/by-account-id/{id}",
+            value = "/by-user-id/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<ActivationLinkDto> getUserByLogin(@PathVariable Long id){
-        return ResponseEntity.ok(activationLinksService.findByAccountId(id));
+    public ResponseEntity<List<PetInfoDto>> getAllPetsByUserId(@PathVariable Long id){
+        return ResponseEntity.ok(petInfoService.findAllByUserId(id));
     }
 
-    @Operation(summary = "Adding a new activation link.")
+    @Operation(summary = "Adding a new pet info.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success adding", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = ActivationLinkDto.class)
+                            schema = @Schema(implementation = PetInfoDto.class)
                     ))
             })
     })
     @PostMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<ActivationLinkDto> addUser(@RequestBody ActivationLinkDto activationLinkDto){
-        return ResponseEntity.ok(activationLinksService.add(activationLinkDto));
+    public ResponseEntity<PetInfoDto> addPet(@RequestBody PetInfoDto petInfoDto){
+        return ResponseEntity.ok(petInfoService.add(petInfoDto));
     }
 
-    @Operation(summary = "Updating activation link by id.")
+    @Operation(summary = "Updating a pet card by id.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success updating", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = ActivationLinkDto.class)
+                            schema = @Schema(implementation = PetInfoDto.class)
                     ))
             })
     })
     @PatchMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<ActivationLinkDto> updateUserById(@RequestBody ActivationLinkDto activationLinkDto){
-        return ResponseEntity.ok(activationLinksService.update(activationLinkDto));
+    public ResponseEntity<PetInfoDto> updatePetInfoById(@RequestBody PetInfoDto petInfoDto){
+        return ResponseEntity.ok(petInfoService.update(petInfoDto));
     }
 
-    @Operation(summary = "Deleting activation link by id.")
+    @Operation(summary = "Deleting pet info by id.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success deleting")
     })
@@ -108,8 +109,8 @@ public class ActivationLinksController {
             value = "/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<?> deleteUserById(@PathVariable Long id){
-        activationLinksService.delete(ActivationLinkDto.builder().id(id).build());
+    public ResponseEntity<?> deletePetInfoById(@PathVariable Long id){
+        petInfoService.delete(PetInfoDto.builder().id(id).build());
         return ResponseEntity.ok().build();
     }
 
