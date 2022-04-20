@@ -12,7 +12,6 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table(name = "pet_info")
-//@ToString(exclude = {"user"})
 public class PetInfo {
 
     @Id

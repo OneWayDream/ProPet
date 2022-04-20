@@ -80,7 +80,7 @@ public class UsersServiceImpl implements UsersService {
             //ignore
         }
         throw ex;
-    }
+        }
     }
 
     @Override

@@ -46,4 +46,7 @@ public class User {
     @OneToMany(targetEntity = PetInfo.class, mappedBy = "user", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     protected List<PetInfo> pets;
 
+    @OneToOne(targetEntity = SitterInfo.class, mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    protected SitterInfo sitterInfo;
+
 }

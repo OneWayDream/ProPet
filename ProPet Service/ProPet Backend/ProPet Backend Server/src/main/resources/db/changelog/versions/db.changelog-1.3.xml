@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="6" author="OneWayDream">
+        <comment>Adding a sitter's cards table</comment>
+        <createTable tableName="sitter_info">
+            <column name="id" type="bigint" autoIncrement="true" incrementBy="1" startWith="1">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" unique="true" foreignKeyName="fk_user_id" referencedTableName="account"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="age" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="info_about" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rate_1" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rate_2" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rate_3" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rate_4" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rate_5" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_deleted" type="boolean" defaultValue="false"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
