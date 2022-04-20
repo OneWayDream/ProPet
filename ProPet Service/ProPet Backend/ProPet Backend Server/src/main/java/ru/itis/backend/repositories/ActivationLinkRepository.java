@@ -8,5 +8,6 @@ import java.util.Optional;
 public interface ActivationLinkRepository extends JpaRepository<ActivationLink, Long> {
 
     Optional<ActivationLink> findByLinkValue(String linkValue);
+    Optional<ActivationLink> findByAccountId(Long accountId);
 
 }

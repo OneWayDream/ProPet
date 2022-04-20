@@ -3,7 +3,7 @@ package ru.itis.jwtserver.redis.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.itis.jwtserver.models.DataAccessUser;
-import ru.itis.jwtserver.redis.models.RedisUser;
+import ru.itis.jwtserver.redis.repositories.models.RedisUser;
 import ru.itis.jwtserver.redis.repositories.RedisUsersRepository;
 import ru.itis.jwtserver.repositories.UsersRepository;
 import ru.itis.jwtserver.services.JwtBlacklistService;

@@ -16,7 +16,7 @@ import ru.itis.backend.services.UsersService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UsersController {
 
@@ -110,11 +110,9 @@ public class UsersController {
             })
     })
     @PatchMapping(
-            value = "/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<UserDto> updateUserById(@RequestBody UserDto userDto, @PathVariable Long id){
-        userDto.setId(id);
+    public ResponseEntity<UserDto> updateUserById(@RequestBody UserDto userDto){
         return ResponseEntity.ok(usersService.update(userDto));
     }
 

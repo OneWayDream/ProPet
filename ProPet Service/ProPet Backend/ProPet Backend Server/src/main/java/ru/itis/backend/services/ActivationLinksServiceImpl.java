@@ -69,4 +69,11 @@ public class ActivationLinksServiceImpl implements ActivationLinksService {
                 .filter(activationLink -> !activationLink.getIsDeleted())
                 .orElseThrow(LinkNotExistsException::new));
     }
+
+    @Override
+    public ActivationLinkDto findByAccountId(Long id) {
+        return ActivationLinkDto.from(activationLinkRepository.findByAccountId(id)
+                .filter(activationLink -> !activationLink.getIsDeleted())
+                .orElseThrow(LinkNotExistsException::new));
+    }
 }

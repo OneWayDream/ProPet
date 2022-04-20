@@ -1,4 +1,4 @@
-package ru.itis.jwtserver.redis.models;
+package ru.itis.jwtserver.redis.repositories.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
