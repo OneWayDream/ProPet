@@ -20,7 +20,7 @@ import ru.itis.backend.services.RegistrationService;
 public class RegistrationController {
 
     @NonNull
-    protected RegistrationService registrationService;
+    protected RegistrationService service;
 
     @Operation(summary = "Register new user")
     @ApiResponses(value = {
@@ -34,7 +34,7 @@ public class RegistrationController {
             headers = {"JWT"}
     )
     public ResponseEntity<UserDto> registerNewUser(@RequestBody RegistrationForm registrationForm){
-        return ResponseEntity.ok(registrationService.registerNewUser(registrationForm));
+        return ResponseEntity.ok(service.registerNewUser(registrationForm));
     }
 
 }

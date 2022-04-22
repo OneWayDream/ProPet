@@ -5,9 +5,6 @@ import lombok.Data;
 import ru.itis.backend.models.User;
 import ru.itis.backend.models.UserState;
 import ru.itis.backend.utils.ImageLoader;
-import ru.itis.backend.utils.ImageType;
-
-import java.awt.image.BufferedImage;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,9 +23,13 @@ public class UserDto {
     protected String country;
     protected String imageKey;
     protected List<PetInfoDto> pets;
+    protected List<CommentAboutSitterDto> comments;
+    protected SitterInfoDto sitterInfoDto;
+    protected List<UserAppealDto> appeals;
+    protected ActivationLinkDto activationLinkDto;
 
     public static UserDto from(User user){
-        return  UserDto.builder()
+        return (user == null) ? null : UserDto.builder()
                 .id(user.getId())
                 .mail(user.getMail())
                 .login(user.getLogin())
@@ -39,11 +40,16 @@ public class UserDto {
                 .country(user.getCountry())
                 .imageKey(user.getImageKey())
                 .pets((user.getPets() == null) ? null : PetInfoDto.from(user.getPets()))
+                .comments((user.getComments() == null) ? null : CommentAboutSitterDto.from(user.getComments()))
+                .appeals((user.getAppeals() == null) ? null : UserAppealDto.from(user.getAppeals()))
+                .sitterInfoDto((user.getSitterInfo() == null) ? null : SitterInfoDto.from(user.getSitterInfo()))
+                .activationLinkDto((user.getActivationLink() == null) ? null :
+                        ActivationLinkDto.from(user.getActivationLink()))
                 .build();
     }
 
     public static User to(UserDto userDto){
-        return User.builder()
+        return (userDto == null) ? null : User.builder()
                 .id(userDto.getId())
                 .mail(userDto.getMail())
                 .login(userDto.getLogin())
@@ -53,6 +59,12 @@ public class UserDto {
                 .registrationDate(userDto.getRegistrationDate())
                 .country(userDto.getCountry())
                 .imageKey(ImageLoader.getImageKeyForUser(userDto))
+                .pets((userDto.getPets() == null) ? null : PetInfoDto.to(userDto.getPets()))
+                .comments((userDto.getComments() == null) ? null : CommentAboutSitterDto.to(userDto.getComments()))
+                .appeals((userDto.getAppeals() == null) ? null : UserAppealDto.to(userDto.getAppeals()))
+                .sitterInfo((userDto.getSitterInfoDto() == null) ? null : SitterInfoDto.to(userDto.getSitterInfoDto()))
+                .activationLink((userDto.getActivationLinkDto() == null) ? null :
+                        ActivationLinkDto.to(userDto.getActivationLinkDto()))
                 .isDeleted(false)
                 .build();
     }

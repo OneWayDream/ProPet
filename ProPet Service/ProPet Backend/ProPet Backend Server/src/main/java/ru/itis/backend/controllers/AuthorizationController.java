@@ -23,7 +23,7 @@ import ru.itis.backend.services.AuthorizationService;
 public class AuthorizationController {
 
     @NonNull
-    protected AuthorizationService authorizationService;
+    protected AuthorizationService service;
 
     @Operation(summary = "Authorize user.")
     @ApiResponses(value = {
@@ -37,7 +37,7 @@ public class AuthorizationController {
             headers = {"JWT"}
     )
     public ResponseEntity<UserDto> banUserById(@RequestBody AuthorizationForm authorizationForm){
-        return ResponseEntity.ok(authorizationService.authorizeUser(authorizationForm));
+        return ResponseEntity.ok(service.authorizeUser(authorizationForm));
     }
 
 }

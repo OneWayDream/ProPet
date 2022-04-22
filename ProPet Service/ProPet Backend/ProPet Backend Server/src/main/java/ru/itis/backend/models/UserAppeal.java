@@ -3,6 +3,7 @@ package ru.itis.backend.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -10,8 +11,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "pet_info")
-public class PetInfo {
+@Table(name = "user_appeal")
+public class UserAppeal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +25,20 @@ public class PetInfo {
     @Column(name = "user_id")
     protected Long userId;
 
-    @Column(name = "image_key")
-    protected String imageKey;
+    @Column(name = "send_date")
+    protected Date sendDate;
 
-    protected String nickname;
+    protected String text;
+
+    @Column(name = "is_closed")
+    protected Boolean isClosed;
 
     @Column(name = "is_deleted")
     protected Boolean isDeleted;
+
+    @OneToOne(targetEntity = AppealAnswer.class, mappedBy = "appeal",
+            cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    protected AppealAnswer appealAnswer;
+
 
 }

@@ -21,7 +21,7 @@ import java.util.List;
 public class ActivationLinksController {
 
     @NonNull
-    protected ActivationLinksService activationLinksService;
+    protected ActivationLinksService service;
 
     @Operation(summary = "Getting all activation links.")
     @ApiResponses(value = {
@@ -35,7 +35,7 @@ public class ActivationLinksController {
             headers = {"JWT"}
     )
     public ResponseEntity<List<ActivationLinkDto>> getAllActivationLinks() {
-        return ResponseEntity.ok(activationLinksService.findAll());
+        return ResponseEntity.ok(service.findAll());
     }
 
     @Operation(summary = "Getting activation link by id.")
@@ -51,7 +51,7 @@ public class ActivationLinksController {
             headers = {"JWT"}
     )
     public ResponseEntity<ActivationLinkDto> getActivationLinkById(@PathVariable Long id){
-        return ResponseEntity.ok(activationLinksService.findById(id));
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @Operation(summary = "Getting activation link by account id.")
@@ -66,8 +66,8 @@ public class ActivationLinksController {
             value = "/by-account-id/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<ActivationLinkDto> getUserByLogin(@PathVariable Long id){
-        return ResponseEntity.ok(activationLinksService.findByAccountId(id));
+    public ResponseEntity<ActivationLinkDto> getActivationLinkByAccountId(@PathVariable Long id){
+        return ResponseEntity.ok(service.findByAccountId(id));
     }
 
     @Operation(summary = "Adding a new activation link.")
@@ -81,8 +81,8 @@ public class ActivationLinksController {
     @PostMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<ActivationLinkDto> addUser(@RequestBody ActivationLinkDto activationLinkDto){
-        return ResponseEntity.ok(activationLinksService.add(activationLinkDto));
+    public ResponseEntity<ActivationLinkDto> addActivationLink(@RequestBody ActivationLinkDto activationLinkDto){
+        return ResponseEntity.ok(service.add(activationLinkDto));
     }
 
     @Operation(summary = "Updating activation link by id.")
@@ -96,8 +96,8 @@ public class ActivationLinksController {
     @PatchMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<ActivationLinkDto> updateUserById(@RequestBody ActivationLinkDto activationLinkDto){
-        return ResponseEntity.ok(activationLinksService.update(activationLinkDto));
+    public ResponseEntity<ActivationLinkDto> updateActivationLinkById(@RequestBody ActivationLinkDto activationLinkDto){
+        return ResponseEntity.ok(service.update(activationLinkDto));
     }
 
     @Operation(summary = "Deleting activation link by id.")
@@ -108,8 +108,8 @@ public class ActivationLinksController {
             value = "/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<?> deleteUserById(@PathVariable Long id){
-        activationLinksService.delete(ActivationLinkDto.builder().id(id).build());
+    public ResponseEntity<?> deleteActivationLinkById(@PathVariable Long id){
+        service.delete(ActivationLinkDto.builder().id(id).build());
         return ResponseEntity.ok().build();
     }
 

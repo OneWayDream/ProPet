@@ -3,11 +3,11 @@ package ru.itis.backend.services;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.itis.backend.dto.PetInfoDto;
+import ru.itis.backend.dto.UserAppealDto;
 import ru.itis.backend.exceptions.EntityNotExistsException;
 import ru.itis.backend.exceptions.EntityNotFoundException;
-import ru.itis.backend.models.PetInfo;
-import ru.itis.backend.repositories.PetInfoRepository;
+import ru.itis.backend.models.UserAppeal;
+import ru.itis.backend.repositories.UserAppealRepository;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -15,22 +15,22 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PetInfoServiceImpl implements PetInfoService {
+public class UserAppealServiceImpl implements UserAppealService {
 
     @NonNull
-    protected PetInfoRepository repository;
+    protected UserAppealRepository repository;
 
     @Override
-    public List<PetInfoDto> findAll() {
-        return PetInfoDto.from(repository.findAll().stream()
+    public List<UserAppealDto> findAll() {
+        return UserAppealDto.from(repository.findAll().stream()
                 .filter(entry -> !entry.getIsDeleted())
                 .collect(Collectors.toList()));
     }
 
     @Override
-    public void delete(PetInfoDto petInfoDto) {
+    public void delete(UserAppealDto userAppealDto) {
         try{
-            PetInfo entityToDelete = repository.findById(petInfoDto.getId())
+            UserAppeal entityToDelete = repository.findById(userAppealDto.getId())
                     .filter(entry -> !entry.getIsDeleted())
                     .orElseThrow(EntityNotExistsException::new);
             entityToDelete.setIsDeleted(true);
@@ -44,30 +44,29 @@ public class PetInfoServiceImpl implements PetInfoService {
     }
 
     @Override
-    public PetInfoDto add(PetInfoDto petInfoDto) {
-        PetInfo newEntity = PetInfoDto.to(petInfoDto);
+    public UserAppealDto add(UserAppealDto userAppealDto) {
+        UserAppeal newEntity = UserAppealDto.to(userAppealDto);
         repository.save(newEntity);
-        return PetInfoDto.from(newEntity);
+        return UserAppealDto.from(newEntity);
     }
 
     @Override
-    public PetInfoDto findById(Long aLong) {
-        return PetInfoDto.from(repository.findById(aLong)
+    public UserAppealDto findById(Long aLong) {
+        return UserAppealDto.from(repository.findById(aLong)
                 .filter(entry -> !entry.getIsDeleted())
                 .orElseThrow(EntityNotFoundException::new));
     }
 
     @Override
-    public PetInfoDto update(PetInfoDto petInfoDto) {
-        PetInfo updatedEntity = repository.save(PetInfoDto.to(petInfoDto));
-        return PetInfoDto.from(updatedEntity);
+    public UserAppealDto update(UserAppealDto userAppealDto) {
+        UserAppeal updatedEntity = repository.save(UserAppealDto.to(userAppealDto));
+        return UserAppealDto.from(updatedEntity);
     }
 
     @Override
-    public List<PetInfoDto> findAllByUserId(Long userId) {
-        return PetInfoDto.from(repository.findAllByUserId(userId)
-                        .stream()
-                        .filter(entry -> !entry.getIsDeleted())
-                        .collect(Collectors.toList()));
+    public List<UserAppealDto> getAllByUserId(Long userId) {
+        return UserAppealDto.from(repository.findAllByUserId(userId).stream()
+                .filter(entry -> !entry.getIsDeleted())
+                .collect(Collectors.toList()));
     }
 }

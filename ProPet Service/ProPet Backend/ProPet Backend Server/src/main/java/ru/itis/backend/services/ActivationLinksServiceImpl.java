@@ -4,12 +4,10 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.itis.backend.dto.ActivationLinkDto;
-import ru.itis.backend.dto.UserDto;
 import ru.itis.backend.exceptions.EntityNotExistsException;
 import ru.itis.backend.exceptions.EntityNotFoundException;
 import ru.itis.backend.exceptions.LinkNotExistsException;
 import ru.itis.backend.models.ActivationLink;
-import ru.itis.backend.models.User;
 import ru.itis.backend.repositories.ActivationLinkRepository;
 
 import javax.persistence.PersistenceException;
@@ -21,23 +19,23 @@ import java.util.stream.Collectors;
 public class ActivationLinksServiceImpl implements ActivationLinksService {
 
     @NonNull
-    protected ActivationLinkRepository activationLinkRepository;
+    protected ActivationLinkRepository repository;
 
     @Override
     public List<ActivationLinkDto> findAll() {
-        return ActivationLinkDto.from(activationLinkRepository.findAll().stream()
-                .filter(link -> !link.getIsDeleted())
+        return ActivationLinkDto.from(repository.findAll().stream()
+                .filter(entry -> !entry.getIsDeleted())
                 .collect(Collectors.toList()));
     }
 
     @Override
     public void delete(ActivationLinkDto activationLinkDto) {
         try{
-            ActivationLink activationLinkForDeletion = activationLinkRepository.findById(activationLinkDto.getId())
-                    .filter(link -> link.getIsDeleted()==null)
+            ActivationLink entityToDelete = repository.findById(activationLinkDto.getId())
+                    .filter(entry -> entry.getIsDeleted()==null)
                     .orElseThrow(EntityNotExistsException::new);
-            activationLinkForDeletion.setIsDeleted(true);
-            activationLinkRepository.save(activationLinkForDeletion);
+            entityToDelete.setIsDeleted(true);
+            repository.save(entityToDelete);
         } catch (Exception ex){
             throw new PersistenceException(ex);
         }
@@ -45,35 +43,35 @@ public class ActivationLinksServiceImpl implements ActivationLinksService {
 
     @Override
     public ActivationLinkDto add(ActivationLinkDto activationLinkDto) {
-        ActivationLink newActivationLink = ActivationLinkDto.to(activationLinkDto);
-        activationLinkRepository.save(newActivationLink);
-        return ActivationLinkDto.from(newActivationLink);
+        ActivationLink newEntity = ActivationLinkDto.to(activationLinkDto);
+        repository.save(newEntity);
+        return ActivationLinkDto.from(newEntity);
     }
 
     @Override
     public ActivationLinkDto findById(Long aLong) {
-        return ActivationLinkDto.from(activationLinkRepository.findById(aLong)
-                .filter(link -> !link.getIsDeleted())
+        return ActivationLinkDto.from(repository.findById(aLong)
+                .filter(entry -> !entry.getIsDeleted())
                 .orElseThrow(EntityNotFoundException::new));
     }
 
     @Override
     public ActivationLinkDto update(ActivationLinkDto activationLinkDto) {
-        ActivationLink updatedActivationLink = activationLinkRepository.save(ActivationLinkDto.to(activationLinkDto));
-        return ActivationLinkDto.from(updatedActivationLink);
+        ActivationLink updatedEntity = repository.save(ActivationLinkDto.to(activationLinkDto));
+        return ActivationLinkDto.from(updatedEntity);
     }
 
     @Override
     public ActivationLinkDto findByLinkValue(String linkValue) {
-        return ActivationLinkDto.from(activationLinkRepository.findByLinkValue(linkValue)
-                .filter(activationLink -> !activationLink.getIsDeleted())
+        return ActivationLinkDto.from(repository.findByLinkValue(linkValue)
+                .filter(entry -> !entry.getIsDeleted())
                 .orElseThrow(LinkNotExistsException::new));
     }
 
     @Override
     public ActivationLinkDto findByAccountId(Long id) {
-        return ActivationLinkDto.from(activationLinkRepository.findByAccountId(id)
-                .filter(activationLink -> !activationLink.getIsDeleted())
+        return ActivationLinkDto.from(repository.findByAccountId(id)
+                .filter(entry -> !entry.getIsDeleted())
                 .orElseThrow(LinkNotExistsException::new));
     }
 }

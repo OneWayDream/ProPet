@@ -30,7 +30,7 @@ public class SitterInfoDto {
     protected Integer rateFive;
 
     public static SitterInfoDto from(SitterInfo info){
-        return SitterInfoDto.builder()
+        return (info == null) ? null : SitterInfoDto.builder()
                 .id(info.getId())
                 .userId(info.getUserId())
                 .name(info.getName())
@@ -47,7 +47,7 @@ public class SitterInfoDto {
     }
 
     public static SitterInfo to(SitterInfoDto infoDto){
-        return SitterInfo.builder()
+        return (infoDto == null) ? null : SitterInfo.builder()
                 .id(infoDto.getId())
                 .userId(infoDto.getUserId())
                 .name(infoDto.getName())

@@ -46,7 +46,18 @@ public class User {
     @OneToMany(targetEntity = PetInfo.class, mappedBy = "user", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     protected List<PetInfo> pets;
 
+    @OneToMany(targetEntity = CommentAboutSitter.class, mappedBy = "user",
+            cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    protected List<CommentAboutSitter> comments;
+
+    @OneToMany(targetEntity = UserAppeal.class, mappedBy = "user",
+            cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    protected List<UserAppeal> appeals;
+
     @OneToOne(targetEntity = SitterInfo.class, mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     protected SitterInfo sitterInfo;
+
+    @OneToOne(targetEntity = ActivationLink.class, mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    protected ActivationLink activationLink;
 
 }

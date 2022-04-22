@@ -22,7 +22,7 @@ import java.util.List;
 public class SitterInfoController {
 
     @NonNull
-    protected SitterInfoService sitterInfoService;
+    protected SitterInfoService service;
 
     @Operation(summary = "Getting all sitter's cards.")
     @ApiResponses(value = {
@@ -36,7 +36,7 @@ public class SitterInfoController {
             headers = {"JWT"}
     )
     public ResponseEntity<List<SitterInfoDto>> getAllPets() {
-        return ResponseEntity.ok(sitterInfoService.findAll());
+        return ResponseEntity.ok(service.findAll());
     }
 
     @Operation(summary = "Getting sitter info by id.")
@@ -52,7 +52,7 @@ public class SitterInfoController {
             headers = {"JWT"}
     )
     public ResponseEntity<SitterInfoDto> getPetInfoById(@PathVariable Long id){
-        return ResponseEntity.ok(sitterInfoService.findById(id));
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @Operation(summary = "Getting sitter info by user's id.")
@@ -68,7 +68,7 @@ public class SitterInfoController {
             headers = {"JWT"}
     )
     public ResponseEntity<SitterInfoDto> getAllPetsByUserId(@PathVariable Long id){
-        return ResponseEntity.ok(sitterInfoService.findByUserId(id));
+        return ResponseEntity.ok(service.findByUserId(id));
     }
 
     @Operation(summary = "Adding a new sitter info.")
@@ -83,7 +83,7 @@ public class SitterInfoController {
             headers = {"JWT"}
     )
     public ResponseEntity<SitterInfoDto> addPet(@RequestBody SitterInfoDto sitterInfoDto){
-        return ResponseEntity.ok(sitterInfoService.add(sitterInfoDto));
+        return ResponseEntity.ok(service.add(sitterInfoDto));
     }
 
     @Operation(summary = "Updating a sitter card by id.")
@@ -98,7 +98,7 @@ public class SitterInfoController {
             headers = {"JWT"}
     )
     public ResponseEntity<SitterInfoDto> updatePetInfoById(@RequestBody SitterInfoDto sitterInfoDto){
-        return ResponseEntity.ok(sitterInfoService.update(sitterInfoDto));
+        return ResponseEntity.ok(service.update(sitterInfoDto));
     }
 
     @Operation(summary = "Deleting sitter info by id.")
@@ -110,7 +110,7 @@ public class SitterInfoController {
             headers = {"JWT"}
     )
     public ResponseEntity<?> deletePetInfoById(@PathVariable Long id){
-        sitterInfoService.delete(SitterInfoDto.builder().id(id).build());
+        service.delete(SitterInfoDto.builder().id(id).build());
         return ResponseEntity.ok().build();
     }
 

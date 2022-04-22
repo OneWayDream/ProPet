@@ -17,6 +17,11 @@ public class ActivationLink {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
+    @OneToOne
+    @JoinColumn(name = "account_id", referencedColumnName = "id",
+            nullable = false, insertable = false, updatable = false)
+    protected User user;
+
     @Column(name = "account_id", unique = true)
     protected Long accountId;
 

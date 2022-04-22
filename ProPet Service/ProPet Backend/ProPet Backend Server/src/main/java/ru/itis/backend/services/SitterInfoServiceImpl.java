@@ -18,23 +18,23 @@ import java.util.stream.Collectors;
 public class SitterInfoServiceImpl implements SitterInfoService {
 
     @NonNull
-    protected SitterInfoRepository sitterInfoRepository;
+    protected SitterInfoRepository repository;
 
     @Override
     public List<SitterInfoDto> findAll() {
-        return SitterInfoDto.from(sitterInfoRepository.findAll().stream()
-                .filter(user -> !user.getIsDeleted())
+        return SitterInfoDto.from(repository.findAll().stream()
+                .filter(entry -> !entry.getIsDeleted())
                 .collect(Collectors.toList()));
     }
 
     @Override
     public void delete(SitterInfoDto sitterInfoDto) {
         try{
-            SitterInfo sitterInfoForDelete = sitterInfoRepository.findById(sitterInfoDto.getId())
-                    .filter(info -> !info.getIsDeleted())
+            SitterInfo entityToDelete = repository.findById(sitterInfoDto.getId())
+                    .filter(entry -> !entry.getIsDeleted())
                     .orElseThrow(EntityNotExistsException::new);
-            sitterInfoForDelete.setIsDeleted(true);
-            sitterInfoRepository.save(sitterInfoForDelete);
+            entityToDelete.setIsDeleted(true);
+            repository.save(entityToDelete);
         } catch (Exception ex){
             if (ex instanceof EntityNotExistsException){
                 throw ex;
@@ -45,23 +45,23 @@ public class SitterInfoServiceImpl implements SitterInfoService {
 
     @Override
     public SitterInfoDto add(SitterInfoDto sitterInfoDto) {
-        SitterInfo newSitterInfo = SitterInfoDto.to(sitterInfoDto);
-        sitterInfoRepository.save(newSitterInfo);
-        return SitterInfoDto.from(newSitterInfo);
+        SitterInfo newEntity = SitterInfoDto.to(sitterInfoDto);
+        repository.save(newEntity);
+        return SitterInfoDto.from(newEntity);
     }
 
     @Override
     public SitterInfoDto findById(Long aLong) {
-        return SitterInfoDto.from(sitterInfoRepository.findById(aLong)
-                .filter(info -> !info.getIsDeleted())
+        return SitterInfoDto.from(repository.findById(aLong)
+                .filter(entry -> !entry.getIsDeleted())
                 .orElseThrow(EntityNotFoundException::new));
     }
 
     @Override
     public SitterInfoDto update(SitterInfoDto sitterInfoDto) {
         try{
-            SitterInfo updatedSitterInfo = sitterInfoRepository.save(SitterInfoDto.to(sitterInfoDto));
-            return SitterInfoDto.from(updatedSitterInfo);
+            SitterInfo updatedEntity = repository.save(SitterInfoDto.to(sitterInfoDto));
+            return SitterInfoDto.from(updatedEntity);
         } catch (Exception ex){
             throw new PersistenceException(ex);
         }
@@ -69,8 +69,8 @@ public class SitterInfoServiceImpl implements SitterInfoService {
 
     @Override
     public SitterInfoDto findByUserId(Long userId) {
-        return SitterInfoDto.from(sitterInfoRepository.findByUserId(userId)
-                .filter(info -> !info.getIsDeleted())
+        return SitterInfoDto.from(repository.findByUserId(userId)
+                .filter(entry -> !entry.getIsDeleted())
                 .orElseThrow(EntityNotFoundException::new));
     }
 

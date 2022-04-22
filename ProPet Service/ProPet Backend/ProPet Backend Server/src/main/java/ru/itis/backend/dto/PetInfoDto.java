@@ -21,7 +21,7 @@ public class PetInfoDto {
     protected String nickname;
 
     public static PetInfoDto from(PetInfo info){
-        return PetInfoDto.builder()
+        return (info == null) ? null : PetInfoDto.builder()
                 .id(info.getId())
                 .userId(info.getUserId())
                 .imageKey(info.getImageKey())
@@ -30,7 +30,7 @@ public class PetInfoDto {
     }
 
     public static PetInfo to(PetInfoDto infoDto){
-        return PetInfo.builder()
+        return (infoDto == null) ? null : PetInfo.builder()
                 .id(infoDto.getId())
                 .imageKey(ImageLoader.getImageKeyForPet(infoDto))
                 .nickname(infoDto.getNickname())

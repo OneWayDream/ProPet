@@ -16,7 +16,7 @@ public class ActivationLinkDto {
     protected String linkValue;
 
     public static ActivationLinkDto from(ActivationLink activationLink){
-        return ActivationLinkDto.builder()
+        return (activationLink == null) ? null : ActivationLinkDto.builder()
                 .id(activationLink.getId())
                 .accountId(activationLink.getAccountId())
                 .linkValue(activationLink.getLinkValue())
@@ -24,7 +24,7 @@ public class ActivationLinkDto {
     }
 
     public static ActivationLink to(ActivationLinkDto activationLinkDto){
-        return ActivationLink.builder()
+        return (activationLinkDto == null) ? null : ActivationLink.builder()
                 .id(activationLinkDto.getId())
                 .accountId(activationLinkDto.getAccountId())
                 .linkValue(activationLinkDto.getLinkValue())

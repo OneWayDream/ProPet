@@ -21,7 +21,7 @@ import java.util.List;
 public class UsersController {
 
     @NonNull
-    protected UsersService usersService;
+    protected UsersService service;
 
     @Operation(summary = "Getting all users.")
     @ApiResponses(value = {
@@ -35,7 +35,7 @@ public class UsersController {
             headers = {"JWT"}
     )
     public ResponseEntity<List<UserDto>> getAllUsers() {
-        return ResponseEntity.ok(usersService.findAll());
+        return ResponseEntity.ok(service.findAll());
     }
 
     @Operation(summary = "Getting user by id.")
@@ -51,7 +51,7 @@ public class UsersController {
             headers = {"JWT"}
     )
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id){
-        return ResponseEntity.ok(usersService.findById(id));
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @Operation(summary = "Getting user by login.")
@@ -67,7 +67,7 @@ public class UsersController {
             headers = {"JWT"}
     )
     public ResponseEntity<UserDto> getUserByLogin(@PathVariable String login){
-        return ResponseEntity.ok(usersService.findUserByLogin(login));
+        return ResponseEntity.ok(service.findUserByLogin(login));
     }
 
     @Operation(summary = "Getting user by mail.")
@@ -83,7 +83,7 @@ public class UsersController {
             headers = {"JWT"}
     )
     public ResponseEntity<UserDto> getUserByMail(@PathVariable String mail){
-        return ResponseEntity.ok(usersService.findUserByMail(mail));
+        return ResponseEntity.ok(service.findUserByMail(mail));
     }
 
     @Operation(summary = "Adding a new user.")
@@ -98,7 +98,7 @@ public class UsersController {
             headers = {"JWT"}
     )
     public ResponseEntity<UserDto> addUser(@RequestBody UserDto userDto){
-        return ResponseEntity.ok(usersService.add(userDto));
+        return ResponseEntity.ok(service.add(userDto));
     }
 
     @Operation(summary = "Updating user by id.")
@@ -113,7 +113,7 @@ public class UsersController {
             headers = {"JWT"}
     )
     public ResponseEntity<UserDto> updateUserById(@RequestBody UserDto userDto){
-        return ResponseEntity.ok(usersService.update(userDto));
+        return ResponseEntity.ok(service.update(userDto));
     }
 
     @Operation(summary = "Deleting user by id.")
@@ -125,7 +125,7 @@ public class UsersController {
             headers = {"JWT"}
     )
     public ResponseEntity<?> deleteUserById(@PathVariable Long id){
-        usersService.delete(UserDto.builder().id(id).build());
+        service.delete(UserDto.builder().id(id).build());
         return ResponseEntity.ok().build();
     }
 
@@ -142,7 +142,7 @@ public class UsersController {
             headers = {"JWT"}
     )
     public ResponseEntity<UserDto> activateAccount(@PathVariable String linkValue){
-        return ResponseEntity.ok(usersService.activateUser(linkValue));
+        return ResponseEntity.ok(service.activateUser(linkValue));
     }
 
 

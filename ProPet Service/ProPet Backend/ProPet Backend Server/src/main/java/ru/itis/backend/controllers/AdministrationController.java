@@ -16,7 +16,7 @@ import ru.itis.backend.services.UsersService;
 public class AdministrationController {
 
     @NonNull
-    protected UsersService usersService;
+    protected UsersService service;
 
     @Operation(summary = "Ban user.")
     @ApiResponses(value = {
@@ -26,7 +26,7 @@ public class AdministrationController {
             headers = {"JWT"}
     )
     public ResponseEntity<?> banUserById(@PathVariable Long id){
-        usersService.banUser(id);
+        service.banUser(id);
         return ResponseEntity.ok().build();
     }
 

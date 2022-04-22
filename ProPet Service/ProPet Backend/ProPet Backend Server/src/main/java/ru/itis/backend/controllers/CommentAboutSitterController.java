@@ -10,40 +10,39 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.itis.backend.dto.PetInfoDto;
-import ru.itis.backend.dto.UserDto;
-import ru.itis.backend.services.PetInfoService;
+import ru.itis.backend.dto.CommentAboutSitterDto;
+import ru.itis.backend.services.CommentAboutSitterService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/pet-info")
+@RequestMapping("/comment-about-sitter")
 @RequiredArgsConstructor
-public class PetInfoController {
+public class CommentAboutSitterController {
 
     @NonNull
-    protected PetInfoService service;
+    protected CommentAboutSitterService service;
 
-    @Operation(summary = "Getting all pet cards.")
+    @Operation(summary = "Getting all comments.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success getting", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = PetInfoDto.class)
+                            schema = @Schema(implementation = CommentAboutSitterDto.class)
                     ))
             })
     })
     @GetMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<List<PetInfoDto>> getAllPets() {
+    public ResponseEntity<List<CommentAboutSitterDto>> getAllComments() {
         return ResponseEntity.ok(service.findAll());
     }
 
-    @Operation(summary = "Getting pet info by id.")
+    @Operation(summary = "Getting a comment by id.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success getting", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = PetInfoDto.class)
+                            schema = @Schema(implementation = CommentAboutSitterDto.class)
                     ))
             })
     })
@@ -51,15 +50,15 @@ public class PetInfoController {
             value = "/by-id/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<PetInfoDto> getPetInfoById(@PathVariable Long id){
+    public ResponseEntity<CommentAboutSitterDto> getCommentById(@PathVariable Long id){
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @Operation(summary = "Getting all pet cards by user's id.")
+    @Operation(summary = "Getting a comment by account id.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success getting", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = PetInfoDto.class)
+                            schema = @Schema(implementation = CommentAboutSitterDto.class)
                     ))
             })
     })
@@ -67,41 +66,42 @@ public class PetInfoController {
             value = "/by-user-id/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<List<PetInfoDto>> getAllPetsByUserId(@PathVariable Long id){
+    public ResponseEntity<List<CommentAboutSitterDto>> getCommentsByUserId(@PathVariable Long id){
         return ResponseEntity.ok(service.findAllByUserId(id));
     }
 
-    @Operation(summary = "Adding a new pet info.")
+    @Operation(summary = "Adding a new comment.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success adding", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = PetInfoDto.class)
+                            schema = @Schema(implementation = CommentAboutSitterDto.class)
                     ))
             })
     })
     @PostMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<PetInfoDto> addPet(@RequestBody PetInfoDto petInfoDto){
-        return ResponseEntity.ok(service.add(petInfoDto));
+    public ResponseEntity<CommentAboutSitterDto> addComment(@RequestBody CommentAboutSitterDto commentAboutSitterDto){
+        return ResponseEntity.ok(service.add(commentAboutSitterDto));
     }
 
-    @Operation(summary = "Updating a pet card by id.")
+    @Operation(summary = "Updating a comment by id.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success updating", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = PetInfoDto.class)
+                            schema = @Schema(implementation = CommentAboutSitterDto.class)
                     ))
             })
     })
     @PatchMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<PetInfoDto> updatePetInfoById(@RequestBody PetInfoDto petInfoDto){
-        return ResponseEntity.ok(service.update(petInfoDto));
+    public ResponseEntity<CommentAboutSitterDto> updateCommentById(
+            @RequestBody CommentAboutSitterDto commentAboutSitterDto){
+        return ResponseEntity.ok(service.update(commentAboutSitterDto));
     }
 
-    @Operation(summary = "Deleting pet info by id.")
+    @Operation(summary = "Deleting a comment by id.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success deleting")
     })
@@ -109,8 +109,8 @@ public class PetInfoController {
             value = "/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<?> deletePetInfoById(@PathVariable Long id){
-        service.delete(PetInfoDto.builder().id(id).build());
+    public ResponseEntity<?> deleteCommentById(@PathVariable Long id){
+        service.delete(CommentAboutSitterDto.builder().id(id).build());
         return ResponseEntity.ok().build();
     }
 

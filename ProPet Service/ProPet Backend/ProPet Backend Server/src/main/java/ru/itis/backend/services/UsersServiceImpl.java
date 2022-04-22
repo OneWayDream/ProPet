@@ -22,25 +22,25 @@ import java.util.stream.Collectors;
 public class UsersServiceImpl implements UsersService {
 
     @NonNull
-    protected UsersRepository usersRepository;
+    protected UsersRepository repository;
     @NonNull
     protected ActivationLinksService activationLinksService;
 
     @Override
     public List<UserDto> findAll() {
-        return UserDto.from(usersRepository.findAll().stream()
-                .filter(user -> !user.getIsDeleted())
+        return UserDto.from(repository.findAll().stream()
+                .filter(entry -> !entry.getIsDeleted())
                 .collect(Collectors.toList()));
     }
 
     @Override
     public void delete(UserDto userDto) {
         try{
-            User userForDelete = usersRepository.findById(userDto.getId())
-                    .filter(user -> !user.getIsDeleted())
+            User entityToDelete = repository.findById(userDto.getId())
+                    .filter(entry -> !entry.getIsDeleted())
                     .orElseThrow(EntityNotExistsException::new);
-            userForDelete.setIsDeleted(true);
-            usersRepository.save(userForDelete);
+            entityToDelete.setIsDeleted(true);
+            repository.save(entityToDelete);
         } catch (Exception ex){
             if (ex instanceof EntityNotExistsException){
                 throw ex;
@@ -51,23 +51,23 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public UserDto add(UserDto userDto) {
-        User newUser = UserDto.to(userDto);
-        usersRepository.save(newUser);
-        return UserDto.from(newUser);
+        User newEntity = UserDto.to(userDto);
+        repository.save(newEntity);
+        return UserDto.from(newEntity);
     }
 
     @Override
     public UserDto findById(Long aLong) {
-        return UserDto.from(usersRepository.findById(aLong)
-                .filter(user -> !user.getIsDeleted())
+        return UserDto.from(repository.findById(aLong)
+                .filter(entry -> !entry.getIsDeleted())
                 .orElseThrow(EntityNotFoundException::new));
     }
 
     @Override
     public UserDto update(UserDto userDto) {
         try{
-            User updatedUser = usersRepository.save(UserDto.to(userDto));
-            return UserDto.from(updatedUser);
+            User updatedEntity = repository.save(UserDto.to(userDto));
+            return UserDto.from(updatedEntity);
         } catch (Exception ex){
         try{
             String message = ex.getCause().getCause().getMessage();
@@ -86,9 +86,9 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public UserDto activateUser(String linkValue) {
         ActivationLinkDto activationLinkDto = activationLinksService.findByLinkValue(linkValue);
-        User userForActivation = usersRepository.getById(activationLinkDto.getAccountId());
+        User userForActivation = repository.getById(activationLinkDto.getAccountId());
         userForActivation.setState(UserState.ACTIVE);
-        usersRepository.save(userForActivation);
+        repository.save(userForActivation);
         activationLinksService.delete(activationLinkDto);
         return UserDto.from(userForActivation);
     }
@@ -96,11 +96,11 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public void banUser(Long userId) {
         try{
-            User userForBan = usersRepository.findById(userId)
-                    .filter(item -> item.getIsDeleted()==null)
+            User userForBan = repository.findById(userId)
+                    .filter(entry -> entry.getIsDeleted()==null)
                     .orElseThrow(EntityNotExistsException::new);
             userForBan.setState(UserState.BANNED);
-            usersRepository.save(userForBan);
+            repository.save(userForBan);
         } catch (Exception ex){
             throw new PersistenceException(ex);
         }
@@ -108,15 +108,15 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public UserDto findUserByLogin(String login) {
-        return UserDto.from(usersRepository.findByLogin(login)
-                .filter(user -> !user.getIsDeleted())
+        return UserDto.from(repository.findByLogin(login)
+                .filter(entry -> !entry.getIsDeleted())
                 .orElseThrow(EntityNotFoundException::new));
     }
 
     @Override
     public UserDto findUserByMail(String mail) {
-        return UserDto.from(usersRepository.findByMail(mail)
-                .filter(user -> !user.getIsDeleted())
+        return UserDto.from(repository.findByMail(mail)
+                .filter(entry -> !entry.getIsDeleted())
                 .orElseThrow(EntityNotFoundException::new));
     }
 }

@@ -3,11 +3,11 @@ package ru.itis.backend.services;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.itis.backend.dto.PetInfoDto;
+import ru.itis.backend.dto.AppealAnswerDto;
 import ru.itis.backend.exceptions.EntityNotExistsException;
 import ru.itis.backend.exceptions.EntityNotFoundException;
-import ru.itis.backend.models.PetInfo;
-import ru.itis.backend.repositories.PetInfoRepository;
+import ru.itis.backend.models.AppealAnswer;
+import ru.itis.backend.repositories.AppealAnswerRepository;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -15,22 +15,22 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PetInfoServiceImpl implements PetInfoService {
+public class AppealAnswerServiceImpl implements AppealAnswerService {
 
     @NonNull
-    protected PetInfoRepository repository;
+    protected AppealAnswerRepository repository;
 
     @Override
-    public List<PetInfoDto> findAll() {
-        return PetInfoDto.from(repository.findAll().stream()
+    public List<AppealAnswerDto> findAll() {
+        return AppealAnswerDto.from(repository.findAll().stream()
                 .filter(entry -> !entry.getIsDeleted())
                 .collect(Collectors.toList()));
     }
 
     @Override
-    public void delete(PetInfoDto petInfoDto) {
+    public void delete(AppealAnswerDto appealAnswerDto) {
         try{
-            PetInfo entityToDelete = repository.findById(petInfoDto.getId())
+            AppealAnswer entityToDelete = repository.findById(appealAnswerDto.getId())
                     .filter(entry -> !entry.getIsDeleted())
                     .orElseThrow(EntityNotExistsException::new);
             entityToDelete.setIsDeleted(true);
@@ -44,30 +44,23 @@ public class PetInfoServiceImpl implements PetInfoService {
     }
 
     @Override
-    public PetInfoDto add(PetInfoDto petInfoDto) {
-        PetInfo newEntity = PetInfoDto.to(petInfoDto);
+    public AppealAnswerDto add(AppealAnswerDto appealAnswerDto) {
+        AppealAnswer newEntity = AppealAnswerDto.to(appealAnswerDto);
         repository.save(newEntity);
-        return PetInfoDto.from(newEntity);
+        return AppealAnswerDto.from(newEntity);
     }
 
     @Override
-    public PetInfoDto findById(Long aLong) {
-        return PetInfoDto.from(repository.findById(aLong)
+    public AppealAnswerDto findById(Long aLong) {
+        return AppealAnswerDto.from(repository.findById(aLong)
                 .filter(entry -> !entry.getIsDeleted())
                 .orElseThrow(EntityNotFoundException::new));
     }
 
     @Override
-    public PetInfoDto update(PetInfoDto petInfoDto) {
-        PetInfo updatedEntity = repository.save(PetInfoDto.to(petInfoDto));
-        return PetInfoDto.from(updatedEntity);
+    public AppealAnswerDto update(AppealAnswerDto appealAnswerDto) {
+        AppealAnswer updatedEntity = repository.save(AppealAnswerDto.to(appealAnswerDto));
+        return AppealAnswerDto.from(updatedEntity);
     }
 
-    @Override
-    public List<PetInfoDto> findAllByUserId(Long userId) {
-        return PetInfoDto.from(repository.findAllByUserId(userId)
-                        .stream()
-                        .filter(entry -> !entry.getIsDeleted())
-                        .collect(Collectors.toList()));
-    }
 }
