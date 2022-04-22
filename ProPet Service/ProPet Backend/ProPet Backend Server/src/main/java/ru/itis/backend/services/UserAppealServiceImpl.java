@@ -59,6 +59,7 @@ public class UserAppealServiceImpl implements UserAppealService {
 
     @Override
     public UserAppealDto update(UserAppealDto userAppealDto) {
+        findById(userAppealDto.getId());
         UserAppeal updatedEntity = repository.save(UserAppealDto.to(userAppealDto));
         return UserAppealDto.from(updatedEntity);
     }

@@ -59,12 +59,9 @@ public class SitterInfoServiceImpl implements SitterInfoService {
 
     @Override
     public SitterInfoDto update(SitterInfoDto sitterInfoDto) {
-        try{
-            SitterInfo updatedEntity = repository.save(SitterInfoDto.to(sitterInfoDto));
-            return SitterInfoDto.from(updatedEntity);
-        } catch (Exception ex){
-            throw new PersistenceException(ex);
-        }
+        findById(sitterInfoDto.getId());
+        SitterInfo updatedEntity = repository.save(SitterInfoDto.to(sitterInfoDto));
+        return SitterInfoDto.from(updatedEntity);
     }
 
     @Override

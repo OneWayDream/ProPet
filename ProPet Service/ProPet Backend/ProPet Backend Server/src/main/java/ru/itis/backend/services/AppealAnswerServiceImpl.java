@@ -59,6 +59,7 @@ public class AppealAnswerServiceImpl implements AppealAnswerService {
 
     @Override
     public AppealAnswerDto update(AppealAnswerDto appealAnswerDto) {
+        findById(appealAnswerDto.getId());
         AppealAnswer updatedEntity = repository.save(AppealAnswerDto.to(appealAnswerDto));
         return AppealAnswerDto.from(updatedEntity);
     }

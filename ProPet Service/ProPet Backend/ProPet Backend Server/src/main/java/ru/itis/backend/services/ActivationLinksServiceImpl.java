@@ -57,6 +57,7 @@ public class ActivationLinksServiceImpl implements ActivationLinksService {
 
     @Override
     public ActivationLinkDto update(ActivationLinkDto activationLinkDto) {
+        findById(activationLinkDto.getId());
         ActivationLink updatedEntity = repository.save(ActivationLinkDto.to(activationLinkDto));
         return ActivationLinkDto.from(updatedEntity);
     }

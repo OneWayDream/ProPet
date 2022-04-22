@@ -59,6 +59,7 @@ public class PetInfoServiceImpl implements PetInfoService {
 
     @Override
     public PetInfoDto update(PetInfoDto petInfoDto) {
+        findById(petInfoDto.getId());
         PetInfo updatedEntity = repository.save(PetInfoDto.to(petInfoDto));
         return PetInfoDto.from(updatedEntity);
     }

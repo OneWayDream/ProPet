@@ -59,6 +59,7 @@ public class CommentAboutSitterServiceImpl implements CommentAboutSitterService 
 
     @Override
     public CommentAboutSitterDto update(CommentAboutSitterDto commentAboutSitterDto) {
+        findById(commentAboutSitterDto.getId());
         CommentAboutSitter updatedEntity = repository.save(CommentAboutSitterDto.to(commentAboutSitterDto));
         return CommentAboutSitterDto.from(updatedEntity);
     }

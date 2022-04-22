@@ -66,20 +66,21 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public UserDto update(UserDto userDto) {
         try{
+            findById(userDto.getId());
             User updatedEntity = repository.save(UserDto.to(userDto));
             return UserDto.from(updatedEntity);
         } catch (Exception ex){
-        try{
-            String message = ex.getCause().getCause().getMessage();
-            if (message.contains("account_mail_key")){
-                throw new MailAlreadyInUseException(ex);
-            } else if (message.contains("account_login_key")){
-                throw new LoginAlreadyInUseException(ex);
+            try{
+                String message = ex.getCause().getCause().getMessage();
+                if (message.contains("account_mail_key")){
+                    throw new MailAlreadyInUseException(ex);
+                } else if (message.contains("account_login_key")){
+                    throw new LoginAlreadyInUseException(ex);
+                }
+            } catch (NullPointerException exception){
+                //ignore
             }
-        } catch (NullPointerException exception){
-            //ignore
-        }
-        throw ex;
+            throw ex;
         }
     }
 
