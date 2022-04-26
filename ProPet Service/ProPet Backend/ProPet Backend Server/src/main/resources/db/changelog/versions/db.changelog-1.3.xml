@@ -8,14 +8,14 @@
         http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet id="6" author="OneWayDream">
+    <changeSet id="5" author="OneWayDream">
         <comment>Adding a sitter's cards table</comment>
         <createTable tableName="sitter_info">
             <column name="id" type="bigint" autoIncrement="true" incrementBy="1" startWith="1">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="user_id" type="bigint">
-                <constraints nullable="false" unique="true" foreignKeyName="fk_user_id" referencedTableName="account"
+            <column name="account_id" type="bigint">
+                <constraints nullable="false" unique="true" foreignKeyName="fk_account_id" referencedTableName="account"
                              referencedColumnNames="id"/>
             </column>
             <column name="name" type="varchar">
@@ -48,7 +48,9 @@
             <column name="rate_5" type="int" defaultValue="0">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_deleted" type="boolean" defaultValue="false"/>
+            <column name="is_deleted" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 

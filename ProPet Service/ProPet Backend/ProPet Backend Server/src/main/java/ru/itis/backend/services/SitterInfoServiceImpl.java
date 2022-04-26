@@ -8,6 +8,7 @@ import ru.itis.backend.exceptions.EntityNotExistsException;
 import ru.itis.backend.exceptions.EntityNotFoundException;
 import ru.itis.backend.models.SitterInfo;
 import ru.itis.backend.repositories.SitterInfoRepository;
+import ru.itis.backend.utils.PropertiesUtils;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -59,14 +60,15 @@ public class SitterInfoServiceImpl implements SitterInfoService {
 
     @Override
     public SitterInfoDto update(SitterInfoDto sitterInfoDto) {
-        findById(sitterInfoDto.getId());
-        SitterInfo updatedEntity = repository.save(SitterInfoDto.to(sitterInfoDto));
+        SitterInfoDto entity = findById(sitterInfoDto.getId());
+        PropertiesUtils.copyNonNullProperties(sitterInfoDto, entity);
+        SitterInfo updatedEntity = repository.save(SitterInfoDto.to(entity));
         return SitterInfoDto.from(updatedEntity);
     }
 
     @Override
     public SitterInfoDto findByUserId(Long userId) {
-        return SitterInfoDto.from(repository.findByUserId(userId)
+        return SitterInfoDto.from(repository.findByAccountId(userId)
                 .filter(entry -> !entry.getIsDeleted())
                 .orElseThrow(EntityNotFoundException::new));
     }

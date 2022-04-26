@@ -15,13 +15,13 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="account_id" type="bigint">
-                <constraints nullable="false" unique="true" foreignKeyName="fk_account_id" referencedTableName="account"
-                             referencedColumnNames="id"/>
+                <constraints nullable="false" unique="true" foreignKeyName="fk_account_id"
+                             referencedTableName="account" referencedColumnNames="id"/>
             </column>
             <column name="link_value" type="varchar">
-                <constraints nullable="true" unique="true"/>
+                <constraints nullable="false" unique="true"/>
             </column>
-            <column name="is_deleted" type="boolean">
+            <column name="is_deleted" type="boolean" defaultValue="false">
                 <constraints nullable="false"/>
             </column>
         </createTable>

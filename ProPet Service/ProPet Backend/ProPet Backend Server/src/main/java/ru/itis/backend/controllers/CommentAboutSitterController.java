@@ -9,7 +9,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.backend.annotations.JwtAccessConstraint;
 import ru.itis.backend.dto.CommentAboutSitterDto;
 import ru.itis.backend.services.CommentAboutSitterService;
 
@@ -34,7 +36,8 @@ public class CommentAboutSitterController {
     @GetMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<List<CommentAboutSitterDto>> getAllComments() {
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<List<CommentAboutSitterDto>> getAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
@@ -50,7 +53,8 @@ public class CommentAboutSitterController {
             value = "/by-id/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<CommentAboutSitterDto> getCommentById(@PathVariable Long id){
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<CommentAboutSitterDto> getById(@PathVariable Long id){
         return ResponseEntity.ok(service.findById(id));
     }
 
@@ -66,7 +70,16 @@ public class CommentAboutSitterController {
             value = "/by-user-id/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<List<CommentAboutSitterDto>> getCommentsByUserId(@PathVariable Long id){
+    @PreAuthorize("isAuthenticated()")
+    @JwtAccessConstraint(
+            jwtFieldName = "id",
+            argName = "id",
+            opRoles = true,
+            jwtRoleFieldName = "role",
+            opRolesArray = {"MODER", "ADMIN"}
+    )
+    public ResponseEntity<List<CommentAboutSitterDto>> getByUserId(@PathVariable Long id,
+                                                                   @RequestHeader("JWT") String token){
         return ResponseEntity.ok(service.findAllByUserId(id));
     }
 
@@ -81,7 +94,17 @@ public class CommentAboutSitterController {
     @PostMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<CommentAboutSitterDto> addComment(@RequestBody CommentAboutSitterDto commentAboutSitterDto){
+    @PreAuthorize("isAuthenticated()")
+    @JwtAccessConstraint(
+            jwtFieldName = "id",
+            argName = "commentAboutSitterDto",
+            argField = "accountId",
+            opRoles = true,
+            jwtRoleFieldName = "role",
+            opRolesArray = {"MODER", "ADMIN"}
+    )
+    public ResponseEntity<CommentAboutSitterDto> add(@RequestBody CommentAboutSitterDto commentAboutSitterDto,
+                                                     @RequestHeader("JWT") String token){
         return ResponseEntity.ok(service.add(commentAboutSitterDto));
     }
 
@@ -96,7 +119,8 @@ public class CommentAboutSitterController {
     @PatchMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<CommentAboutSitterDto> updateCommentById(
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<CommentAboutSitterDto> updateById(
             @RequestBody CommentAboutSitterDto commentAboutSitterDto){
         return ResponseEntity.ok(service.update(commentAboutSitterDto));
     }
@@ -109,7 +133,8 @@ public class CommentAboutSitterController {
             value = "/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<?> deleteCommentById(@PathVariable Long id){
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<?> deleteById(@PathVariable Long id){
         service.delete(CommentAboutSitterDto.builder().id(id).build());
         return ResponseEntity.ok().build();
     }

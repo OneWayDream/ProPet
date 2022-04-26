@@ -9,7 +9,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.backend.annotations.JwtAccessConstraint;
 import ru.itis.backend.dto.PetInfoDto;
 import ru.itis.backend.dto.SitterInfoDto;
 import ru.itis.backend.services.SitterInfoService;
@@ -35,7 +37,8 @@ public class SitterInfoController {
     @GetMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<List<SitterInfoDto>> getAllPets() {
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<List<SitterInfoDto>> getAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
@@ -51,7 +54,8 @@ public class SitterInfoController {
             value = "/by-id/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<SitterInfoDto> getPetInfoById(@PathVariable Long id){
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<SitterInfoDto> getById(@PathVariable Long id){
         return ResponseEntity.ok(service.findById(id));
     }
 
@@ -67,7 +71,16 @@ public class SitterInfoController {
             value = "/by-user-id/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<SitterInfoDto> getAllPetsByUserId(@PathVariable Long id){
+    @PreAuthorize("isAuthenticated()")
+    @JwtAccessConstraint(
+            jwtFieldName = "id",
+            argName = "id",
+            opRoles = true,
+            jwtRoleFieldName = "role",
+            opRolesArray = {"MODER", "ADMIN"}
+    )
+    public ResponseEntity<SitterInfoDto> getAllByUserId(@PathVariable Long id,
+                                                            @RequestHeader("JWT") String token){
         return ResponseEntity.ok(service.findByUserId(id));
     }
 
@@ -82,7 +95,17 @@ public class SitterInfoController {
     @PostMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<SitterInfoDto> addPet(@RequestBody SitterInfoDto sitterInfoDto){
+    @PreAuthorize("isAuthenticated()")
+    @JwtAccessConstraint(
+            jwtFieldName = "id",
+            argName = "sitterInfoDto",
+            argField = "accountId",
+            opRoles = true,
+            jwtRoleFieldName = "role",
+            opRolesArray = {"MODER", "ADMIN"}
+    )
+    public ResponseEntity<SitterInfoDto> add(@RequestBody SitterInfoDto sitterInfoDto,
+                                                    @RequestHeader("JWT") String token){
         return ResponseEntity.ok(service.add(sitterInfoDto));
     }
 
@@ -97,7 +120,17 @@ public class SitterInfoController {
     @PatchMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<SitterInfoDto> updatePetInfoById(@RequestBody SitterInfoDto sitterInfoDto){
+    @PreAuthorize("isAuthenticated()")
+    @JwtAccessConstraint(
+            jwtFieldName = "id",
+            argName = "sitterInfoDto",
+            argField = "accountId",
+            opRoles = true,
+            jwtRoleFieldName = "role",
+            opRolesArray = {"MODER", "ADMIN"}
+    )
+    public ResponseEntity<SitterInfoDto> updateById(@RequestBody SitterInfoDto sitterInfoDto,
+                                                    @RequestHeader("JWT") String token){
         return ResponseEntity.ok(service.update(sitterInfoDto));
     }
 
@@ -109,7 +142,17 @@ public class SitterInfoController {
             value = "/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<?> deletePetInfoById(@PathVariable Long id){
+    @PreAuthorize("isAuthenticated()")
+    @JwtAccessConstraint(
+            jwtFieldName = "id",
+            argName = "sitterInfoDto",
+            argField = "accountId",
+            opRoles = true,
+            jwtRoleFieldName = "role",
+            opRolesArray = {"MODER", "ADMIN"}
+    )
+    public ResponseEntity<?> deleteById(@PathVariable Long id,
+                                               @RequestHeader("JWT") String token){
         service.delete(SitterInfoDto.builder().id(id).build());
         return ResponseEntity.ok().build();
     }

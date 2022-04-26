@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.backend.dto.ActivationLinkDto;
 import ru.itis.backend.services.ActivationLinksService;
@@ -34,7 +35,8 @@ public class ActivationLinksController {
     @GetMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<List<ActivationLinkDto>> getAllActivationLinks() {
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<List<ActivationLinkDto>> getAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
@@ -50,7 +52,8 @@ public class ActivationLinksController {
             value = "/by-id/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<ActivationLinkDto> getActivationLinkById(@PathVariable Long id){
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<ActivationLinkDto> getById(@PathVariable Long id){
         return ResponseEntity.ok(service.findById(id));
     }
 
@@ -66,7 +69,8 @@ public class ActivationLinksController {
             value = "/by-account-id/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<ActivationLinkDto> getActivationLinkByAccountId(@PathVariable Long id){
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<ActivationLinkDto> getByAccountId(@PathVariable Long id){
         return ResponseEntity.ok(service.findByAccountId(id));
     }
 
@@ -81,7 +85,8 @@ public class ActivationLinksController {
     @PostMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<ActivationLinkDto> addActivationLink(@RequestBody ActivationLinkDto activationLinkDto){
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<ActivationLinkDto> add(@RequestBody ActivationLinkDto activationLinkDto){
         return ResponseEntity.ok(service.add(activationLinkDto));
     }
 
@@ -96,7 +101,8 @@ public class ActivationLinksController {
     @PatchMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<ActivationLinkDto> updateActivationLinkById(@RequestBody ActivationLinkDto activationLinkDto){
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<ActivationLinkDto> updateById(@RequestBody ActivationLinkDto activationLinkDto){
         return ResponseEntity.ok(service.update(activationLinkDto));
     }
 
@@ -108,7 +114,8 @@ public class ActivationLinksController {
             value = "/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<?> deleteActivationLinkById(@PathVariable Long id){
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<?> deleteById(@PathVariable Long id){
         service.delete(ActivationLinkDto.builder().id(id).build());
         return ResponseEntity.ok().build();
     }

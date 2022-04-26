@@ -20,15 +20,15 @@ public class ActivationLink {
     @OneToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id",
             nullable = false, insertable = false, updatable = false)
-    protected User user;
+    protected Account account;
 
-    @Column(name = "account_id", unique = true)
+    @Column(name = "account_id", unique = true, nullable = false)
     protected Long accountId;
 
-    @Column(name = "link_value", unique = true)
+    @Column(name = "link_value", unique = true, nullable = false)
     protected String linkValue;
 
-    @Column(name = "is_deleted")
+    @Column(name = "is_deleted", nullable = false)
     protected Boolean isDeleted = false;
 
 }

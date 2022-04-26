@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface CommentAboutSitterRepository extends JpaRepository<CommentAboutSitter, Long> {
 
-    List<CommentAboutSitter> findAllByUserId(Long userId);
+    List<CommentAboutSitter> findAllByAccountId(Long accountId);
 
 }

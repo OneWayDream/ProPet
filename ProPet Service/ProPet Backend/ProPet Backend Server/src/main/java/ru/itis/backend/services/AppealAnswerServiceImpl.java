@@ -8,6 +8,7 @@ import ru.itis.backend.exceptions.EntityNotExistsException;
 import ru.itis.backend.exceptions.EntityNotFoundException;
 import ru.itis.backend.models.AppealAnswer;
 import ru.itis.backend.repositories.AppealAnswerRepository;
+import ru.itis.backend.utils.PropertiesUtils;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -59,8 +60,9 @@ public class AppealAnswerServiceImpl implements AppealAnswerService {
 
     @Override
     public AppealAnswerDto update(AppealAnswerDto appealAnswerDto) {
-        findById(appealAnswerDto.getId());
-        AppealAnswer updatedEntity = repository.save(AppealAnswerDto.to(appealAnswerDto));
+        AppealAnswerDto entity = findById(appealAnswerDto.getId());
+        PropertiesUtils.copyNonNullProperties(appealAnswerDto, entity);
+        AppealAnswer updatedEntity = repository.save(AppealAnswerDto.to(entity));
         return AppealAnswerDto.from(updatedEntity);
     }
 

@@ -9,9 +9,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.backend.dto.RegistrationForm;
-import ru.itis.backend.dto.UserDto;
+import ru.itis.backend.dto.AccountDto;
 import ru.itis.backend.services.RegistrationService;
 
 @RestController
@@ -26,15 +27,16 @@ public class RegistrationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success registration", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = UserDto.class)
+                            schema = @Schema(implementation = AccountDto.class)
                     ))
             })
     })
     @PostMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<UserDto> registerNewUser(@RequestBody RegistrationForm registrationForm){
-        return ResponseEntity.ok(service.registerNewUser(registrationForm));
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<AccountDto> registerNewUser(@RequestBody RegistrationForm registrationForm){
+        return ResponseEntity.ok(service.registerNewAccount(registrationForm));
     }
 
 }

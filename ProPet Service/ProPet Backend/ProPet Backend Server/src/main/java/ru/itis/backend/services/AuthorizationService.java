@@ -1,10 +1,10 @@
 package ru.itis.backend.services;
 
 import ru.itis.backend.dto.AuthorizationForm;
-import ru.itis.backend.dto.UserDto;
+import ru.itis.backend.dto.AccountDto;
 
 public interface AuthorizationService {
 
-    UserDto authorizeUser(AuthorizationForm authorizationForm);
+    AccountDto authorizeUser(AuthorizationForm authorizationForm);
 
 }

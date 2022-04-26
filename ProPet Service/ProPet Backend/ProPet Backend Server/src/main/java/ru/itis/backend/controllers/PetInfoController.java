@@ -9,9 +9,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.backend.annotations.JwtAccessConstraint;
 import ru.itis.backend.dto.PetInfoDto;
-import ru.itis.backend.dto.UserDto;
 import ru.itis.backend.services.PetInfoService;
 
 import java.util.List;
@@ -35,7 +36,8 @@ public class PetInfoController {
     @GetMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<List<PetInfoDto>> getAllPets() {
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<List<PetInfoDto>> getAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
@@ -51,7 +53,8 @@ public class PetInfoController {
             value = "/by-id/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<PetInfoDto> getPetInfoById(@PathVariable Long id){
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<PetInfoDto> getById(@PathVariable Long id){
         return ResponseEntity.ok(service.findById(id));
     }
 
@@ -67,7 +70,16 @@ public class PetInfoController {
             value = "/by-user-id/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<List<PetInfoDto>> getAllPetsByUserId(@PathVariable Long id){
+    @PreAuthorize("isAuthenticated()")
+    @JwtAccessConstraint(
+            jwtFieldName = "id",
+            argName = "id",
+            opRoles = true,
+            jwtRoleFieldName = "role",
+            opRolesArray = {"MODER", "ADMIN"}
+    )
+    public ResponseEntity<List<PetInfoDto>> getAllByUserId(@PathVariable Long id,
+                                                           @RequestHeader("JWT") String token){
         return ResponseEntity.ok(service.findAllByUserId(id));
     }
 
@@ -82,7 +94,17 @@ public class PetInfoController {
     @PostMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<PetInfoDto> addPet(@RequestBody PetInfoDto petInfoDto){
+    @PreAuthorize("isAuthenticated()")
+    @JwtAccessConstraint(
+            jwtFieldName = "id",
+            argName = "petInfoDto",
+            argField = "accountId",
+            opRoles = true,
+            jwtRoleFieldName = "role",
+            opRolesArray = {"MODER", "ADMIN"}
+    )
+    public ResponseEntity<PetInfoDto> add(@RequestBody PetInfoDto petInfoDto,
+                                          @RequestHeader("JWT") String token){
         return ResponseEntity.ok(service.add(petInfoDto));
     }
 
@@ -97,7 +119,17 @@ public class PetInfoController {
     @PatchMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<PetInfoDto> updatePetInfoById(@RequestBody PetInfoDto petInfoDto){
+    @PreAuthorize("isAuthenticated()")
+    @JwtAccessConstraint(
+            jwtFieldName = "id",
+            argName = "petInfoDto",
+            argField = "accountId",
+            opRoles = true,
+            jwtRoleFieldName = "role",
+            opRolesArray = {"MODER", "ADMIN"}
+    )
+    public ResponseEntity<PetInfoDto> updateById(@RequestBody PetInfoDto petInfoDto,
+                                                     @RequestHeader("JWT") String token){
         return ResponseEntity.ok(service.update(petInfoDto));
     }
 
@@ -109,7 +141,15 @@ public class PetInfoController {
             value = "/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<?> deletePetInfoById(@PathVariable Long id){
+    @PreAuthorize("isAuthenticated()")
+    @JwtAccessConstraint(
+            jwtFieldName = "id",
+            argName = "id",
+            opRoles = true,
+            jwtRoleFieldName = "role",
+            opRolesArray = {"MODER", "ADMIN"}
+    )
+    public ResponseEntity<?> deleteById(@PathVariable Long id, @RequestHeader("JWT") String token){
         service.delete(PetInfoDto.builder().id(id).build());
         return ResponseEntity.ok().build();
     }

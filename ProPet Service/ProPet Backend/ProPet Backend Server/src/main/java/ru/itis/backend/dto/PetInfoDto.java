@@ -16,14 +16,14 @@ import java.util.stream.Collectors;
 public class PetInfoDto {
 
     protected Long id;
-    protected Long userId;
+    protected Long accountId;
     protected String imageKey;
     protected String nickname;
 
     public static PetInfoDto from(PetInfo info){
         return (info == null) ? null : PetInfoDto.builder()
                 .id(info.getId())
-                .userId(info.getUserId())
+                .accountId(info.getAccountId())
                 .imageKey(info.getImageKey())
                 .nickname(info.getNickname())
                 .build();
@@ -34,7 +34,7 @@ public class PetInfoDto {
                 .id(infoDto.getId())
                 .imageKey(ImageLoader.getImageKeyForPet(infoDto))
                 .nickname(infoDto.getNickname())
-                .userId(infoDto.getUserId())
+                .accountId(infoDto.getAccountId())
                 .isDeleted(false)
                 .build();
     }

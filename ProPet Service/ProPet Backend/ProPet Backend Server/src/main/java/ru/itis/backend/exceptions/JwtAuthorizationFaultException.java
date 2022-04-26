@@ -1,6 +1,6 @@
 package ru.itis.backend.exceptions;
 
-public class JwtAuthorizationFaultException extends RuntimeException{
+public class JwtAuthorizationFaultException extends JwtServerException{
 
     public JwtAuthorizationFaultException() {
         super();

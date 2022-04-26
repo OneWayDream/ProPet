@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface SitterInfoRepository extends JpaRepository<SitterInfo, Long> {
 
-    Optional<SitterInfo> findByUserId(Long userId);
+    Optional<SitterInfo> findByAccountId(Long accountId);
 
 }

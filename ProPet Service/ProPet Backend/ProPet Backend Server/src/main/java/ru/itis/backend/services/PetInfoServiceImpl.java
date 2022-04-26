@@ -8,6 +8,7 @@ import ru.itis.backend.exceptions.EntityNotExistsException;
 import ru.itis.backend.exceptions.EntityNotFoundException;
 import ru.itis.backend.models.PetInfo;
 import ru.itis.backend.repositories.PetInfoRepository;
+import ru.itis.backend.utils.PropertiesUtils;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -59,14 +60,15 @@ public class PetInfoServiceImpl implements PetInfoService {
 
     @Override
     public PetInfoDto update(PetInfoDto petInfoDto) {
-        findById(petInfoDto.getId());
-        PetInfo updatedEntity = repository.save(PetInfoDto.to(petInfoDto));
+        PetInfoDto entity = findById(petInfoDto.getId());
+        PropertiesUtils.copyNonNullProperties(petInfoDto, entity);
+        PetInfo updatedEntity = repository.save(PetInfoDto.to(entity));
         return PetInfoDto.from(updatedEntity);
     }
 
     @Override
     public List<PetInfoDto> findAllByUserId(Long userId) {
-        return PetInfoDto.from(repository.findAllByUserId(userId)
+        return PetInfoDto.from(repository.findAllByAccountId(userId)
                         .stream()
                         .filter(entry -> !entry.getIsDeleted())
                         .collect(Collectors.toList()));

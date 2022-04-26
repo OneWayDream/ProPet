@@ -9,6 +9,7 @@ import ru.itis.backend.exceptions.EntityNotFoundException;
 import ru.itis.backend.exceptions.LinkNotExistsException;
 import ru.itis.backend.models.ActivationLink;
 import ru.itis.backend.repositories.ActivationLinkRepository;
+import ru.itis.backend.utils.PropertiesUtils;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -32,7 +33,7 @@ public class ActivationLinksServiceImpl implements ActivationLinksService {
     public void delete(ActivationLinkDto activationLinkDto) {
         try{
             ActivationLink entityToDelete = repository.findById(activationLinkDto.getId())
-                    .filter(entry -> entry.getIsDeleted()==null)
+                    .filter(entry -> !entry.getIsDeleted())
                     .orElseThrow(EntityNotExistsException::new);
             entityToDelete.setIsDeleted(true);
             repository.save(entityToDelete);
@@ -57,8 +58,9 @@ public class ActivationLinksServiceImpl implements ActivationLinksService {
 
     @Override
     public ActivationLinkDto update(ActivationLinkDto activationLinkDto) {
-        findById(activationLinkDto.getId());
-        ActivationLink updatedEntity = repository.save(ActivationLinkDto.to(activationLinkDto));
+        ActivationLinkDto entity = findById(activationLinkDto.getId());
+        PropertiesUtils.copyNonNullProperties(activationLinkDto, entity);
+        ActivationLink updatedEntity = repository.save(ActivationLinkDto.to(entity));
         return ActivationLinkDto.from(updatedEntity);
     }
 

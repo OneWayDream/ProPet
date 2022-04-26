@@ -26,20 +26,21 @@ public class AppealAnswer {
     @Column(name = "appeal_id")
     protected Long appealId;
 
-    @Column(name = "send_date")
+    @Column(name = "send_date", nullable = false)
     protected Date sendDate;
 
     @ManyToOne
     @JoinColumn(name = "author_id", referencedColumnName = "id",
             nullable = false, insertable = false, updatable = false)
-    protected User author;
+    protected Account author;
 
     @Column(name = "author_id")
     protected Long authorId;
 
+    @Column(nullable = false)
     protected String text;
 
-    @Column(name = "is_deleted")
-    protected Boolean isDeleted;
+    @Column(name = "is_deleted", nullable = false)
+    protected Boolean isDeleted = false;
 
 }

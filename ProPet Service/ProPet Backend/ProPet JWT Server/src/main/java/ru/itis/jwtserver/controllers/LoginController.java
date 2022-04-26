@@ -7,20 +7,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.itis.jwtserver.dto.AccessTokenDto;
-import ru.itis.jwtserver.dto.LoginPasswordDto;
-import ru.itis.jwtserver.dto.RefreshTokenDto;
-import ru.itis.jwtserver.exceptions.BannedTokenException;
-import ru.itis.jwtserver.exceptions.BannedUserException;
-import ru.itis.jwtserver.exceptions.IncorrectJwtException;
-import ru.itis.jwtserver.exceptions.IncorrectUserDataException;
-import ru.itis.jwtserver.services.LoginService;
+import ru.itis.jwtserver.dto.AccessTokenResponse;
+import ru.itis.jwtserver.dto.ModuleAuthorizationForm;
+import ru.itis.jwtserver.dto.RefreshTokenResponse;
+import ru.itis.jwtserver.dto.UserAuthorizationForm;
+import ru.itis.jwtserver.services.ModuleLoginService;
+import ru.itis.jwtserver.services.UserLoginService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,36 +27,73 @@ import javax.servlet.http.HttpServletRequest;
 @CrossOrigin
 public class LoginController {
 
-    protected final LoginService loginService;
+    protected final ModuleLoginService loginService;
+    protected final UserLoginService userLoginService;
 
-    @Operation(summary = "Login (get refresh token by login and password)")
+    @Operation(summary = "Login a module(get refresh token by login and password)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success getting", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = RefreshTokenDto.class)
+                            schema = @Schema(implementation = RefreshTokenResponse.class)
                     ))
             })
     })
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginPasswordDto loginPasswordDto){
-        return ResponseEntity.ok(loginService.login(loginPasswordDto));
+    @PostMapping("/login-module")
+    public ResponseEntity<?> loginModule(@RequestBody ModuleAuthorizationForm moduleAuthorizationForm){
+        return ResponseEntity.ok(loginService.login(moduleAuthorizationForm));
     }
 
-    @Operation(summary = "Authenticate (get access token by refresh token)")
+    @Operation(summary = "Authenticate a module (get access token by refresh token)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success getting", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = AccessTokenDto.class)
+                            schema = @Schema(implementation = AccessTokenResponse.class)
                     ))
             })
     })
     @PostMapping(
-            value = "/auth",
+            value = "/auth-module",
+            headers = {"refresh-token"}
+    )
+    public ResponseEntity<?> authenticateModule(HttpServletRequest request){
+        return ResponseEntity.ok(loginService.authenticate(RefreshTokenResponse.builder()
+                .token(request.getHeader("refresh-token"))
+                .build()));
+    }
+
+    @Operation(summary = "Login a user (get refresh token by login and password)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success getting", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(
+                            schema = @Schema(implementation = RefreshTokenResponse.class)
+                    ))
+            })
+    })
+    @PostMapping(
+            value = "/login-user",
             headers = {"JWT"}
     )
-    public ResponseEntity<?> getAccessToken(HttpServletRequest request){
-        return ResponseEntity.ok(loginService.authenticate(RefreshTokenDto.builder()
-                .token(request.getHeader("JWT"))
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<?> loginUser(@RequestBody UserAuthorizationForm form){
+        return ResponseEntity.ok(userLoginService.login(form));
+    }
+
+    @Operation(summary = "Authenticate a user (get access token by refresh token)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success getting", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(
+                            schema = @Schema(implementation = AccessTokenResponse.class)
+                    ))
+            })
+    })
+    @PostMapping(
+            value = "/auth-user",
+            headers = {"JWT", "refresh-token"}
+    )
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<?> authenticateUser(HttpServletRequest request){
+        return ResponseEntity.ok(userLoginService.authenticate(RefreshTokenResponse.builder()
+                .token(request.getHeader("refresh-token"))
                 .build()));
     }
 

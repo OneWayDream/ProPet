@@ -2,11 +2,15 @@ package ru.itis.jwtserver.redis.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.itis.jwtserver.models.DataAccessUser;
+import ru.itis.jwtserver.dto.JwtModuleDto;
+import ru.itis.jwtserver.dto.JwtUserDto;
+import ru.itis.jwtserver.models.JwtUser;
 import ru.itis.jwtserver.redis.repositories.models.RedisUser;
 import ru.itis.jwtserver.redis.repositories.RedisUsersRepository;
-import ru.itis.jwtserver.repositories.UsersRepository;
+import ru.itis.jwtserver.repositories.JwtUserRepository;
 import ru.itis.jwtserver.services.JwtBlacklistService;
+import ru.itis.jwtserver.services.JwtModuleService;
+import ru.itis.jwtserver.services.JwtUserService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,12 +20,12 @@ import java.util.List;
 @Service
 public class RedisUsersServiceImpl implements RedisUsersService {
 
-    protected final UsersRepository usersRepository;
+    protected final JwtUserService userService;
     protected final JwtBlacklistService blacklistService;
     protected final RedisUsersRepository redisUsersRepository;
 
     @Override
-    public void addTokenToUser(DataAccessUser user, String token) {
+    public void addTokenToUser(JwtUserDto user, String token) {
         String redisId = user.getRedisId();
 
         RedisUser redisUser;
@@ -38,12 +42,15 @@ public class RedisUsersServiceImpl implements RedisUsersService {
                     .build();
         }
         redisUsersRepository.save(redisUser);
-        user.setRedisId(redisUser.getId());
-        usersRepository.save(user);
+
+        if (redisId == null){
+            user.setRedisId(redisUser.getId());
+            userService.update(user);
+        }
     }
 
     @Override
-    public void addAllTokensToBlackList(DataAccessUser user) {
+    public void addAllTokensToBlackList(JwtUser user) {
         if (user.getRedisId() != null) {
             RedisUser redisUser = redisUsersRepository.findById(user.getRedisId())
                     .orElseThrow(IllegalArgumentException::new);

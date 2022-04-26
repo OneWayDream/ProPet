@@ -9,7 +9,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.backend.annotations.JwtAccessConstraint;
 import ru.itis.backend.dto.AppealAnswerDto;
 import ru.itis.backend.services.AppealAnswerService;
 
@@ -34,7 +36,8 @@ public class AppealAnswerController {
     @GetMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<List<AppealAnswerDto>> getAllAnswers() {
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<List<AppealAnswerDto>> getAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
@@ -50,7 +53,8 @@ public class AppealAnswerController {
             value = "/by-id/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<AppealAnswerDto> getAnswerById(@PathVariable Long id){
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<AppealAnswerDto> getById(@PathVariable Long id){
         return ResponseEntity.ok(service.findById(id));
     }
 
@@ -65,7 +69,8 @@ public class AppealAnswerController {
     @PostMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<AppealAnswerDto> addAnswer(@RequestBody AppealAnswerDto appealAnswerDto){
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<AppealAnswerDto> add(@RequestBody AppealAnswerDto appealAnswerDto){
         return ResponseEntity.ok(service.add(appealAnswerDto));
     }
 
@@ -80,7 +85,8 @@ public class AppealAnswerController {
     @PatchMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<AppealAnswerDto> updateActivationLinkById(@RequestBody AppealAnswerDto appealAnswerDto){
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<AppealAnswerDto> updateById(@RequestBody AppealAnswerDto appealAnswerDto){
         return ResponseEntity.ok(service.update(appealAnswerDto));
     }
 
@@ -92,7 +98,8 @@ public class AppealAnswerController {
             value = "/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<?> deleteAnswerById(@PathVariable Long id){
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<?> deleteById(@PathVariable Long id){
         service.delete(AppealAnswerDto.builder().id(id).build());
         return ResponseEntity.ok().build();
     }

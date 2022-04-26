@@ -9,7 +9,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.backend.annotations.JwtAccessConstraint;
 import ru.itis.backend.dto.UserAppealDto;
 import ru.itis.backend.services.UserAppealService;
 
@@ -34,7 +36,8 @@ public class UserAppealController {
     @GetMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<List<UserAppealDto>> getAllAppeals() {
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<List<UserAppealDto>> getAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
@@ -50,7 +53,8 @@ public class UserAppealController {
             value = "/by-id/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<UserAppealDto> getActivationLinkById(@PathVariable Long id){
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<UserAppealDto> getById(@PathVariable Long id){
         return ResponseEntity.ok(service.findById(id));
     }
 
@@ -66,7 +70,16 @@ public class UserAppealController {
             value = "/by-user-id/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<List<UserAppealDto>> getAppealsByUserId(@PathVariable Long id){
+    @PreAuthorize("isAuthenticated()")
+    @JwtAccessConstraint(
+            jwtFieldName = "id",
+            argName = "id",
+            opRoles = true,
+            jwtRoleFieldName = "role",
+            opRolesArray = {"MODER", "ADMIN"}
+    )
+    public ResponseEntity<List<UserAppealDto>> getByUserId(@PathVariable Long id,
+                                                           @RequestHeader("JWT") String token){
         return ResponseEntity.ok(service.getAllByUserId(id));
     }
 
@@ -81,7 +94,17 @@ public class UserAppealController {
     @PostMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<UserAppealDto> addActivationLink(@RequestBody UserAppealDto userAppealDto){
+    @PreAuthorize("isAuthenticated()")
+    @JwtAccessConstraint(
+            jwtFieldName = "id",
+            argName = "userAppealDto",
+            argField = "accountId",
+            opRoles = true,
+            jwtRoleFieldName = "role",
+            opRolesArray = {"MODER", "ADMIN"}
+    )
+    public ResponseEntity<UserAppealDto> add(@RequestBody UserAppealDto userAppealDto,
+                                                   @RequestHeader("JWT") String token){
         return ResponseEntity.ok(service.add(userAppealDto));
     }
 
@@ -96,7 +119,8 @@ public class UserAppealController {
     @PatchMapping(
             headers = {"JWT"}
     )
-    public ResponseEntity<UserAppealDto> updateActivationLinkById(@RequestBody UserAppealDto userAppealDto){
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<UserAppealDto> updateById(@RequestBody UserAppealDto userAppealDto){
         return ResponseEntity.ok(service.update(userAppealDto));
     }
 
@@ -108,7 +132,8 @@ public class UserAppealController {
             value = "/{id}",
             headers = {"JWT"}
     )
-    public ResponseEntity<?> deleteActivationLinkById(@PathVariable Long id){
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<?> deleteById(@PathVariable Long id){
         service.delete(UserAppealDto.builder().id(id).build());
         return ResponseEntity.ok().build();
     }

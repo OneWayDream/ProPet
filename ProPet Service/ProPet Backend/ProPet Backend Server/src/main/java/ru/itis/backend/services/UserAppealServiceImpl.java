@@ -8,6 +8,7 @@ import ru.itis.backend.exceptions.EntityNotExistsException;
 import ru.itis.backend.exceptions.EntityNotFoundException;
 import ru.itis.backend.models.UserAppeal;
 import ru.itis.backend.repositories.UserAppealRepository;
+import ru.itis.backend.utils.PropertiesUtils;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -59,14 +60,15 @@ public class UserAppealServiceImpl implements UserAppealService {
 
     @Override
     public UserAppealDto update(UserAppealDto userAppealDto) {
-        findById(userAppealDto.getId());
-        UserAppeal updatedEntity = repository.save(UserAppealDto.to(userAppealDto));
+        UserAppealDto entity = findById(userAppealDto.getId());
+        PropertiesUtils.copyNonNullProperties(userAppealDto, entity);
+        UserAppeal updatedEntity = repository.save(UserAppealDto.to(entity));
         return UserAppealDto.from(updatedEntity);
     }
 
     @Override
     public List<UserAppealDto> getAllByUserId(Long userId) {
-        return UserAppealDto.from(repository.findAllByUserId(userId).stream()
+        return UserAppealDto.from(repository.findAllByAccountId(userId).stream()
                 .filter(entry -> !entry.getIsDeleted())
                 .collect(Collectors.toList()));
     }

@@ -8,13 +8,39 @@
         http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet id="5" author="OneWayDream">
-        <comment>Creating a table for jwt users</comment>
-        <createTable tableName="data_access_user">
+    <changeSet id="9" author="OneWayDream">
+        <comment>Creating a jwt table for application modules</comment>
+        <createTable tableName="jwt_module">
             <column name="id" type="bigint" autoIncrement="true" incrementBy="1" startWith="1">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="login" type="varchar">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="hash_password" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="state" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_deleted" type="boolean" defaultValue="false"/>
+            <column name="redis_id" type="varchar"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="10" author="OneWayDream">
+        <comment>Creating a jwt table for users</comment>
+        <createTable tableName="jwt_user">
+            <column name="id" type="bigint" autoIncrement="true" incrementBy="1" startWith="1">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="login" type="varchar">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="mail" type="varchar">
                 <constraints unique="true" nullable="false"/>
             </column>
             <column name="hash_password" type="varchar">

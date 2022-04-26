@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.itis.backend.models.SitterInfo;
-import ru.itis.backend.models.User;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 public class SitterInfoDto {
 
     protected Long id;
-    protected Long userId;
+    protected Long accountId;
     protected String name;
     protected String surname;
     protected String city;
@@ -32,7 +31,7 @@ public class SitterInfoDto {
     public static SitterInfoDto from(SitterInfo info){
         return (info == null) ? null : SitterInfoDto.builder()
                 .id(info.getId())
-                .userId(info.getUserId())
+                .accountId(info.getAccountId())
                 .name(info.getName())
                 .surname(info.getSurname())
                 .city(info.getCity())
@@ -49,7 +48,7 @@ public class SitterInfoDto {
     public static SitterInfo to(SitterInfoDto infoDto){
         return (infoDto == null) ? null : SitterInfo.builder()
                 .id(infoDto.getId())
-                .userId(infoDto.getUserId())
+                .accountId(infoDto.getAccountId())
                 .name(infoDto.getName())
                 .surname(infoDto.getSurname())
                 .city(infoDto.getCity())

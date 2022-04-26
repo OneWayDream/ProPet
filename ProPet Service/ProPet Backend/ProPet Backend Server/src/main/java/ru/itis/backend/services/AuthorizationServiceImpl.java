@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.itis.backend.dto.AuthorizationForm;
-import ru.itis.backend.dto.UserDto;
+import ru.itis.backend.dto.AccountDto;
 import ru.itis.backend.exceptions.BannedUserException;
 import ru.itis.backend.exceptions.IncorrectPasswordException;
 import ru.itis.backend.exceptions.NotActivatedUserException;
@@ -15,13 +15,13 @@ import ru.itis.backend.exceptions.NotActivatedUserException;
 public class AuthorizationServiceImpl implements AuthorizationService {
 
     @NonNull
-    protected UsersService usersService;
+    protected AccountService usersService;
     @NonNull
     protected PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDto authorizeUser(AuthorizationForm authorizationForm) {
-        UserDto userDto;
+    public AccountDto authorizeUser(AuthorizationForm authorizationForm) {
+        AccountDto userDto;
         if (authorizationForm.getLogin() != null){
             userDto = usersService.findUserByLogin(authorizationForm.getLogin());
         } else {

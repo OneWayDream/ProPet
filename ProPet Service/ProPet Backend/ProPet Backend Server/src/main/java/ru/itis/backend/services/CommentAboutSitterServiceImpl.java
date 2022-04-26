@@ -8,6 +8,7 @@ import ru.itis.backend.exceptions.EntityNotExistsException;
 import ru.itis.backend.exceptions.EntityNotFoundException;
 import ru.itis.backend.models.CommentAboutSitter;
 import ru.itis.backend.repositories.CommentAboutSitterRepository;
+import ru.itis.backend.utils.PropertiesUtils;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -59,14 +60,15 @@ public class CommentAboutSitterServiceImpl implements CommentAboutSitterService 
 
     @Override
     public CommentAboutSitterDto update(CommentAboutSitterDto commentAboutSitterDto) {
-        findById(commentAboutSitterDto.getId());
-        CommentAboutSitter updatedEntity = repository.save(CommentAboutSitterDto.to(commentAboutSitterDto));
+        CommentAboutSitterDto entity = findById(commentAboutSitterDto.getId());
+        PropertiesUtils.copyNonNullProperties(commentAboutSitterDto, entity);
+        CommentAboutSitter updatedEntity = repository.save(CommentAboutSitterDto.to(entity));
         return CommentAboutSitterDto.from(updatedEntity);
     }
 
     @Override
     public List<CommentAboutSitterDto> findAllByUserId(Long userId) {
-        return CommentAboutSitterDto.from(repository.findAllByUserId(userId).stream()
+        return CommentAboutSitterDto.from(repository.findAllByAccountId(userId).stream()
                 .filter(entry -> !entry.getIsDeleted())
                 .collect(Collectors.toList()));
     }

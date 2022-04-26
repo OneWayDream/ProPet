@@ -19,22 +19,23 @@ public class UserAppeal {
     protected Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    protected User user;
+    @JoinColumn(name = "account_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    protected Account account;
 
-    @Column(name = "user_id")
-    protected Long userId;
+    @Column(name = "account_id")
+    protected Long accountId;
 
-    @Column(name = "send_date")
+    @Column(name = "send_date", nullable = false)
     protected Date sendDate;
 
+    @Column(nullable = false)
     protected String text;
 
-    @Column(name = "is_closed")
-    protected Boolean isClosed;
+    @Column(name = "is_closed", nullable = false)
+    protected Boolean isClosed = false;
 
-    @Column(name = "is_deleted")
-    protected Boolean isDeleted;
+    @Column(name = "is_deleted", nullable = false)
+    protected Boolean isDeleted = false;
 
     @OneToOne(targetEntity = AppealAnswer.class, mappedBy = "appeal",
             cascade = CascadeType.ALL, fetch = FetchType.EAGER)

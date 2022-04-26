@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class UserAppealDto {
 
     protected Long id;
-    protected Long userId;
+    protected Long accountId;
     protected Date sendDate;
     protected String text;
     protected Boolean isClosed;
@@ -26,7 +26,7 @@ public class UserAppealDto {
     public static UserAppealDto from(UserAppeal userAppeal){
         return (userAppeal == null) ? null : UserAppealDto.builder()
                 .id(userAppeal.getId())
-                .userId(userAppeal.getUserId())
+                .accountId(userAppeal.getAccountId())
                 .sendDate(userAppeal.getSendDate())
                 .text(userAppeal.getText())
                 .isClosed(userAppeal.getIsClosed())
@@ -37,7 +37,7 @@ public class UserAppealDto {
     public static UserAppeal to(UserAppealDto userAppealDto){
         return (userAppealDto == null) ? null : UserAppeal.builder()
                 .id(userAppealDto.getId())
-                .userId(userAppealDto.getUserId())
+                .accountId(userAppealDto.getAccountId())
                 .sendDate(userAppealDto.getSendDate())
                 .text(userAppealDto.getText())
                 .isClosed(userAppealDto.getIsClosed())

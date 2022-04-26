@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface UserAppealRepository extends JpaRepository<UserAppeal, Long> {
 
-    List<UserAppeal> findAllByUserId(Long userId);
+    List<UserAppeal> findAllByAccountId(Long accountId);
 
 }
