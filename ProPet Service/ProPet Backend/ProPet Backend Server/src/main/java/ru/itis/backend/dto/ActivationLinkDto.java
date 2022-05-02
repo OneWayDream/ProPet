@@ -1,7 +1,5 @@
 package ru.itis.backend.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Builder;
 import lombok.Data;
 import ru.itis.backend.models.ActivationLink;
