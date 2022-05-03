@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/appeal-answer")
 @RequiredArgsConstructor
+@CrossOrigin
 public class AppealAnswerController {
 
     @NonNull

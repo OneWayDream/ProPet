@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/comment-about-sitter")
 @RequiredArgsConstructor
+@CrossOrigin
 public class CommentAboutSitterController {
 
     @NonNull

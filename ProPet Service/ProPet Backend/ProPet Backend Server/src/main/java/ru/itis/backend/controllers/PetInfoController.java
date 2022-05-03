@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/pet-info")
 @RequiredArgsConstructor
+@CrossOrigin
 public class PetInfoController {
 
     @NonNull

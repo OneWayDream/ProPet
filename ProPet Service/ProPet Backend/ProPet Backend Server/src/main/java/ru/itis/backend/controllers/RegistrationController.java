@@ -18,6 +18,7 @@ import ru.itis.backend.services.RegistrationService;
 @RestController
 @RequestMapping("/registration")
 @RequiredArgsConstructor
+@CrossOrigin
 public class RegistrationController {
 
     @NonNull
@@ -31,10 +32,7 @@ public class RegistrationController {
                     ))
             })
     })
-    @PostMapping(
-            headers = {"JWT"}
-    )
-    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    @PostMapping()
     public ResponseEntity<AccountDto> registerNewUser(@RequestBody RegistrationForm registrationForm){
         return ResponseEntity.ok(service.registerNewAccount(registrationForm));
     }

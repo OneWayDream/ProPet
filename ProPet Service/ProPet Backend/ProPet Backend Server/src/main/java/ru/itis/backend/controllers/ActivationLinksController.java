@@ -19,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/activation-link")
 @RequiredArgsConstructor
+@CrossOrigin
 public class ActivationLinksController {
 
     @NonNull

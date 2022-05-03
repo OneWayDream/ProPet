@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
+@CrossOrigin
 public class AccountController {
 
     @NonNull
@@ -166,7 +167,6 @@ public class AccountController {
             value = "/activate/{linkValue}",
             headers = {"JWT"}
     )
-    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
     public ResponseEntity<AccountDto> activateAccount(@PathVariable String linkValue){
         return ResponseEntity.ok(service.activateUser(linkValue));
     }

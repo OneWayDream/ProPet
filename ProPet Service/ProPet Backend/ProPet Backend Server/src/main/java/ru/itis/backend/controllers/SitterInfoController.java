@@ -21,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/sitter-info")
 @RequiredArgsConstructor
+@CrossOrigin
 public class SitterInfoController {
 
     @NonNull

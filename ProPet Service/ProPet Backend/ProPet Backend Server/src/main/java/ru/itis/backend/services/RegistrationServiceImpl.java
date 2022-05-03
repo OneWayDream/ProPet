@@ -3,6 +3,7 @@ package ru.itis.backend.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.itis.backend.dto.ActivationLinkDto;
 import ru.itis.backend.dto.RegistrationForm;
 import ru.itis.backend.dto.AccountDto;
 import ru.itis.backend.exceptions.*;
@@ -22,8 +23,8 @@ import java.util.UUID;
 public class RegistrationServiceImpl implements RegistrationService {
 
     protected final PasswordEncoder passwordEncoder;
-    protected final AccountRepository accountRepository;
-    protected final ActivationLinkRepository activationLinkRepository;
+    protected final ActivationLinksService activationLinksService;
+    protected final AccountService accountService;
     protected final TokenManager tokenManager;
 
 
@@ -33,24 +34,23 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new DifferentPasswordsException("The passwords are different");
         }
         try {
-            Account newAccount = Account.builder()
+            AccountDto newAccount = AccountDto.builder()
                     .login(registrationForm.getLogin())
                     .mail(registrationForm.getMail())
                     .hashPassword(passwordEncoder.encode(registrationForm.getPassword()))
                     .state(UserState.NOT_ACTIVATED)
                     .role(UserRole.USER)
-                    .isDeleted(false)
                     .registrationDate(new Date(System.currentTimeMillis()))
                     .imageKey("default.png")
                     .build();
-            accountRepository.save(newAccount);
-            ActivationLink link = ActivationLink.builder()
+            newAccount = accountService.add(newAccount);
+            ActivationLinkDto link = ActivationLinkDto.builder()
                     .accountId(newAccount.getId())
                     .linkValue(UUID.randomUUID().toString())
-                    .isDeleted(false)
                     .build();
-            activationLinkRepository.save(link);
-            return AccountDto.from(newAccount);
+            activationLinksService.add(link);
+            accountService.activateUser(link.getLinkValue());
+            return newAccount;
         } catch (Exception ex){
             try{
                 String message = ex.getCause().getCause().getMessage();
