@@ -70,10 +70,8 @@ public class LoginController {
             })
     })
     @PostMapping(
-            value = "/login-user",
-            headers = {"JWT"}
+            value = "/login-user"
     )
-    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
     public ResponseEntity<?> loginUser(@RequestBody UserAuthorizationForm form){
         return ResponseEntity.ok(userLoginService.login(form));
     }
@@ -88,9 +86,8 @@ public class LoginController {
     })
     @PostMapping(
             value = "/auth-user",
-            headers = {"JWT", "refresh-token"}
+            headers = {"refresh-token"}
     )
-    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
     public ResponseEntity<?> authenticateUser(HttpServletRequest request){
         return ResponseEntity.ok(userLoginService.authenticate(RefreshTokenResponse.builder()
                 .token(request.getHeader("refresh-token"))
