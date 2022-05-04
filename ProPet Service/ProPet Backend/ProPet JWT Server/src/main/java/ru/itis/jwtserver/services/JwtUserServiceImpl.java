@@ -8,6 +8,7 @@ import ru.itis.jwtserver.exceptions.EntityNotExistsException;
 import ru.itis.jwtserver.exceptions.EntityNotFoundException;
 import ru.itis.jwtserver.models.JwtUser;
 import ru.itis.jwtserver.repositories.JwtUserRepository;
+import ru.itis.jwtserver.utils.PropertiesUtils;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -59,8 +60,9 @@ public class JwtUserServiceImpl implements JwtUserService {
 
     @Override
     public JwtUserDto update(JwtUserDto jwtUserDto) {
-        findById(jwtUserDto.getId());
-        JwtUser updatedEntity = repository.save(JwtUserDto.to(jwtUserDto));
+        JwtUserDto entity = findById(jwtUserDto.getId());
+        PropertiesUtils.copyNonNullProperties(jwtUserDto, entity);
+        JwtUser updatedEntity = repository.save(JwtUserDto.to(entity));
         return JwtUserDto.from(updatedEntity);
     }
 

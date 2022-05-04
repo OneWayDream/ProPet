@@ -8,7 +8,9 @@ import ru.itis.jwtserver.dto.JwtUserDto;
 import ru.itis.jwtserver.exceptions.EntityNotExistsException;
 import ru.itis.jwtserver.exceptions.EntityNotFoundException;
 import ru.itis.jwtserver.models.JwtModule;
+import ru.itis.jwtserver.models.JwtUser;
 import ru.itis.jwtserver.repositories.JwtModuleRepository;
+import ru.itis.jwtserver.utils.PropertiesUtils;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -60,8 +62,9 @@ public class JwtModuleServiceImpl implements JwtModuleService {
 
     @Override
     public JwtModuleDto update(JwtModuleDto jwtModuleDto) {
-        findById(jwtModuleDto.getId());
-        JwtModule updatedEntity = repository.save(JwtModuleDto.to(jwtModuleDto));
+        JwtModuleDto entity = findById(jwtModuleDto.getId());
+        PropertiesUtils.copyNonNullProperties(jwtModuleDto, entity);
+        JwtModule updatedEntity = repository.save(JwtModuleDto.to(entity));
         return JwtModuleDto.from(updatedEntity);
     }
 
