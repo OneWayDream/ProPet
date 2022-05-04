@@ -10,12 +10,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.filter.CorsFilter;
 import ru.itis.jwtserver.exceptions.handlers.ExceptionHandlerFilter;
 import ru.itis.jwtserver.security.filters.JwtCheckingFilter;
 import ru.itis.jwtserver.security.filters.JwtLogoutFilter;
 import ru.itis.jwtserver.security.filters.TokenAuthenticationFilter;
 import ru.itis.jwtserver.security.providers.TokenAuthenticationProvider;
+
+import java.util.List;
 
 @EnableWebSecurity()
 @EnableGlobalMethodSecurity(
@@ -42,6 +45,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtCheckingFilter, TokenAuthenticationFilter.class);
         http.addFilterBefore(jwtLogoutFilter, TokenAuthenticationFilter.class);
         http.addFilterBefore(exceptionHandlerFilter, CorsFilter.class);
+
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+        corsConfiguration.setAllowedOrigins(List.of("*"));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT","OPTIONS","PATCH", "DELETE"));
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setExposedHeaders(List.of("Authorization"));
+
+        http.authorizeRequests().antMatchers("/**").permitAll().anyRequest()
+                .authenticated().and().cors().configurationSource(request -> corsConfiguration);
     }
 
     @Override
