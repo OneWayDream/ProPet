@@ -1,6 +1,7 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-const StyledMenuItem = styled.a((props) => `
+const StyledMenuItem = styled.div((props) => `
 	color: ${props.color ? props.color : 'black'};
 	text-decoration: none;
 	padding: 15px;
@@ -13,7 +14,7 @@ const StyledMenuItem = styled.a((props) => `
 
 const MenuItem = (props) => {
 	const { children,  href, ...otherProps} = props;
-	return <StyledMenuItem {...otherProps} href={href}>{children}</StyledMenuItem>
+	return <Link to={href} style={{ textDecoration: 'none' }}><StyledMenuItem {...otherProps}>{children}</StyledMenuItem></Link>
 }
 
 export default MenuItem;
