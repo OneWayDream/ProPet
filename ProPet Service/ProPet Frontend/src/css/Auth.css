@@ -9,6 +9,15 @@
   margin: 0 10vw;
 }
 
+.signInMessageSuccess {
+  background-color: rgb(87, 255, 54);
+  border: 1px solid green;
+  font-size: 1.2vw;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 20px;
+}
+
 .signUpContainer {
   border-radius: 20px;
   background-color: rgba(127, 255, 152, 0.5);
@@ -17,4 +26,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.signUpMessageError {
+  background-color: rgb(252, 95, 95);
+  border: 1px solid red;
+  font-size: 1.2vw;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 20px;
 }

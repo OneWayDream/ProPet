@@ -38,7 +38,7 @@ const Input = (props) => {
   return <>
     <StyledDiv>
       <Image image={props.image} width={props.width}></Image>
-      <StyledInput onChange={handleChange} placeholder={props.placeholder} type={props.type} props={props}>{props.children}</StyledInput>
+      <StyledInput onChange={handleChange} placeholder={props.placeholder} pattern={props.validate} value={props.value} type={props.type} props={props}>{props.children}</StyledInput>
     </StyledDiv>
   </>
 

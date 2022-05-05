@@ -20,7 +20,7 @@ const StyledBytton = styled.button(({color, background, width}) => `
 
 const Button = (props) => {
   if (props.style === 'orange') {
-    return <StyledBytton color="black" background="linear-gradient(90deg, rgba(255,175,35,1) 15%, rgba(255,255,255,0.2) 100%)" width={props.width} >{props.children}</StyledBytton>
+    return <StyledBytton color="black" background="linear-gradient(90deg, rgba(255,175,35,1) 15%, rgba(255,255,255,0.2) 100%)" width={props.width} onClick={props.onClick}>{props.children}</StyledBytton>
   }
 
   return <StyledBytton props>{props.children}</StyledBytton>
