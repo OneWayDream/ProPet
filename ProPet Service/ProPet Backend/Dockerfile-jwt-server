@@ -1,0 +1,16 @@
+#build project
+FROM maven:3.8.5-openjdk-18-slim AS build
+ARG src="ProPet JWT Server/src"
+COPY $src /home/ProPet/JWT/src
+##parent pom
+COPY pom.xml /home/ProPet
+##child pom
+ARG child_pom="ProPet JWT Server/pom.xml"
+COPY $child_pom /home/ProPet/JWT
+RUN mvn -f /home/ProPet/JWT/pom.xml clean package -Dmaven.test.skip
+
+#package
+FROM openjdk:18-alpine
+COPY --from=build /home/ProPet/JWT/target/jwt-server-0.1.jar /ProPet/jwt.jar
+EXPOSE 8081
+ENTRYPOINT ["java","-jar","/ProPet/jwt.jar"]
