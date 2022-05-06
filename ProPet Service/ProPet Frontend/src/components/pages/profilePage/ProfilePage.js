@@ -27,11 +27,15 @@ const ProfilePage = () => {
     //   setUser(response.data)
     //   setLoading(false)
     // })
-    const credentials = JSON.parse(localStorage.getItem('user'))
-    getUser(credentials.mail, credentials.accessToken).then((response) => {
-      setUser(response.data)
-      setLoading(false)
-    })
+    if (!localStorage.getItem('user')) {
+      navigate(paths.SIGN_IN)
+    } else {
+      const credentials = JSON.parse(localStorage.getItem('user'))
+      getUser(credentials.mail, credentials.accessToken).then((response) => {
+        setUser(response.data)
+        setLoading(false)
+      })
+    }
   }, [])
 
   const logOut = () => {

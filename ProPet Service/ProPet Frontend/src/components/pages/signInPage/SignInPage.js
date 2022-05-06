@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Button from "../../atoms/button";
 import Input from "../../atoms/input";
@@ -13,12 +13,17 @@ import { useDispatch, useSelector } from "react-redux";
 const SignInPage = (props) => {
   const location = useLocation()
   const navigate = useNavigate()
-  
-  if (localStorage.getItem('user')) {
-    // navigate(paths.PROFILE)
 
-  }
+  // if (localStorage.getItem('user')) {
+  // navigate(paths.PROFILE)
 
+  // }
+
+  useEffect(() => {
+    if (localStorage.getItem('user')) {
+      navigate(paths.PROFILE)
+    }
+  }, [])
 
   let message = '';
   let showSuccessMessage = false;
@@ -49,9 +54,27 @@ const SignInPage = (props) => {
   const handleLogin = () => {
     dispatch(authenticate(username, password))
     if (localStorage.getItem('user')) {
-      navigate(paths.PROFILE)      
+      navigate(paths.PROFILE)
     }
   }
+
+  const handleKeypress = (e) => {
+    console.log(e.keyCode)
+  }
+
+  // useEffect(() => {
+  //   const listener = event => {
+  //     if (event.code === "Enter" || event.code === "NumpadEnter") {
+  //       console.log("Enter key was pressed. Run your function.");
+  //       event.preventDefault();
+  //       // callMyFunction();
+  //     }
+  //   };
+  //   document.addEventListener("keydown", listener);
+  //   return () => {
+  //     document.removeEventListener("keydown", listener);
+  //   };
+  // }, []);
 
   const body = <>
     <div className="signInContainer">
