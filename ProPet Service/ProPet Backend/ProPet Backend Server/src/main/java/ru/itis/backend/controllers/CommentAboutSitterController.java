@@ -72,15 +72,7 @@ public class CommentAboutSitterController {
             headers = {"JWT"}
     )
     @PreAuthorize("isAuthenticated()")
-    @JwtAccessConstraint(
-            jwtFieldName = "id",
-            argName = "id",
-            opRoles = true,
-            jwtRoleFieldName = "role",
-            opRolesArray = {"MODER", "ADMIN"}
-    )
-    public ResponseEntity<List<CommentAboutSitterDto>> getByUserId(@PathVariable Long id,
-                                                                   @RequestHeader("JWT") String token){
+    public ResponseEntity<List<CommentAboutSitterDto>> getByUserId(@PathVariable Long id){
         return ResponseEntity.ok(service.findAllByUserId(id));
     }
 
@@ -97,7 +89,7 @@ public class CommentAboutSitterController {
     )
     @PreAuthorize("isAuthenticated()")
     @JwtAccessConstraint(
-            jwtFieldName = "id",
+            jwtFieldName = "account_id",
             argName = "commentAboutSitterDto",
             argField = "accountId",
             opRoles = true,

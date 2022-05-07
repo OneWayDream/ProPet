@@ -9,6 +9,7 @@ import ru.itis.backend.models.UserState;
 @Builder
 public class TokenRegistrationForm {
 
+    protected Long accountId;
     protected String login;
     protected String mail;
     protected String hashPassword;

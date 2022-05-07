@@ -74,7 +74,7 @@ public class UserLoginServiceImpl implements UserLoginService {
             }
             String token = JWT.create()
                     .withSubject(user.getId().toString())
-                    .withClaim("id", user.getId())
+                    .withClaim("account_id", user.getAccountId())
                     .withClaim("login", user.getLogin())
                     .withClaim("state", user.getState().toString())
                     .withClaim("role", user.getRole().toString())
@@ -112,7 +112,7 @@ public class UserLoginServiceImpl implements UserLoginService {
             }
             String accessToken = JWT.create()
                     .withSubject(decodedJWT.getSubject())
-                    .withClaim("id", decodedJWT.getClaim("id").asString())
+                    .withClaim("account_id", decodedJWT.getClaim("account_id").asLong())
                     .withClaim("login", decodedJWT.getClaim("login").asString())
                     .withClaim("role", decodedJWT.getClaim("role").asString())
                     .withClaim("state", decodedJWT.getClaim("state").asString())

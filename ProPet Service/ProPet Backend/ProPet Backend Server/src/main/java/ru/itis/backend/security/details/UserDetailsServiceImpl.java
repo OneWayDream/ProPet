@@ -54,7 +54,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new IncorrectJwtException("This token is not supported.");
         }
         return new UserDetailsImpl(AccessToken.builder()
-                .id(decodedJWT.getClaim("id").asLong())
+                .accountId(decodedJWT.getClaim("account_id").asLong())
                 .login(decodedJWT.getClaim("role").asString())
                 .role(decodedJWT.getClaim("role").as(UserRole.class))
                 .state(decodedJWT.getClaim("state").as(UserState.class))

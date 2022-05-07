@@ -72,15 +72,7 @@ public class PetInfoController {
             headers = {"JWT"}
     )
     @PreAuthorize("isAuthenticated()")
-    @JwtAccessConstraint(
-            jwtFieldName = "id",
-            argName = "id",
-            opRoles = true,
-            jwtRoleFieldName = "role",
-            opRolesArray = {"MODER", "ADMIN"}
-    )
-    public ResponseEntity<List<PetInfoDto>> getAllByUserId(@PathVariable Long id,
-                                                           @RequestHeader("JWT") String token){
+    public ResponseEntity<List<PetInfoDto>> getAllByUserId(@PathVariable Long id){
         return ResponseEntity.ok(service.findAllByUserId(id));
     }
 
@@ -97,7 +89,7 @@ public class PetInfoController {
     )
     @PreAuthorize("isAuthenticated()")
     @JwtAccessConstraint(
-            jwtFieldName = "id",
+            jwtFieldName = "account_id",
             argName = "petInfoDto",
             argField = "accountId",
             opRoles = true,
@@ -122,7 +114,7 @@ public class PetInfoController {
     )
     @PreAuthorize("isAuthenticated()")
     @JwtAccessConstraint(
-            jwtFieldName = "id",
+            jwtFieldName = "account_id",
             argName = "petInfoDto",
             argField = "accountId",
             opRoles = true,
@@ -144,7 +136,7 @@ public class PetInfoController {
     )
     @PreAuthorize("isAuthenticated()")
     @JwtAccessConstraint(
-            jwtFieldName = "id",
+            jwtFieldName = "account_id",
             argName = "id",
             opRoles = true,
             jwtRoleFieldName = "role",

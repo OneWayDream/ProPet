@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class JwtUserDto extends JwtEntityDto {
 
     protected String mail;
+    protected Long accountId;
 
     public static JwtUserDto from(JwtUser user){
         return JwtUserDto.builder()
@@ -25,6 +26,7 @@ public class JwtUserDto extends JwtEntityDto {
                 .state(user.getState())
                 .role(user.getRole())
                 .redisId(user.getRedisId())
+                .accountId(user.getAccountId())
                 .build();
     }
 
@@ -37,6 +39,7 @@ public class JwtUserDto extends JwtEntityDto {
                 .state(user.getState())
                 .role(user.getRole())
                 .redisId(user.getRedisId())
+                .accountId(user.getAccountId())
                 .isDeleted(false)
                 .build();
     }

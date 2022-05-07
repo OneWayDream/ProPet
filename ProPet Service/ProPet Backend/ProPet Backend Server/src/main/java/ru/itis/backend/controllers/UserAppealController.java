@@ -73,7 +73,7 @@ public class UserAppealController {
     )
     @PreAuthorize("isAuthenticated()")
     @JwtAccessConstraint(
-            jwtFieldName = "id",
+            jwtFieldName = "account_id",
             argName = "id",
             opRoles = true,
             jwtRoleFieldName = "role",
@@ -97,7 +97,7 @@ public class UserAppealController {
     )
     @PreAuthorize("isAuthenticated()")
     @JwtAccessConstraint(
-            jwtFieldName = "id",
+            jwtFieldName = "account_id",
             argName = "userAppealDto",
             argField = "accountId",
             opRoles = true,

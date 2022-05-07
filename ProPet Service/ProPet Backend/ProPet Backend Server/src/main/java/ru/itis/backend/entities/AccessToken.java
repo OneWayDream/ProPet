@@ -15,7 +15,7 @@ import java.util.Date;
 @Builder
 public class AccessToken {
 
-    protected Long id;
+    protected Long accountId;
     protected String login;
     protected Date expiration;
     protected UserRole role;

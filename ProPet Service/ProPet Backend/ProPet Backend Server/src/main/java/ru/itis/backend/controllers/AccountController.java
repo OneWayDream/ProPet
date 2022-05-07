@@ -122,7 +122,7 @@ public class AccountController {
     )
     @PreAuthorize("isAuthenticated()")
     @JwtAccessConstraint(
-            jwtFieldName = "id",
+            jwtFieldName = "account_id",
             argName = "accountDto",
             argField = "id",
             opRoles = true,
@@ -144,7 +144,7 @@ public class AccountController {
     )
     @PreAuthorize("isAuthenticated()")
     @JwtAccessConstraint(
-            jwtFieldName = "id",
+            jwtFieldName = "account_id",
             argName = "id",
             opRoles = true,
             jwtRoleFieldName = "role",

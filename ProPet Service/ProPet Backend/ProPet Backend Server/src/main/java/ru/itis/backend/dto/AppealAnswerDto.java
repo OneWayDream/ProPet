@@ -23,7 +23,7 @@ public class AppealAnswerDto {
     protected String text;
 
     public static AppealAnswerDto from(AppealAnswer answer){
-        return AppealAnswerDto.builder()
+        return (answer == null) ? null :AppealAnswerDto.builder()
                 .id(answer.getId())
                 .appealId(answer.getAppealId())
                 .sendDate(answer.getSendDate())
@@ -33,7 +33,7 @@ public class AppealAnswerDto {
     }
 
     public static AppealAnswer to(AppealAnswerDto answerDto){
-        return AppealAnswer.builder()
+        return (answerDto == null) ? null :AppealAnswer.builder()
                 .id(answerDto.getId())
                 .appealId(answerDto.getAppealId())
                 .sendDate(answerDto.getSendDate())

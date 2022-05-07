@@ -122,6 +122,7 @@ public class AccountServiceImpl implements AccountService {
         activationLinksService.delete(activationLinkDto);
 
         registerOnAuthorizationServer(TokenRegistrationForm.builder()
+                .accountId(userForActivation.getId())
                 .login(userForActivation.getLogin())
                 .mail(userForActivation.getMail())
                 .hashPassword(userForActivation.getHashPassword())
@@ -134,6 +135,7 @@ public class AccountServiceImpl implements AccountService {
     protected void registerOnAuthorizationServer(TokenRegistrationForm form){
         try{
             JSONObject body = new JSONObject()
+                    .put("accountId", form.getAccountId())
                     .put("login", form.getLogin())
                     .put("mail", form.getMail())
                     .put("hashPassword", form.getHashPassword())

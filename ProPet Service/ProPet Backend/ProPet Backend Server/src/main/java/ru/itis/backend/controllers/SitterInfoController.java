@@ -55,7 +55,7 @@ public class SitterInfoController {
             value = "/by-id/{id}",
             headers = {"JWT"}
     )
-    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<SitterInfoDto> getById(@PathVariable Long id){
         return ResponseEntity.ok(service.findById(id));
     }
@@ -73,15 +73,7 @@ public class SitterInfoController {
             headers = {"JWT"}
     )
     @PreAuthorize("isAuthenticated()")
-    @JwtAccessConstraint(
-            jwtFieldName = "id",
-            argName = "id",
-            opRoles = true,
-            jwtRoleFieldName = "role",
-            opRolesArray = {"MODER", "ADMIN"}
-    )
-    public ResponseEntity<SitterInfoDto> getAllByUserId(@PathVariable Long id,
-                                                            @RequestHeader("JWT") String token){
+    public ResponseEntity<SitterInfoDto> getByUserId(@PathVariable Long id){
         return ResponseEntity.ok(service.findByUserId(id));
     }
 
@@ -98,7 +90,7 @@ public class SitterInfoController {
     )
     @PreAuthorize("isAuthenticated()")
     @JwtAccessConstraint(
-            jwtFieldName = "id",
+            jwtFieldName = "account_id",
             argName = "sitterInfoDto",
             argField = "accountId",
             opRoles = true,
@@ -123,7 +115,7 @@ public class SitterInfoController {
     )
     @PreAuthorize("isAuthenticated()")
     @JwtAccessConstraint(
-            jwtFieldName = "id",
+            jwtFieldName = "account_id",
             argName = "sitterInfoDto",
             argField = "accountId",
             opRoles = true,
@@ -145,7 +137,7 @@ public class SitterInfoController {
     )
     @PreAuthorize("isAuthenticated()")
     @JwtAccessConstraint(
-            jwtFieldName = "id",
+            jwtFieldName = "account_id",
             argName = "sitterInfoDto",
             argField = "accountId",
             opRoles = true,

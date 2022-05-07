@@ -23,6 +23,9 @@ public class JwtUser {
 
     protected String mail;
 
+    @Column(name = "account_id", nullable = false, unique = true)
+    protected Long accountId;
+
     @Column(name = "hash_password")
     protected String hashPassword;
 
