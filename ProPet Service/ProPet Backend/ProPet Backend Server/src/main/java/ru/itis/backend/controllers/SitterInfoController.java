@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.itis.backend.annotations.JwtAccessConstraint;
 import ru.itis.backend.dto.PetInfoDto;
 import ru.itis.backend.dto.SitterInfoDto;
+import ru.itis.backend.entities.SortingOrder;
+import ru.itis.backend.entities.SortingVariable;
 import ru.itis.backend.services.SitterInfoService;
 
 import java.util.List;
@@ -170,6 +172,16 @@ public class SitterInfoController {
                                                @RequestHeader("JWT") String token){
         service.delete(SitterInfoDto.builder().id(id).build());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(
+            value = "/search?page={page}&size={size}&sorted-by={sortedBy}&order={order}"
+    )
+    public ResponseEntity<?> getSearchPage(@PathVariable int page,  @PathVariable int size,
+                                           @PathVariable String sortedBy, @PathVariable String order){
+        return ResponseEntity.ok(service.getSearchPage(page, size,
+                (sortedBy == null) ? null : SortingVariable.get(sortedBy),
+                (order == null) ? null : SortingOrder.get(order)));
     }
 
 }

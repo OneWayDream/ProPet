@@ -89,6 +89,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpErrorStatus.ACCESS_DENIED.value()).body("Access denied");
     }
 
+    @ExceptionHandler(SearchException.class)
+    public ResponseEntity<?> handleSearchException(SearchException exception){
+        if (exception instanceof IncorrectOrderException){
+            return ResponseEntity.status(HttpErrorStatus.INCORRECT_SEARCH_ORDER.value()).build();
+        }
+        else if (exception instanceof IncorrectVariableException){
+            return ResponseEntity.status(HttpErrorStatus.INCORRECT_SEARCH_VARIABLE.value()).build();
+        }
+        else {
+            return ResponseEntity.status(HttpErrorStatus.INCORRECT_SEARCH_SETTINGS.value()).build();
+        }
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> defaultExceptionHandler(Exception exception){
         exception.printStackTrace();

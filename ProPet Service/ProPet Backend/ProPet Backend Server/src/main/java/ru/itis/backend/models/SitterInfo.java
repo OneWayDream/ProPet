@@ -25,11 +25,6 @@ public class SitterInfo {
     @Column(name = "account_id")
     protected Long accountId;
 
-    @Column(nullable = false)
-    protected String name;
-
-    @Column(nullable = false)
-    protected String surname;
     protected Integer age;
 
     @Column(name = "info_about", nullable = false)
@@ -53,6 +48,9 @@ public class SitterInfo {
 
     @Column(name = "rate_5", nullable = false)
     protected Integer rateFive = 0;
+
+    @Column(name = "rating", nullable = false)
+    protected Double rating = 0.0;
 
     @Column(name = "is_deleted", nullable = false)
     protected Boolean isDeleted = false;

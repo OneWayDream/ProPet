@@ -39,6 +39,10 @@ public class Account {
     @Column(nullable = false)
     protected UserRole role;
 
+    protected String name;
+
+    protected String surname;
+
     protected String city;
 
     @Column(name = "sitter_status", nullable = false)

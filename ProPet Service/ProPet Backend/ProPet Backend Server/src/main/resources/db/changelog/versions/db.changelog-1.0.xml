@@ -21,8 +21,10 @@
                 <constraints unique="true" nullable="false"/>
             </column>
             <column name="hash_password" type="varchar">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
+            <column name="name" type="varchar"/>
+            <column name="surname" type="varchar"/>
             <column name="last_login_date" type="timestamptz"/>
             <column name="state" type="varchar">
                 <constraints nullable="false"/>

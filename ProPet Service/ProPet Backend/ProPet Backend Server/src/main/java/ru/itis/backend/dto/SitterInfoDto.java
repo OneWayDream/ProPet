@@ -17,8 +17,6 @@ public class SitterInfoDto {
 
     protected Long id;
     protected Long accountId;
-    protected String name;
-    protected String surname;
     protected Integer age;
     protected String infoAbout;
     protected String animals;
@@ -28,13 +26,12 @@ public class SitterInfoDto {
     protected Integer rateThree;
     protected Integer rateFour;
     protected Integer rateFive;
+    protected Double rating;
 
     public static SitterInfoDto from(SitterInfo info){
         return (info == null) ? null : SitterInfoDto.builder()
                 .id(info.getId())
                 .accountId(info.getAccountId())
-                .name(info.getName())
-                .surname(info.getSurname())
                 .age(info.getAge())
                 .infoAbout(info.getInfoAbout())
                 .animals(info.getAnimals())
@@ -44,6 +41,7 @@ public class SitterInfoDto {
                 .rateThree(info.getRateThree())
                 .rateFour(info.getRateFour())
                 .rateFive(info.getRateFive())
+                .rating(info.getRating())
                 .build();
     }
 
@@ -51,17 +49,10 @@ public class SitterInfoDto {
         return (infoDto == null) ? null : SitterInfo.builder()
                 .id(infoDto.getId())
                 .accountId(infoDto.getAccountId())
-                .name(infoDto.getName())
-                .surname(infoDto.getSurname())
                 .age(infoDto.getAge())
                 .infoAbout(infoDto.getInfoAbout())
                 .animals(infoDto.getAnimals())
                 .services(infoDto.getServices())
-                .rateOne(infoDto.getRateOne())
-                .rateTwo(infoDto.getRateTwo())
-                .rateThree(infoDto.getRateThree())
-                .rateFour(infoDto.getRateFour())
-                .rateFive(infoDto.getRateFive())
                 .isDeleted(false)
                 .build();
     }

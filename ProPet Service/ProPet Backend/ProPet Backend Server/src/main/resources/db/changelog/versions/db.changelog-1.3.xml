@@ -18,15 +18,6 @@
                 <constraints nullable="false" unique="true" foreignKeyName="fk_account_id" referencedTableName="account"
                              referencedColumnNames="id"/>
             </column>
-            <column name="name" type="varchar">
-                <constraints nullable="false"/>
-            </column>
-            <column name="surname" type="varchar">
-                <constraints nullable="false"/>
-            </column>
-            <column name="city" type="varchar">
-                <constraints nullable="false"/>
-            </column>
             <column name="age" type="int"/>
             <column name="info_about" type="varchar">
                 <constraints nullable="false"/>
@@ -46,6 +37,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="rate_5" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rating" type="float" defaultValue="0">
                 <constraints nullable="false"/>
             </column>
             <column name="is_deleted" type="boolean" defaultValue="false">

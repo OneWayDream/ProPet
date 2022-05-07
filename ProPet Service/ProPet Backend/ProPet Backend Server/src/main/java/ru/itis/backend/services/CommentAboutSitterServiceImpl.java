@@ -4,10 +4,13 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.itis.backend.dto.CommentAboutSitterDto;
+import ru.itis.backend.dto.SitterInfoDto;
 import ru.itis.backend.exceptions.EntityNotExistsException;
 import ru.itis.backend.exceptions.EntityNotFoundException;
 import ru.itis.backend.models.CommentAboutSitter;
+import ru.itis.backend.models.SitterInfo;
 import ru.itis.backend.repositories.CommentAboutSitterRepository;
+import ru.itis.backend.repositories.SitterInfoRepository;
 import ru.itis.backend.utils.PropertiesUtils;
 
 import javax.persistence.PersistenceException;
@@ -18,8 +21,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CommentAboutSitterServiceImpl implements CommentAboutSitterService {
 
-    @NonNull
-    protected CommentAboutSitterRepository repository;
+    protected final CommentAboutSitterRepository repository;
+    protected final SitterInfoRepository sitterInfoRepository;
 
     @Override
     public List<CommentAboutSitterDto> findAll() {
@@ -36,6 +39,7 @@ public class CommentAboutSitterServiceImpl implements CommentAboutSitterService 
                     .orElseThrow(EntityNotExistsException::new);
             entityToDelete.setIsDeleted(true);
             repository.save(entityToDelete);
+            updateRating(entityToDelete, -1);
         } catch (Exception ex){
             if (ex instanceof EntityNotExistsException){
                 throw ex;
@@ -48,6 +52,7 @@ public class CommentAboutSitterServiceImpl implements CommentAboutSitterService 
     public CommentAboutSitterDto add(CommentAboutSitterDto commentAboutSitterDto) {
         CommentAboutSitter newEntity = CommentAboutSitterDto.to(commentAboutSitterDto);
         repository.save(newEntity);
+        updateRating(newEntity, +1);
         return CommentAboutSitterDto.from(newEntity);
     }
 
@@ -63,6 +68,7 @@ public class CommentAboutSitterServiceImpl implements CommentAboutSitterService 
         CommentAboutSitterDto entity = findById(commentAboutSitterDto.getId());
         PropertiesUtils.copyNonNullProperties(commentAboutSitterDto, entity);
         CommentAboutSitter updatedEntity = repository.save(CommentAboutSitterDto.to(entity));
+        updateRating(updatedEntity, +1);
         return CommentAboutSitterDto.from(updatedEntity);
     }
 
@@ -71,5 +77,23 @@ public class CommentAboutSitterServiceImpl implements CommentAboutSitterService 
         return CommentAboutSitterDto.from(repository.findAllByAccountId(userId).stream()
                 .filter(entry -> !entry.getIsDeleted())
                 .collect(Collectors.toList()));
+    }
+
+    protected void updateRating(CommentAboutSitter comment, int commentChange){
+        SitterInfo sitterInfo = sitterInfoRepository.findById(comment.getSitterInfoId())
+                .orElseThrow(EntityNotExistsException::new);
+        switch (comment.getRate()) {
+            case 1 -> sitterInfo.setRateOne(sitterInfo.getRateOne() + commentChange);
+            case 2 -> sitterInfo.setRateTwo(sitterInfo.getRateTwo() + commentChange);
+            case 3 -> sitterInfo.setRateThree(sitterInfo.getRateThree() + commentChange);
+            case 4 -> sitterInfo.setRateFour(sitterInfo.getRateFour() + commentChange);
+            case 5 -> sitterInfo.setRateFive(sitterInfo.getRateFive() + commentChange);
+        }
+        Double sum = (double) (sitterInfo.getRateOne() + sitterInfo.getRateTwo() * 2 + sitterInfo.getRateThree() * 3
+                + sitterInfo.getRateFour() * 4 + sitterInfo.getRateFive() * 5);
+        Integer amount = sitterInfo.getRateOne() + sitterInfo.getRateTwo() + sitterInfo.getRateThree()
+                + sitterInfo.getRateFour() + sitterInfo.getRateFive();
+        sitterInfo.setRating(sum / amount);
+        sitterInfoRepository.save(sitterInfo);
     }
 }

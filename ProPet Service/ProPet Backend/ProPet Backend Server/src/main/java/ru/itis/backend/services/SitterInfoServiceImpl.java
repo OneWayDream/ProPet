@@ -2,8 +2,13 @@ package ru.itis.backend.services;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.itis.backend.dto.SitterInfoDto;
+import ru.itis.backend.entities.SortingOrder;
+import ru.itis.backend.entities.SortingVariable;
 import ru.itis.backend.exceptions.EntityNotExistsException;
 import ru.itis.backend.exceptions.EntityNotFoundException;
 import ru.itis.backend.models.SitterInfo;
@@ -47,6 +52,12 @@ public class SitterInfoServiceImpl implements SitterInfoService {
     @Override
     public SitterInfoDto add(SitterInfoDto sitterInfoDto) {
         SitterInfo newEntity = SitterInfoDto.to(sitterInfoDto);
+        newEntity.setRateOne(0);
+        newEntity.setRateTwo(0);
+        newEntity.setRateThree(0);
+        newEntity.setRateFour(0);
+        newEntity.setRateFive(0);
+        newEntity.setRating(0.0);
         repository.save(newEntity);
         return SitterInfoDto.from(newEntity);
     }
@@ -71,6 +82,29 @@ public class SitterInfoServiceImpl implements SitterInfoService {
         return SitterInfoDto.from(repository.findByAccountId(userId)
                 .filter(entry -> !entry.getIsDeleted())
                 .orElseThrow(EntityNotFoundException::new));
+    }
+
+    @Override
+    public List<SitterInfoDto> getSearchPage(Integer page, Integer size,
+                                             SortingVariable sortedBy, SortingOrder order) {
+        Sort sort = null;
+        if (sortedBy != null){
+            sort = Sort.by(sortedBy.value());
+            if (order != null){
+                if (order.equals(SortingOrder.ASCENDING)){
+                    sort.ascending();
+                } else {
+                    sort.descending();
+                }
+            }
+        }
+        Pageable pageable;
+        if (sort != null){
+            pageable = PageRequest.of(page, size, sort);
+        } else {
+            pageable = PageRequest.of(page, size);
+        }
+        return SitterInfoDto.from(repository.findAll(pageable).toList());
     }
 
 }

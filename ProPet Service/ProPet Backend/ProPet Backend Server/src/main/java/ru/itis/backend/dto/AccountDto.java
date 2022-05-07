@@ -22,6 +22,8 @@ public class AccountDto {
     protected Date lastLogin;
     protected UserState state;
     protected UserRole role;
+    protected String name;
+    protected String surname;
     protected Date registrationDate;
     protected String imageKey;
     protected String city;
@@ -40,6 +42,8 @@ public class AccountDto {
                 .lastLogin(account.getLastLogin())
                 .state(account.getState())
                 .role(account.getRole())
+                .name(account.getName())
+                .surname(account.getSurname())
                 .registrationDate(account.getRegistrationDate())
                 .imageKey(account.getImageKey())
                 .city(account.getCity())
@@ -62,6 +66,8 @@ public class AccountDto {
                 .lastLogin(account.getLastLogin())
                 .state(account.getState())
                 .role(account.getRole())
+                .name(account.getName())
+                .surname(account.getSurname())
                 .registrationDate(account.getRegistrationDate())
                 .imageKey(ImageLoader.getImageKeyForUser(account))
                 .city(account.getCity())
