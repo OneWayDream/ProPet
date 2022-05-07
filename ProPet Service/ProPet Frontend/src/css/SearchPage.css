@@ -1,0 +1,38 @@
+.searchInput {
+  width: 40vw;
+  padding: 20px;
+  border-radius: 100px;
+  font-size: 1.3vw;
+  background: rgba(255,255,255,0.9);
+  border: none;
+  outline: none;
+  padding-right: 8vw;
+}
+
+.submitButton {
+  margin-left: -6.7vw;  
+  height: 100%;
+  width: 7vw;
+  font-size: 1.3vw;
+  color: white;
+  border: none;
+  border-radius: 100px;
+  background: rgba(162, 110, 165, 1);
+}
+
+.submitButton:hover {
+  cursor: pointer;
+}
+
+.searchInput:focus {
+  box-shadow: 0px 0px 20px 10px rgba(162, 110, 165, 0.46);
+}
+
+.searchItem {
+  width: 60vw;
+  /* min-width: 100%; */
+  margin: 30px 0;
+  padding: 15px;
+  border: 1px solid green;
+  border-radius: 20px;
+}

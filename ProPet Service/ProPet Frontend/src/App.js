@@ -1,26 +1,30 @@
-import logo from './logo.svg';
 import './App.css';
-import MenuItem from './components/atoms/menuItem/index';
+import './css/'
+import MainPage from './components/pages/mainPage';
+import ProfilePage from './components/pages/profilePage';
+import SignInPage from './components/pages/signInPage/';
+import SignUpPage from './components/pages/signUpPage';
+import SearchPage from './components/pages/searchPage';
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import paths from './configs/paths';
+import {Provider, useSelector} from 'react-redux';
+import {store} from './reducers';
+
 
 function App() {
+  // console.log(isAuth)
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        {/* <MenuItem href='ss'>Child</MenuItem> */}
-      </header>
-    </div>
+    <Provider store={ store }>
+      <BrowserRouter>
+        <Routes>
+          <Route path={paths.DEFAULT} element={<MainPage />} />
+          <Route path={paths.SIGN_IN} element={<SignInPage />} />
+          <Route path={paths.SIGN_UP} element={<SignUpPage />} />
+          <Route path={paths.SEARCH} element={<SearchPage />} />
+          <Route path={paths.PROFILE} element={<ProfilePage />} />
+        </Routes>
+      </BrowserRouter>
+    </Provider>
   );
 }
 
