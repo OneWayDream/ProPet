@@ -11,7 +11,7 @@
     <changeSet id="6" author="OneWayDream">
         <comment>Creating a table for sitter's comments</comment>
         <createTable tableName="comment_about_sitter">
-            <column name="id" type="bigint" autoIncrement="true" incrementBy="1" startWith="1">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="sitter_info_id" type="bigint">
@@ -38,7 +38,7 @@
     <changeSet id="7" author="OneWayDream">
         <comment>Creating a table for user's support appeals</comment>
         <createTable tableName="user_appeal">
-            <column name="id" type="bigint" autoIncrement="true" incrementBy="1" startWith="1">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="account_id" type="bigint">
@@ -63,7 +63,7 @@
     <changeSet id="8" author="OneWayDream">
         <comment>Creating a support answers table</comment>
         <createTable tableName="appeal_answer">
-            <column name="id" type="bigint" autoIncrement="true" incrementBy="1" startWith="1">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="appeal_id" type="bigint">

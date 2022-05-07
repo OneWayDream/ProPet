@@ -11,6 +11,6 @@ public class RegistrationForm {
     protected String mail;
     protected String password;
     protected String repeatedPassword;
-    protected String country;
+    protected String city;
 
 }

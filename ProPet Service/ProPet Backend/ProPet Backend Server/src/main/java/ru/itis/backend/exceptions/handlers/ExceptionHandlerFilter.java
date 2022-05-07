@@ -2,7 +2,6 @@ package ru.itis.backend.exceptions.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -23,7 +22,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (RuntimeException ex) {
             ErrorResponse errorResponse = new ErrorResponse(ex);
-            response.setStatus(errorResponse.getStatus().value());
+            response.setStatus(errorResponse.getStatus());
             response.setContentType("application/json");
             if (errorResponse.getMessage() != null){
                 ObjectMapper mapper = new ObjectMapper();

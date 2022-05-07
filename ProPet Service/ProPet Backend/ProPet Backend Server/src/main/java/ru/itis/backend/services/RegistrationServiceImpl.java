@@ -22,7 +22,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RegistrationServiceImpl implements RegistrationService {
 
-    protected final PasswordEncoder passwordEncoder;
     protected final ActivationLinksService activationLinksService;
     protected final AccountService accountService;
     protected final TokenManager tokenManager;
@@ -37,11 +36,13 @@ public class RegistrationServiceImpl implements RegistrationService {
             AccountDto newAccount = AccountDto.builder()
                     .login(registrationForm.getLogin())
                     .mail(registrationForm.getMail())
-                    .hashPassword(passwordEncoder.encode(registrationForm.getPassword()))
+                    .password(registrationForm.getPassword())
                     .state(UserState.NOT_ACTIVATED)
                     .role(UserRole.USER)
                     .registrationDate(new Date(System.currentTimeMillis()))
                     .imageKey("default.png")
+                    .city(registrationForm.getCity())
+                    .sitterStatus(false)
                     .build();
             newAccount = accountService.add(newAccount);
             ActivationLinkDto link = ActivationLinkDto.builder()

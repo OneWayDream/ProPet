@@ -30,15 +30,14 @@ public class SitterInfo {
 
     @Column(nullable = false)
     protected String surname;
-
-    @Column(nullable = false)
-    protected String city;
-
-    @Column(nullable = false)
     protected Integer age;
 
     @Column(name = "info_about", nullable = false)
     protected String infoAbout;
+
+    protected String animals;
+
+    protected String services;
 
     @Column(name = "rate_1", nullable = false)
     protected Integer rateOne = 0;
@@ -56,6 +55,5 @@ public class SitterInfo {
     protected Integer rateFive = 0;
 
     @Column(name = "is_deleted", nullable = false)
-    protected Boolean isDeleted;
-
+    protected Boolean isDeleted = false;
 }

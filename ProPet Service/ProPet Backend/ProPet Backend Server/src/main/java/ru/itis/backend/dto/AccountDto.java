@@ -5,6 +5,7 @@ import lombok.Data;
 import ru.itis.backend.models.Account;
 import ru.itis.backend.models.UserRole;
 import ru.itis.backend.models.UserState;
+import ru.itis.backend.utils.EncryptionUtils;
 import ru.itis.backend.utils.ImageLoader;
 import java.util.Date;
 import java.util.List;
@@ -17,13 +18,14 @@ public class AccountDto {
     protected Long id;
     protected String mail;
     protected String login;
-    protected String hashPassword;
+    protected String password;
     protected Date lastLogin;
     protected UserState state;
     protected UserRole role;
     protected Date registrationDate;
-    protected String country;
     protected String imageKey;
+    protected String city;
+    protected Boolean sitterStatus;
     protected List<PetInfoDto> pets;
     protected List<CommentAboutSitterDto> comments;
     protected SitterInfoDto sitterInfoDto;
@@ -35,13 +37,13 @@ public class AccountDto {
                 .id(account.getId())
                 .mail(account.getMail())
                 .login(account.getLogin())
-                .hashPassword(account.getHashPassword())
                 .lastLogin(account.getLastLogin())
                 .state(account.getState())
                 .role(account.getRole())
                 .registrationDate(account.getRegistrationDate())
-                .country(account.getCountry())
                 .imageKey(account.getImageKey())
+                .city(account.getCity())
+                .sitterStatus(account.getSitterStatus())
                 .pets((account.getPets() == null) ? null : PetInfoDto.from(account.getPets()))
                 .comments((account.getComments() == null) ? null : CommentAboutSitterDto.from(account.getComments()))
                 .appeals((account.getAppeals() == null) ? null : UserAppealDto.from(account.getAppeals()))
@@ -56,13 +58,14 @@ public class AccountDto {
                 .id(account.getId())
                 .mail(account.getMail())
                 .login(account.getLogin())
-                .hashPassword(account.getHashPassword())
+                .hashPassword(EncryptionUtils.encryptPassword(account.getPassword()))
                 .lastLogin(account.getLastLogin())
                 .state(account.getState())
                 .role(account.getRole())
                 .registrationDate(account.getRegistrationDate())
-                .country(account.getCountry())
                 .imageKey(ImageLoader.getImageKeyForUser(account))
+                .city(account.getCity())
+                .sitterStatus(account.getSitterStatus())
                 .pets((account.getPets() == null) ? null : PetInfoDto.to(account.getPets()))
                 .comments((account.getComments() == null) ? null : CommentAboutSitterDto.to(account.getComments()))
                 .appeals((account.getAppeals() == null) ? null : UserAppealDto.to(account.getAppeals()))

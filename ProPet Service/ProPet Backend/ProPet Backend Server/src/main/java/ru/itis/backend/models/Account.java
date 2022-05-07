@@ -39,13 +39,16 @@ public class Account {
     @Column(nullable = false)
     protected UserRole role;
 
+    protected String city;
+
+    @Column(name = "sitter_status", nullable = false)
+    protected Boolean sitterStatus = true;
+
     @Column(name = "is_deleted", nullable = false)
     protected Boolean isDeleted = false;
 
     @Column(name = "registration_date", nullable = false)
     protected Date registrationDate;
-
-    protected String country;
 
     @Column(name = "image_key", nullable = false)
     protected String imageKey = "default.png";

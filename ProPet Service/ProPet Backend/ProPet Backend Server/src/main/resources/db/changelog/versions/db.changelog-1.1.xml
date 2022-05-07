@@ -11,7 +11,7 @@
     <changeSet id="2" author="OneWayDream">
         <comment>Creating an activation links table</comment>
         <createTable tableName="activation_link">
-            <column name="id" type="bigint" autoIncrement="true" incrementBy="1" startWith="1">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="account_id" type="bigint">

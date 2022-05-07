@@ -19,9 +19,10 @@ public class SitterInfoDto {
     protected Long accountId;
     protected String name;
     protected String surname;
-    protected String city;
     protected Integer age;
     protected String infoAbout;
+    protected String animals;
+    protected String services;
     protected Integer rateOne;
     protected Integer rateTwo;
     protected Integer rateThree;
@@ -34,9 +35,10 @@ public class SitterInfoDto {
                 .accountId(info.getAccountId())
                 .name(info.getName())
                 .surname(info.getSurname())
-                .city(info.getCity())
                 .age(info.getAge())
                 .infoAbout(info.getInfoAbout())
+                .animals(info.getAnimals())
+                .services(info.getServices())
                 .rateOne(info.getRateOne())
                 .rateTwo(info.getRateTwo())
                 .rateThree(info.getRateThree())
@@ -51,9 +53,10 @@ public class SitterInfoDto {
                 .accountId(infoDto.getAccountId())
                 .name(infoDto.getName())
                 .surname(infoDto.getSurname())
-                .city(infoDto.getCity())
                 .age(infoDto.getAge())
                 .infoAbout(infoDto.getInfoAbout())
+                .animals(infoDto.getAnimals())
+                .services(infoDto.getServices())
                 .rateOne(infoDto.getRateOne())
                 .rateTwo(infoDto.getRateTwo())
                 .rateThree(infoDto.getRateThree())
