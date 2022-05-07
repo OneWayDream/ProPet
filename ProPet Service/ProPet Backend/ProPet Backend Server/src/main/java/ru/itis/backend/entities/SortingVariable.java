@@ -1,6 +1,5 @@
 package ru.itis.backend.entities;
 
-import ru.itis.backend.exceptions.IncorrectOrderException;
 import ru.itis.backend.exceptions.IncorrectVariableException;
 
 import java.util.Arrays;

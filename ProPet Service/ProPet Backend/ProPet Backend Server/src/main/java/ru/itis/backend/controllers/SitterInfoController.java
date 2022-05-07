@@ -174,9 +174,24 @@ public class SitterInfoController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Getting sitter info cards for the search")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success getting", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(
+                            schema = @Schema(implementation = SitterInfoDto.class)
+                    ))
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "458", description = "Access denied"),
+            @ApiResponse(responseCode = "459", description = "Incorrect search option value"),
+            @ApiResponse(responseCode = "460", description = "Incorrect search variable value"),
+            @ApiResponse(responseCode = "461", description = "Incorrect search options")
+    })
     @GetMapping(
             value = "/search?page={page}&size={size}&sorted-by={sortedBy}&order={order}"
     )
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> getSearchPage(@PathVariable int page,  @PathVariable int size,
                                            @PathVariable String sortedBy, @PathVariable String order){
         return ResponseEntity.ok(service.getSearchPage(page, size,
