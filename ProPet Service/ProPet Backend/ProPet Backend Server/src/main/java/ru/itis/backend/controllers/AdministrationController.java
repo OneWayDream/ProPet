@@ -23,7 +23,11 @@ public class AdministrationController {
 
     @Operation(summary = "Ban user.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success account blocking")
+            @ApiResponse(responseCode = "200", description = "Success account blocking"),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "404", description = "Entity does not exists"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "458", description = "Access denied")
     })
     @PostMapping(
             headers = {"JWT"}

@@ -33,7 +33,10 @@ public class SitterInfoController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = SitterInfoDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "458", description = "Access denied")
     })
     @GetMapping(
             headers = {"JWT"}
@@ -49,7 +52,11 @@ public class SitterInfoController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = SitterInfoDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "404", description = "Entity not found"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "458", description = "Access denied")
     })
     @GetMapping(
             value = "/by-id/{id}",
@@ -66,7 +73,11 @@ public class SitterInfoController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = SitterInfoDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "404", description = "Entity not found"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "458", description = "Access denied")
     })
     @GetMapping(
             value = "/by-user-id/{id}",
@@ -83,7 +94,10 @@ public class SitterInfoController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = SitterInfoDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "458", description = "Access denied")
     })
     @PostMapping(
             headers = {"JWT"}
@@ -108,7 +122,11 @@ public class SitterInfoController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = SitterInfoDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "404", description = "Entity does not exists"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "458", description = "Access denied")
     })
     @PatchMapping(
             headers = {"JWT"}
@@ -129,7 +147,11 @@ public class SitterInfoController {
 
     @Operation(summary = "Deleting sitter info by id.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success deleting")
+            @ApiResponse(responseCode = "200", description = "Success deleting"),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "404", description = "Entity does not exists"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "458", description = "Access denied")
     })
     @DeleteMapping(
             value = "/{id}",

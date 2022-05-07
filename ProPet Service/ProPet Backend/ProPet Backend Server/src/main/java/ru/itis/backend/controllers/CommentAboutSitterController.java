@@ -32,7 +32,9 @@ public class CommentAboutSitterController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = CommentAboutSitterDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception")
     })
     @GetMapping(
             headers = {"JWT"}
@@ -48,7 +50,10 @@ public class CommentAboutSitterController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = CommentAboutSitterDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "404", description = "Entity not found"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception")
     })
     @GetMapping(
             value = "/by-id/{id}",
@@ -59,13 +64,17 @@ public class CommentAboutSitterController {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @Operation(summary = "Getting a comment by account id.")
+    @Operation(summary = "Getting comments by account id.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success getting", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = CommentAboutSitterDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "404", description = "Entity does not exists"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "458", description = "Access denied")
     })
     @GetMapping(
             value = "/by-user-id/{id}",
@@ -82,7 +91,11 @@ public class CommentAboutSitterController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = CommentAboutSitterDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "404", description = "Entity does not exists"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "458", description = "Access denied")
     })
     @PostMapping(
             headers = {"JWT"}
@@ -107,7 +120,11 @@ public class CommentAboutSitterController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = CommentAboutSitterDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "404", description = "Entity does not exists"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "458", description = "Access denied")
     })
     @PatchMapping(
             headers = {"JWT"}
@@ -120,7 +137,11 @@ public class CommentAboutSitterController {
 
     @Operation(summary = "Deleting a comment by id.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success deleting")
+            @ApiResponse(responseCode = "200", description = "Success deleting"),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "404", description = "Entity does not exists"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "458", description = "Access denied")
     })
     @DeleteMapping(
             value = "/{id}",

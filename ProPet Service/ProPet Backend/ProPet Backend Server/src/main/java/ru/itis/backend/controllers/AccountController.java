@@ -32,7 +32,10 @@ public class AccountController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = AccountDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "458", description = "Access denied")
     })
     @GetMapping(
             headers = {"JWT"}
@@ -48,7 +51,11 @@ public class AccountController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = AccountDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "404", description = "Entity not found"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "458", description = "Access denied")
     })
     @GetMapping(
             value = "/by-id/{id}",
@@ -65,7 +72,11 @@ public class AccountController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = AccountDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "404", description = "Entity not found"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "458", description = "Access denied")
     })
     @GetMapping(
             value = "/by-login/{login}",
@@ -82,7 +93,11 @@ public class AccountController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = AccountDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "404", description = "Entity not found"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "458", description = "Access denied")
     })
     @GetMapping(
             value = "/by-mail/{mail}",
@@ -99,7 +114,12 @@ public class AccountController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = AccountDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "456", description = "This login is already in use"),
+            @ApiResponse(responseCode = "457", description = "This mail is already in use"),
+            @ApiResponse(responseCode = "458", description = "Access denied")
     })
     @PostMapping(
             headers = {"JWT"}
@@ -115,7 +135,14 @@ public class AccountController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = AccountDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "404", description = "Entity does not exists"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "456", description = "This login is already in use"),
+            @ApiResponse(responseCode = "457", description = "This mail is already in use"),
+            @ApiResponse(responseCode = "458", description = "Access denied"),
+            @ApiResponse(responseCode = "502", description = "Something wrong with jwt server connection")
     })
     @PatchMapping(
             headers = {"JWT"}
@@ -136,7 +163,12 @@ public class AccountController {
 
     @Operation(summary = "Deleting user by id.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success deleting")
+            @ApiResponse(responseCode = "200", description = "Success deleting"),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "404", description = "Entity does not exists"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "458", description = "Access denied"),
+            @ApiResponse(responseCode = "502", description = "Something wrong with jwt server connection")
     })
     @DeleteMapping(
             value = "/{id}",
@@ -161,7 +193,11 @@ public class AccountController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = AccountDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "404", description = "The link does not exist"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "502", description = "Something wrong with jwt server connection")
     })
     @PostMapping(
             value = "/activate/{linkValue}",

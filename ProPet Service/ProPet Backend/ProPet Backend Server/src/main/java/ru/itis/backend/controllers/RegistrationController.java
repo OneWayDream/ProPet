@@ -30,7 +30,13 @@ public class RegistrationController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = AccountDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "453", description = "Different passwords"),
+            @ApiResponse(responseCode = "456", description = "This login is already in use"),
+            @ApiResponse(responseCode = "457", description = "This mail is already in use"),
+            @ApiResponse(responseCode = "502", description = "Something wrong with jwt server connection")
     })
     @PostMapping()
     public ResponseEntity<AccountDto> registerNewUser(@RequestBody RegistrationForm registrationForm){

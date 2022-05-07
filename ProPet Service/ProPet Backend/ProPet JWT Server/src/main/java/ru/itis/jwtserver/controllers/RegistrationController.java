@@ -27,7 +27,10 @@ public class RegistrationController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = JwtUserDto.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "457", description = "Access denied")
     })
     @PostMapping(
             value = "/register",

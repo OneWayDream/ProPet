@@ -15,10 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-@RequiredArgsConstructor
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtBlacklistService service;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -27,12 +25,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String token = request.getHeader("JWT");
 
         if (token!=null){
-
-            if (service.exists(token)) {
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                return;
-            }
-
             TokenAuthentication tokenAuthentication = new TokenAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(tokenAuthentication);
         }

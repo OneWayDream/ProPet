@@ -22,7 +22,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (RuntimeException ex) {
             ErrorResponse errorResponse = new ErrorResponse(ex);
-            response.setStatus(errorResponse.getStatus().value());
+            response.setStatus(errorResponse.getStatus());
             response.setContentType("application/json");
             if (errorResponse.getMessage() != null){
                 ObjectMapper mapper = new ObjectMapper();

@@ -22,13 +22,17 @@ public class AdministrationController {
 
     @Operation(summary = "Ban token")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success token blocking")
+            @ApiResponse(responseCode = "200", description = "Success token blocking"),
+            @ApiResponse(responseCode = "400", description = "The token is null"),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "457", description = "Access denied")
     })
     @PostMapping("/ban-token")
     @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
     public ResponseEntity<?> login(@RequestBody String token){
         if (token == null){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .build();
         }
         jwtBlacklistService.add(token);

@@ -51,7 +51,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         if (decodedJWT == null){
             SecurityContextHolder.getContext().setAuthentication(null);
-            throw new IncorrectJwtException("This token is not supported.");
+            throw new IncorrectJwtException();
         }
         return new UserDetailsImpl(AccessToken.builder()
                 .accountId(decodedJWT.getClaim("account_id").asLong())

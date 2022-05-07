@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ru.itis.backend.exceptions.BannedTokenException;
 import ru.itis.backend.exceptions.ExpiredJwtException;
 import ru.itis.backend.exceptions.IncorrectJwtException;
 import ru.itis.backend.services.JwtBlacklistService;
@@ -46,8 +47,7 @@ public class JwtCheckingFilter extends OncePerRequestFilter {
         if (request.getHeader("JWT") != null){
             String token = request.getHeader("JWT");
             if (service.exists(token)) {
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                return;
+                throw new BannedTokenException();
             }
 
             DecodedJWT decodedJWT = null;
@@ -63,14 +63,14 @@ public class JwtCheckingFilter extends OncePerRequestFilter {
             }
 
             if (decodedJWT == null){
-                throw new IncorrectJwtException("This token is incorrect");
+                throw new IncorrectJwtException();
             }
 
             if (decodedJWT.getClaim("expiration").asDate() != null){
                 Date date = java.util.Calendar.getInstance().getTime();
                 Date timeToDie = decodedJWT.getClaim("expiration").asDate();
                 if (!date.before(timeToDie)){
-                    throw new ExpiredJwtException("The token is expired.");
+                    throw new ExpiredJwtException();
                 }
             }
         }

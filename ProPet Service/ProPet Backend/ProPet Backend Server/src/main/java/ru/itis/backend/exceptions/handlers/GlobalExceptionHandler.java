@@ -13,32 +13,16 @@ import javax.persistence.PersistenceException;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(UserAuthorizationException.class)
-    public ResponseEntity<?> handleUserAuthorizationException(UserAuthorizationException exception){
-        if (exception instanceof BannedUserException){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
-        }
-        else if (exception instanceof NotActivatedUserException){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
-        }
-        else if (exception instanceof IncorrectPasswordException){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
-        }
-        else {
-            return ResponseEntity.badRequest().body("Something went wrong");
-        }
-    }
-
     @ExceptionHandler(RegistrationException.class)
     public ResponseEntity<?> handleRegistrationException(RegistrationException exception){
         if (exception instanceof DifferentPasswordsException){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+            return ResponseEntity.status(HttpErrorStatus.DIFFERENT_PASSWORDS.value()).body(exception.getMessage());
         }
         else if (exception instanceof LoginAlreadyInUseException){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This login is already in use");
+            return ResponseEntity.status(HttpErrorStatus.EXISTED_LOGIN.value()).body("This login is already in use");
         }
         else if (exception instanceof MailAlreadyInUseException){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This mail is already in use");
+            return ResponseEntity.status(HttpErrorStatus.EXISTED_MAIL.value()).body("This mail is already in use");
         }
         else {
             return ResponseEntity.badRequest().body("Something went wrong");
@@ -68,13 +52,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(TokenAuthenticationException.class)
     public ResponseEntity<?> handleTokenAuthenticationException(TokenAuthenticationException exception){
         if (exception instanceof ExpiredJwtException){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+            return ResponseEntity.status(HttpErrorStatus.EXPIRED_TOKEN.value()).body(
                     (exception.getMessage() == null) ? "The token is expired." : exception.getMessage()
             );
         }
         if (exception instanceof IncorrectJwtException){
             System.out.println(exception.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+            return ResponseEntity.status(HttpErrorStatus.INCORRECT_TOKEN.value()).body(
                     (exception.getMessage() == null) ? "This token is not supported" : exception.getMessage()
             );
         }
@@ -102,7 +86,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException exception){
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied.");
+        return ResponseEntity.status(HttpErrorStatus.ACCESS_DENIED.value()).body("Access denied");
     }
 
     @ExceptionHandler(Exception.class)

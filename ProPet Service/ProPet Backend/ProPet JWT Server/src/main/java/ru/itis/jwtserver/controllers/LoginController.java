@@ -36,7 +36,11 @@ public class LoginController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = RefreshTokenResponse.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "453", description = "The module is banned"),
+            @ApiResponse(responseCode = "456", description = "Incorrect module data")
     })
     @PostMapping("/login-module")
     public ResponseEntity<?> loginModule(@RequestBody ModuleAuthorizationForm moduleAuthorizationForm){
@@ -49,7 +53,12 @@ public class LoginController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = AccessTokenResponse.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "452", description = "The token is banned"),
+            @ApiResponse(responseCode = "454", description = "The token is expired"),
+            @ApiResponse(responseCode = "455", description = "The token is incorrect")
     })
     @PostMapping(
             value = "/auth-module",
@@ -67,7 +76,11 @@ public class LoginController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = RefreshTokenResponse.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "453", description = "The user is banned"),
+            @ApiResponse(responseCode = "456", description = "Incorrect user data")
     })
     @PostMapping(
             value = "/login-user"
@@ -82,7 +95,12 @@ public class LoginController {
                     @Content(mediaType = "application/json", array = @ArraySchema(
                             schema = @Schema(implementation = AccessTokenResponse.class)
                     ))
-            })
+            }),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "452", description = "The token is banned"),
+            @ApiResponse(responseCode = "454", description = "The token is expired"),
+            @ApiResponse(responseCode = "455", description = "The token is incorrect")
     })
     @PostMapping(
             value = "/auth-user",
