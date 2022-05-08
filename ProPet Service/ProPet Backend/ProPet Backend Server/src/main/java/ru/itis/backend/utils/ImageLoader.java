@@ -23,7 +23,7 @@ public class ImageLoader {
     protected final Path usersImagesFolder;
     protected final Path petsImagesFolder;
     protected final String defaultImage;
-    protected final ResourceLoader resourceLoader;
+    protected final String classPath;
 
     @Autowired
     public ImageLoader(
@@ -31,11 +31,12 @@ public class ImageLoader {
             @Value("${images.pets-images-folder}") String petsImagesFolder,
             @Value("${images.default-image}") String defaultImage,
             ResourceLoader resourceLoader
-    ){
-        this.usersImagesFolder = Paths.get(usersImagesFolder);
-        this.petsImagesFolder = Paths.get(petsImagesFolder);
+    ) throws IOException {
+        Resource resource = resourceLoader.getResource("classpath:");
+        classPath = resource.getFile().getPath();
+        this.usersImagesFolder = Paths.get(classPath + usersImagesFolder);
+        this.petsImagesFolder = Paths.get(classPath + petsImagesFolder);
         this.defaultImage = defaultImage;
-        this.resourceLoader = resourceLoader;
     }
 
     public Resource getUserImage(Long userId) {
@@ -59,19 +60,16 @@ public class ImageLoader {
         Path filePath;
 
         for (ImageType type: ImageType.values()){
-            filePath = folderPath.resolve(fileName + "." + type.value()).normalize();
-            Resource resource = resourceLoader.getResource(
-                    "classpath:" + filePath);
-            if (resource.exists()) {
-                return resource;
+            try{
+                filePath = folderPath.resolve(fileName + "." + type.value()).normalize();
+                Resource resource = new UrlResource(filePath.toUri());
+                if (resource.exists()) {
+                    return resource;
+                }
+            } catch (MalformedURLException ex){
+                //ignore
             }
-        }
 
-        Resource test = resourceLoader.getResource("classpath:");
-        try{
-            System.out.println(test.getFile().getPath());
-        } catch (Exception ex){
-            //ignore
         }
 
         filePath = folderPath.resolve(defaultImage).normalize();
@@ -83,7 +81,7 @@ public class ImageLoader {
             } else {
                 throw new ImageLoadException();
             }
-        } catch (MalformedURLException ex) {
+        } catch (Exception ex) {
             throw new ImageLoadException(ex);
         }
     }

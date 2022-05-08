@@ -1,9 +1,6 @@
 package ru.itis.backend.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -60,10 +57,7 @@ public class ImagesController {
     @PostMapping(
             value = "/user/{id}",
             headers = {"JWT"},
-            consumes = {
-                    "image/png; charset=utf-8",
-                    "image/jpeg; charset=utf-8"
-            }
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}
     )
     @PreAuthorize("isAuthenticated()")
     @JwtAccessConstraint(
@@ -73,8 +67,9 @@ public class ImagesController {
             jwtRoleFieldName = "role",
             opRolesArray = {"MODER", "ADMIN"}
     )
-    public ResponseEntity<?> uploadImageForUser(@RequestParam MultipartFile file, @PathVariable Long id){
-        imageLoader.saveUserImage(file, id);
+    public ResponseEntity<?> uploadImageForUser(@RequestPart(name = "image") MultipartFile image, @PathVariable Long id,
+                                                @RequestHeader("JWT") String token){
+        imageLoader.saveUserImage(image, id);
         return ResponseEntity.ok().build();
     }
 
@@ -112,10 +107,7 @@ public class ImagesController {
     @PostMapping(
             value = "/pet/{userId}/{petId}",
             headers = {"JWT"},
-            consumes = {
-                    "image/png; charset=utf-8",
-                    "image/jpeg; charset=utf-8"
-            }
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}
     )
     @PreAuthorize("isAuthenticated()")
     @JwtAccessConstraint(
@@ -125,9 +117,9 @@ public class ImagesController {
             jwtRoleFieldName = "role",
             opRolesArray = {"MODER", "ADMIN"}
     )
-    public ResponseEntity<?> uploadImageForPet(@RequestParam MultipartFile file, @PathVariable Long userId,
-                                               @PathVariable Long petId){
-        imageLoader.savePetImage(file, userId, petId);
+    public ResponseEntity<?> uploadImageForPet(@RequestPart(name = "image") MultipartFile image, @PathVariable Long userId,
+                                               @PathVariable Long petId, @RequestHeader("JWT") String token){
+        imageLoader.savePetImage(image, userId, petId);
         return ResponseEntity.ok().build();
     }
 
