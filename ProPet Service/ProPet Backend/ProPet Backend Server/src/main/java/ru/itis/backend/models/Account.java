@@ -54,9 +54,6 @@ public class Account {
     @Column(name = "registration_date", nullable = false)
     protected Date registrationDate;
 
-    @Column(name = "image_key", nullable = false)
-    protected String imageKey = "default.png";
-
     @OneToMany(targetEntity = PetInfo.class, mappedBy = "account", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     protected List<PetInfo> pets;
 

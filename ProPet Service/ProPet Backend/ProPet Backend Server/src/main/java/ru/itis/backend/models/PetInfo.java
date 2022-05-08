@@ -24,9 +24,6 @@ public class PetInfo {
     @Column(name = "account_id", nullable = false)
     protected Long accountId;
 
-    @Column(name = "image_key", nullable = false)
-    protected String imageKey = "default.png";
-
     @Column(nullable = false)
     protected String nickname;
 

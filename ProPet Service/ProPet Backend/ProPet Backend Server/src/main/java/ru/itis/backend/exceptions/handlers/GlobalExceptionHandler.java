@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.itis.backend.exceptions.*;
+import ru.itis.backend.utils.ImageLoader;
 
 import javax.persistence.PersistenceException;
 
@@ -43,6 +44,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         }
         if (exception instanceof LinkNotExistsException){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("This link is not exists");
+        }
+        if (exception instanceof SitterInfoAlreadyExistsException){
+            return ResponseEntity.status(HttpErrorStatus.ALREADY_CREATED_SITTER_INFO.value())
+                    .body("This account already has a sitter info card");
         }
         else {
             return ResponseEntity.badRequest().body("Something went wrong");
@@ -99,6 +104,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         }
         else {
             return ResponseEntity.status(HttpErrorStatus.INCORRECT_SEARCH_SETTINGS.value()).build();
+        }
+    }
+
+    @ExceptionHandler(ImageException.class)
+    public ResponseEntity<?> handleImageException(ImageException exception){
+        exception.printStackTrace();
+        if (exception instanceof ImageLoadException){
+            return ResponseEntity.status(HttpErrorStatus.IMAGE_LOAD_ERROR.value())
+                    .body("Can't load an image");
+        }
+        else if (exception instanceof ImageStoreException){
+            return ResponseEntity.status(HttpErrorStatus.IMAGE_STORE_ERROR.value())
+                    .body("Can't save an image");
+        }
+        else if (exception instanceof IncorrectImageTypeException){
+            return ResponseEntity.status(HttpErrorStatus.INCORRECT_IMAGE_TYPE.value())
+                    .body("Incorrect image type");
+        }
+        else {
+            return ResponseEntity.badRequest().body("Something went wrong");
         }
     }
 

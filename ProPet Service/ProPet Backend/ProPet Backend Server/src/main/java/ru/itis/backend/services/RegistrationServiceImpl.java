@@ -40,7 +40,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                     .state(UserState.NOT_ACTIVATED)
                     .role(UserRole.USER)
                     .registrationDate(new Date(System.currentTimeMillis()))
-                    .imageKey("default.png")
                     .city(registrationForm.getCity())
                     .sitterStatus(false)
                     .build();

@@ -19,7 +19,6 @@ public class CommentAboutSitterDto {
     protected Long id;
     protected Long sitterInfoId;
     protected Long accountId;
-    protected String imageKey;
     protected Integer rate;
     protected String review;
 
@@ -28,7 +27,6 @@ public class CommentAboutSitterDto {
                 .id(comment.getId())
                 .sitterInfoId(comment.getSitterInfoId())
                 .accountId(comment.getAccountId())
-                .imageKey(comment.getImageKey())
                 .rate(comment.getRate())
                 .review(comment.getReview())
                 .build();
@@ -39,7 +37,6 @@ public class CommentAboutSitterDto {
                 .id(comment.getId())
                 .sitterInfoId(comment.getSitterInfoId())
                 .accountId(comment.getAccountId())
-                .imageKey(ImageLoader.getImageKeyCommentAboutSitter(comment))
                 .rate(comment.getRate())
                 .review(comment.getReview())
                 .isDeleted(false)

@@ -9,13 +9,14 @@ import org.springframework.stereotype.Service;
 import ru.itis.backend.dto.SitterInfoDto;
 import ru.itis.backend.entities.SortingOrder;
 import ru.itis.backend.entities.SortingVariable;
-import ru.itis.backend.exceptions.EntityNotExistsException;
-import ru.itis.backend.exceptions.EntityNotFoundException;
+import ru.itis.backend.exceptions.*;
 import ru.itis.backend.models.SitterInfo;
 import ru.itis.backend.repositories.SitterInfoRepository;
 import ru.itis.backend.utils.PropertiesUtils;
 
+import javax.persistence.OrderBy;
 import javax.persistence.PersistenceException;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,15 +52,27 @@ public class SitterInfoServiceImpl implements SitterInfoService {
 
     @Override
     public SitterInfoDto add(SitterInfoDto sitterInfoDto) {
-        SitterInfo newEntity = SitterInfoDto.to(sitterInfoDto);
-        newEntity.setRateOne(0);
-        newEntity.setRateTwo(0);
-        newEntity.setRateThree(0);
-        newEntity.setRateFour(0);
-        newEntity.setRateFive(0);
-        newEntity.setRating(0.0);
-        repository.save(newEntity);
-        return SitterInfoDto.from(newEntity);
+        try {
+            SitterInfo newEntity = SitterInfoDto.to(sitterInfoDto);
+            newEntity.setRateOne(0);
+            newEntity.setRateTwo(0);
+            newEntity.setRateThree(0);
+            newEntity.setRateFour(0);
+            newEntity.setRateFive(0);
+            newEntity.setRating(0.0);
+            repository.save(newEntity);
+            return SitterInfoDto.from(newEntity);
+        } catch (Exception ex){
+            try{
+                String message = ex.getCause().getCause().getMessage();
+                if (message.contains("sitter_info_account_id_key")){
+                    throw new SitterInfoAlreadyExistsException(ex);
+                }
+            } catch (NullPointerException exception){
+                //ignore
+            }
+            throw ex;
+        }
     }
 
     @Override
@@ -104,7 +117,17 @@ public class SitterInfoServiceImpl implements SitterInfoService {
         } else {
             pageable = PageRequest.of(page, size);
         }
-        return SitterInfoDto.from(repository.findAll(pageable).toList());
+//        return SitterInfoDto.from(repository.findAll(pageable).toList()); syntax error :c
+        if (sortedBy == null){
+            return SitterInfoDto.from(repository.getSearchPage(size, (long) page*size));
+        } else {
+            List<SitterInfoDto> result = SitterInfoDto.from(repository.getSearchPageWithSorting(size,
+                    (long) page*size, sortedBy.value()));
+            if ((order != null) && (order.equals(SortingOrder.DESCENDING))){
+                Collections.reverse(result);
+            }
+            return result;
+        }
     }
 
 }

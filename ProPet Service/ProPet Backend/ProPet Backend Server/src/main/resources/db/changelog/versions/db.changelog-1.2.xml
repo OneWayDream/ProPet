@@ -18,9 +18,6 @@
                 <constraints nullable="false" foreignKeyName="fk_account_id" referencedTableName="account"
                              referencedColumnNames="id"/>
             </column>
-            <column name="image_key" type="varchar" defaultValue="default.png">
-                <constraints nullable="false"/>
-            </column>
             <column name="nickname" type="varchar">
                 <constraints nullable="false"/>
             </column>

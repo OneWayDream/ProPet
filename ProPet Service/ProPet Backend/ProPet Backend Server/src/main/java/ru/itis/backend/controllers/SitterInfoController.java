@@ -19,6 +19,7 @@ import ru.itis.backend.entities.SortingVariable;
 import ru.itis.backend.services.SitterInfoService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/sitter-info")
@@ -99,7 +100,8 @@ public class SitterInfoController {
             }),
             @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
             @ApiResponse(responseCode = "418", description = "Unexpected exception"),
-            @ApiResponse(responseCode = "458", description = "Access denied")
+            @ApiResponse(responseCode = "458", description = "Access denied"),
+            @ApiResponse(responseCode = "462", description = "Sitter info is already exists")
     })
     @PostMapping(
             headers = {"JWT"}
@@ -189,11 +191,13 @@ public class SitterInfoController {
             @ApiResponse(responseCode = "461", description = "Incorrect search options")
     })
     @GetMapping(
-            value = "/search?page={page}&size={size}&sorted-by={sortedBy}&order={order}"
+            value = "/search",
+            headers = {"JWT"}
     )
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> getSearchPage(@PathVariable int page,  @PathVariable int size,
-                                           @PathVariable String sortedBy, @PathVariable String order){
+    public ResponseEntity<?> getSearchPage(@RequestParam int page,  @RequestParam int size,
+                                           @RequestParam(required = false) String sortedBy,
+                                           @RequestParam(required = false) String order){
         return ResponseEntity.ok(service.getSearchPage(page, size,
                 (sortedBy == null) ? null : SortingVariable.get(sortedBy),
                 (order == null) ? null : SortingOrder.get(order)));

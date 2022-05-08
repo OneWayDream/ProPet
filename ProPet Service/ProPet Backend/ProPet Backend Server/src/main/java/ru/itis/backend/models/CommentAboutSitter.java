@@ -32,9 +32,6 @@ public class CommentAboutSitter {
     @Column(name = "account_id")
     protected Long accountId;
 
-    @Column(name = "image_key", nullable = false)
-    protected String imageKey = "default.png";
-
     @Column(nullable = false)
     protected Integer rate;
 

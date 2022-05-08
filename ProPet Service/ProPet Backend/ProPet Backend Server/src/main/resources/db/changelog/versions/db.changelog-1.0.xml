@@ -39,9 +39,6 @@
                 <constraints nullable="false"/>
             </column>
             <column name="city" type="varchar"/>
-            <column name="image_key" type="varchar" defaultValue="default.png">
-                <constraints nullable="false"/>
-            </column>
             <column name="sitter_status" type="boolean" defaultValue="true">
                 <constraints nullable="false"/>
             </column>

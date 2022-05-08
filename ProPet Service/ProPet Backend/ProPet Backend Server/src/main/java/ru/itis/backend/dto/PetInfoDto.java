@@ -17,14 +17,12 @@ public class PetInfoDto {
 
     protected Long id;
     protected Long accountId;
-    protected String imageKey;
     protected String nickname;
 
     public static PetInfoDto from(PetInfo info){
         return (info == null) ? null : PetInfoDto.builder()
                 .id(info.getId())
                 .accountId(info.getAccountId())
-                .imageKey(info.getImageKey())
                 .nickname(info.getNickname())
                 .build();
     }
@@ -32,7 +30,6 @@ public class PetInfoDto {
     public static PetInfo to(PetInfoDto infoDto){
         return (infoDto == null) ? null : PetInfo.builder()
                 .id(infoDto.getId())
-                .imageKey(ImageLoader.getImageKeyForPet(infoDto))
                 .nickname(infoDto.getNickname())
                 .accountId(infoDto.getAccountId())
                 .isDeleted(false)

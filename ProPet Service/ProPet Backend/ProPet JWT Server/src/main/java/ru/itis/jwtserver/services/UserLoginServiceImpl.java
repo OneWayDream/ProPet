@@ -119,7 +119,7 @@ public class UserLoginServiceImpl implements UserLoginService {
                     .withClaim("expiration", date)
                     .sign(Algorithm.HMAC256(accessSecretKey));
             redisUsersService.addTokenToUser(JwtUserDto.builder()
-                            .id(decodedJWT.getClaim("id").asLong())
+                            .id(Long.valueOf(decodedJWT.getSubject()))
                             .redisId(decodedJWT.getClaim("redis_id").asString())
                             .build(), accessToken);
             return AccessTokenResponse.builder()

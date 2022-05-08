@@ -6,8 +6,8 @@ import java.util.Arrays;
 
 public enum SortingOrder {
 
-    ASCENDING("ascending"),
-    DESCENDING("descending");
+    ASCENDING("asc"),
+    DESCENDING("desc");
 
     private final String value;
 

@@ -25,7 +25,6 @@ public class AccountDto {
     protected String name;
     protected String surname;
     protected Date registrationDate;
-    protected String imageKey;
     protected String city;
     protected Boolean sitterStatus;
     protected List<PetInfoDto> pets;
@@ -45,7 +44,6 @@ public class AccountDto {
                 .name(account.getName())
                 .surname(account.getSurname())
                 .registrationDate(account.getRegistrationDate())
-                .imageKey(account.getImageKey())
                 .city(account.getCity())
                 .sitterStatus(account.getSitterStatus())
                 .pets((account.getPets() == null) ? null : PetInfoDto.from(account.getPets()))
@@ -69,7 +67,6 @@ public class AccountDto {
                 .name(account.getName())
                 .surname(account.getSurname())
                 .registrationDate(account.getRegistrationDate())
-                .imageKey(ImageLoader.getImageKeyForUser(account))
                 .city(account.getCity())
                 .sitterStatus(account.getSitterStatus())
                 .pets((account.getPets() == null) ? null : PetInfoDto.to(account.getPets()))
