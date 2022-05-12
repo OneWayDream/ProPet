@@ -7,7 +7,7 @@ const StyledCheckbox = styled.input.attrs({type: 'checkbox'})`
 `
 
 const Checkbox = (props) => {
-  return <StyledCheckbox/>
+  return <StyledCheckbox onChange={props.onChange}/>
 }
 
 export default Checkbox;

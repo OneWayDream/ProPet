@@ -82,7 +82,8 @@ const SignInPage = (props) => {
       case 418:
       case 403:
       default:
-        setErrorServerMessage('Возникла непредвиденная ошибка')
+        setErrorServerMessage('Что-то пошло не так')
+        console.log(response)
         break
     }
   }

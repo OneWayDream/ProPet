@@ -12,13 +12,17 @@ import { setUser } from "../reducers/userReducer"
 // return response
 // })
 
-export const registration = (login, mail, password, repeatedPassword, country) => {
-  return axios.post(api.SIGN_UP, {
+export const registration = (login, mail, password, repeatedPassword, city, onError, onSuccess) => {
+  axios.post(api.SIGN_UP, {
     login,
     mail,
     password,
     repeatedPassword,
-    country
+    city
+  }).then((response) => {
+    onSuccess(response)
+  }).catch((error) => {
+    onError(error.response)
   })
 }
 
