@@ -6,5 +6,6 @@ export default {
   SIGN_UP: '/signUp',
   PROFILE: '/profile',
   ABOUT: '/about',
-  CONTACTS: '/contacts'
+  CONTACTS: '/contacts',
+  PROFILE_EDIT: '/profile/edit',
 }

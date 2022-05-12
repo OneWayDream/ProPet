@@ -1,5 +1,17 @@
 .profileContainer {
-  background: linear-gradient(90deg, rgba(127, 255, 152, 0.5) 35%, rgba(255,255,255,0.1) 100%);
+  background: linear-gradient(90deg, rgba(127, 255, 152, 0.5) 35%, rgba(255, 255, 255, 0.1) 100%);
   padding: 2vw;
   border-radius: 50px;
+}
+
+
+.profileEditContainer {
+  padding: 2vw;
+  background: linear-gradient(90deg, rgba(127, 255, 152, 0.5) 35%, rgba(255, 255, 255, 0.1) 100%);
+  border-radius: 50px;
+}
+
+.profileEditContainerInner {
+  display: flex;
+  margin: 3vw 0;
 }

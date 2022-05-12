@@ -11,80 +11,103 @@ import { authenticate } from "../../../services/auth.service";
 import { useDispatch, useSelector } from "react-redux";
 
 const SignInPage = (props) => {
-  const location = useLocation()
-  const navigate = useNavigate()
-
-  // if (localStorage.getItem('user')) {
-  // navigate(paths.PROFILE)
-
+  // const handleKeypress = (e) => {
+  //   console.log(e.keyCode)
   // }
 
+
+  //usefull hooks
+  const location = useLocation()
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  //const for auth
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  //const for success messages
+  const [successMessage, setSuccessMessage] = useState('')
+
+  //const for errors messages
+  const [errorMessage, setErrorMessage] = useState({})
+
+  //set on startup
   useEffect(() => {
+    //check if user is authenticated
     if (localStorage.getItem('user')) {
       navigate(paths.PROFILE)
     }
-  }, [])
-
-  let message = '';
-  let showSuccessMessage = false;
-  let mail = '';
-  if (location.state != null) {
-    switch (location.state.action) {
-      case 'afterRegistration':
-        showSuccessMessage = true;
-        mail = location.state.mail;
-        console.log(mail)
-        message =
-          <>
+    //check if user after registration to show success register message
+    if (location.state != null) {
+      switch (location.state.action) {
+        case 'afterRegistration':
+          setSuccessMessage(
             <div>
               Регистрация прошла успешно
             </div>
-          </>
+          )
+          setUsername(location.state.mail)
+          break;
+      }
     }
-  }
 
-  const [username, setUsername] = useState(mail);
-  const [password, setPassword] = useState('');
+    //Add enter key press listener
+    // const listener = (e) => {
+    //   if (e.code === "Enter") {
+    //     e.preventDefault();
+    //     console.log(username)
+    //     handleLogin();
+    //   }
+    // };
+    // document.addEventListener("keydown", listener);
+    // return () => {
+    //   document.removeEventListener("keydown", listener);
+    // };
+  }, [])
 
-  const [showMessage, setShowMessage] = useState(showSuccessMessage)
-
-  const dispatch = useDispatch()
-
-
+  //actions for click sign in button
   const handleLogin = () => {
-    dispatch(authenticate(username, password))
-    if (localStorage.getItem('user')) {
-      navigate(paths.PROFILE)
+    if (validate()) {
+      dispatch(authenticate(username, password))
     }
   }
 
-  const handleKeypress = (e) => {
-    console.log(e.keyCode)
+  //validate date
+  const validate = () => {
+    let errors = {}
+    if (password.length < 5) {
+      errors.password = 'Пароль слишком короткий'
+    }
+
+    const usernameRegex = RegExp('^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$')
+    if (!usernameRegex.test(username)) {
+      errors.username = 'Неправильная почта'
+    }
+    setErrorMessage(errors)
+    return isEmpty(errors)
   }
 
-  // useEffect(() => {
-  //   const listener = event => {
-  //     if (event.code === "Enter" || event.code === "NumpadEnter") {
-  //       console.log("Enter key was pressed. Run your function.");
-  //       event.preventDefault();
-  //       // callMyFunction();
-  //     }
-  //   };
-  //   document.addEventListener("keydown", listener);
-  //   return () => {
-  //     document.removeEventListener("keydown", listener);
-  //   };
-  // }, []);
+  //check if object is empty
+  const isEmpty = (object) => {
+    return Object.keys(object).length == 0
+  }
+
 
   const body = <>
     <div className="signInContainer">
-      <div className="signInMessageSuccess" style={{ display: showMessage ? "block" : "none" }}>
-        {message}
+      <div className='signInMessageSuccess' style={{ display: successMessage ? "block" : "none" }} >
+        {successMessage}
       </div>
       <div style={{ fontSize: '2vw', paddingBottom: '5px' }}>
         Войдите в аккаунт
       </div>
+      <div className='signInMessageError' style={{ display: errorMessage.username ? "block" : "none" }} >
+        {errorMessage.username}
+      </div>
       <Input image={ProfilePic} width='2vw' placeholder='Логин' value={username} onChange={setUsername} />
+      <div className='signInMessageError' style={{ display: errorMessage.password ? "block" : "none" }} >
+        {errorMessage.password}
+      </div>
       <Input image={Key} width='2vw' placeholder='Пароль' type='password' onChange={setPassword} />
       <Link to="/forgot" style={{ color: 'black', fontSize: '1.5vw' }}>Я забыл пароль</Link>
       <Button style='orange' width='20vw' onClick={handleLogin}>Войти</Button>

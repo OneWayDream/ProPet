@@ -5,7 +5,7 @@ import settingPic from "../../../img/settings_picture.png";
 import OutputItem from "../../atoms/outputItem";
 import { logout } from "../../../reducers/userReducer";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import paths from "../../../configs/paths";
 import { useEffect, useState } from "react";
 import { getUser } from "../../../services/user.service";
@@ -19,14 +19,6 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // axios.get(api.GET_USER_BY_MAIL + credentials.mail, {
-    //   headers: {
-    //     "JWT": credentials.accessToken
-    //   }
-    // }).then((response) => {
-    //   setUser(response.data)
-    //   setLoading(false)
-    // })
     if (!localStorage.getItem('user')) {
       navigate(paths.SIGN_IN)
     } else {
@@ -47,11 +39,11 @@ const ProfilePage = () => {
     <div className="profileContainer">
       <div style={{ display: 'flex' }}>
         <div>
-          {console.log(user)}
           <Image image={profilePic} width="15vw" />
         </div>
         <div style={{ padding: '0 1vw' }}>
-          <a href="/settings"><Image image={settingPic} width="3vw" /></a>
+          <Link to={paths.PROFILE_EDIT}><Image image={settingPic} width="3vw" /></Link>
+          {/* <a href="/settings"><Image image={settingPic} width="3vw" /></a> */}
         </div>
         <div>
           <div style={{ display: 'flex', height: '100%' }}>
