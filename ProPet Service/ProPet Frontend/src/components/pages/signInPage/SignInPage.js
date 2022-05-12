@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import Button from "../../atoms/button";
 import Input from "../../atoms/input";
 import Template from "../template";
@@ -8,14 +7,9 @@ import Key from "../../../img/key.png"
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import paths from "../../../configs/paths";
 import { authenticate } from "../../../services/auth.service";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const SignInPage = (props) => {
-  // const handleKeypress = (e) => {
-  //   console.log(e.keyCode)
-  // }
-
-
   //usefull hooks
   const location = useLocation()
   const navigate = useNavigate()
@@ -28,8 +22,11 @@ const SignInPage = (props) => {
   //const for success messages
   const [successMessage, setSuccessMessage] = useState('')
 
-  //const for errors messages
+  //const for errors messages on input(invalid email or password) 
   const [errorMessage, setErrorMessage] = useState({})
+
+  //const for errors from server(no user with received login etc)
+  const [errorServerMessage, setErrorServerMessage] = useState('')
 
   //set on startup
   useEffect(() => {
@@ -65,10 +62,28 @@ const SignInPage = (props) => {
     // };
   }, [])
 
+  const forwardToProfile = () => {
+      navigate(paths.PROFILE)
+  }
+
   //actions for click sign in button
   const handleLogin = () => {
     if (validate()) {
-      dispatch(authenticate(username, password))
+      dispatch(authenticate(username, password, handleErrorFromServer, forwardToProfile))
+    }
+  }
+
+  //catch errors from server, callback on authenticate()
+  const handleErrorFromServer = (response) => {
+    switch (response.status) {
+      case 456:
+        setErrorServerMessage('Неверная почта или пароль')
+        break
+      case 418:
+      case 403:
+      default:
+        setErrorServerMessage('Возникла непредвиденная ошибка')
+        break
     }
   }
 
@@ -95,9 +110,14 @@ const SignInPage = (props) => {
 
   const body = <>
     <div className="signInContainer">
-      <div className='signInMessageSuccess' style={{ display: successMessage ? "block" : "none" }} >
+      <div className='signInMessageSuccess' style={{ display: successMessage ? "block" : "none"}} >
         {successMessage}
       </div>
+      
+      <div className='signInMessageError' style={{ display: errorServerMessage ? "block" : "none" }} >
+        {errorServerMessage}
+      </div>
+
       <div style={{ fontSize: '2vw', paddingBottom: '5px' }}>
         Войдите в аккаунт
       </div>

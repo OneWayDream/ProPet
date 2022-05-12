@@ -22,7 +22,7 @@ export const registration = (login, mail, password, repeatedPassword, country) =
   })
 }
 
-export const authenticate = (mail, password) => {
+export const authenticate = (mail, password, onError, onSuccess) => {
   return async dispatch => {
     const response = axios.post(api.SIGN_IN, {
       mail,
@@ -35,7 +35,12 @@ export const authenticate = (mail, password) => {
       }).then((resp) => {
         const user = { user: { mail: mail, refreshToken: response.data.token, accessToken: resp.data.token } }
         dispatch(setUser(user))
+        onSuccess()
       })
+    }).catch((e) => {
+      if (e.response) {
+        onError(e.response)
+      }
     })
   }
 }

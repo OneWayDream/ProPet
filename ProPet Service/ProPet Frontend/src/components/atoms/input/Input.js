@@ -6,10 +6,9 @@ const StyledDiv = styled.div((props) => `
   border: 1px solid black;
   border-radius: 15px;
   padding: 20px;
-  margin-bottom: 20px;
+  margin: 5px 7px 15px 7px;
+  // margin-bottom: 20px;
   width: 27vw;
-  // min-width: 40%
-  // width: 70%;
   display: flex;
 `)
 
