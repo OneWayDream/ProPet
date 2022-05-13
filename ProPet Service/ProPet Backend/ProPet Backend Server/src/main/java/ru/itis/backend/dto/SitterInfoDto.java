@@ -53,6 +53,12 @@ public class SitterInfoDto {
                 .infoAbout(infoDto.getInfoAbout())
                 .animals(infoDto.getAnimals())
                 .services(infoDto.getServices())
+                .rateOne(infoDto.getRateOne())
+                .rateTwo(infoDto.getRateTwo())
+                .rateThree(infoDto.getRateThree())
+                .rateFour(infoDto.getRateFour())
+                .rateFive(infoDto.getRateFive())
+                .rating(infoDto.getRating())
                 .isDeleted(false)
                 .build();
     }
