@@ -27,7 +27,7 @@ public class SitterInfo {
 
     protected Integer age;
 
-    @Column(name = "info_about", nullable = false)
+    @Column(name = "info_about")
     protected String infoAbout;
 
     protected String animals;

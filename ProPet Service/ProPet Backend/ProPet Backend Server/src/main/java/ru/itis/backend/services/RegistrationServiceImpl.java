@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.itis.backend.dto.ActivationLinkDto;
 import ru.itis.backend.dto.RegistrationForm;
 import ru.itis.backend.dto.AccountDto;
+import ru.itis.backend.dto.SitterInfoDto;
 import ru.itis.backend.exceptions.*;
 import ru.itis.backend.models.ActivationLink;
 import ru.itis.backend.models.Account;
@@ -24,6 +25,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     protected final ActivationLinksService activationLinksService;
     protected final AccountService accountService;
+    protected final SitterInfoService sitterInfoService;
     protected final TokenManager tokenManager;
 
 
@@ -49,6 +51,11 @@ public class RegistrationServiceImpl implements RegistrationService {
                     .linkValue(UUID.randomUUID().toString())
                     .build();
             activationLinksService.add(link);
+            SitterInfoDto sitterInfo = SitterInfoDto.builder()
+                                    .accountId(newAccount.getId())
+                                    .build();
+            sitterInfo = sitterInfoService.add(sitterInfo);
+            newAccount.setSitterInfoDto(sitterInfo);
             accountService.activateUser(link.getLinkValue());
             return newAccount;
         } catch (Exception ex){
