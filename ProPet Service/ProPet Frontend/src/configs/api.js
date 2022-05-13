@@ -8,4 +8,5 @@ export default {
   SIGN_IN: JWT_URL + '/login-user',
   GET_USER_BY_MAIL: BASE_URL + '/user/by-mail/',
   GET_ACCESS_TOKEN: JWT_URL + '/auth-user',
+  SEARCH_SITTERS: BASE_URL + '/sitter-info/search'
 }

@@ -8,6 +8,8 @@ export const getUser = async (mail, token) => {
       "JWT": token
     }
   })
+
+
   // axios.get(api.GET_USER_BY_MAIL + mail).then((response) => {
     // console.log("AAA " + response)
   // })
@@ -21,4 +23,8 @@ export const getUser = async (mail, token) => {
   // }).catch((e) => {
   //   console.log(e)
   // });
+}
+
+export const getAccessToken = () => {
+  return localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).accessToken : undefined
 }
