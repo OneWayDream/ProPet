@@ -60,7 +60,8 @@ public class AccountDto {
                 .id(account.getId())
                 .mail(account.getMail())
                 .login(account.getLogin())
-                .hashPassword(EncryptionUtils.encryptPassword(account.getPassword()))
+                .hashPassword((account.getPassword() == null) ? null
+                        : EncryptionUtils.encryptPassword(account.getPassword()))
                 .lastLogin(account.getLastLogin())
                 .state(account.getState())
                 .role(account.getRole())
