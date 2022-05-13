@@ -94,9 +94,12 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountDto update(AccountDto accountDto) {
         try{
-            AccountDto entity = findById(accountDto.getId());
-            PropertiesUtils.copyNonNullProperties(accountDto, entity);
-            Account updatedEntity = repository.save(AccountDto.to(entity));
+            Account entity = repository.findById(accountDto.getId())
+                    .filter(entry -> !entry.getIsDeleted())
+                    .orElseThrow(EntityNotFoundException::new);
+            Account updatedEntity = AccountDto.to(accountDto);
+            PropertiesUtils.copyNonNullProperties(updatedEntity, entity);
+            updatedEntity = repository.save(entity);
             return AccountDto.from(updatedEntity);
         } catch (Exception ex){
             try{
