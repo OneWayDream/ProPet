@@ -9,6 +9,7 @@ import Checkbox from "../../atoms/checkbox/";
 import { Link, useNavigate } from "react-router-dom";
 import { registration } from "../../../services/auth.service";
 import paths from "../../../configs/paths";
+import { emailRegex } from "../../../configs/regexp";
 
 const SignUpPage = () => {
   //Some usefull hooks
@@ -96,7 +97,7 @@ const SignUpPage = () => {
       errors.login = 'Неверный логин'
     }
 
-    const mailRegex = RegExp('^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$')
+    const mailRegex = emailRegex
     if (!mailRegex.test(mail)) {
       errors.mail = 'Неправильная почта'
     }

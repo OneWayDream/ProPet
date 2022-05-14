@@ -27,24 +27,44 @@ export const registration = (login, mail, password, repeatedPassword, city, onEr
 }
 
 export const authenticate = (mail, password, onError, onSuccess) => {
-  return async dispatch => {
-    const response = axios.post(api.SIGN_IN, {
-      mail,
-      password
-    }).then((response) => {
-      axios.post(api.GET_ACCESS_TOKEN, {}, {
-        headers: {
-          'refresh-token': response.data.token
-        }
-      }).then((resp) => {
-        const user = { user: { mail: mail, refreshToken: response.data.token, accessToken: resp.data.token } }
-        dispatch(setUser(user))
-        onSuccess()
-      })
-    }).catch((e) => {
-      if (e.response) {
-        onError(e.response)
+  axios.post(api.SIGN_IN, {
+    mail,
+    password
+  }).then((response) => {
+    axios.post(api.GET_ACCESS_TOKEN, {}, {
+      headers: {
+        'refresh-token': response.data.token
       }
+    }).then((resp) => {
+      // const user = { user: { mail: mail, refreshToken: response.data.token, accessToken: resp.data.token } }
+      // setUser(user)
+      const user = {mail: mail, refreshToken: response.data.token, accessToken: resp.data.token }
+      localStorage.setItem('user', JSON.stringify(user))
+      onSuccess(resp)
+    }).catch((e) => {
+      onError(e.response)
     })
-  }
+  }).catch((e) => {
+    onError(e.response)
+  })
+
+  // return async dispatch => {
+  // const response = axios.post(api.SIGN_IN, {
+  //   mail,
+  //   password
+  // }).then((response) => {
+  //   axios.post(api.GET_ACCESS_TOKEN, {}, {
+  //     headers: {
+  //       'refresh-token': response.data.token
+  //     }
+  //   }).then((resp) => {
+  //     const user = { user: { mail: mail, refreshToken: response.data.token, accessToken: resp.data.token } }
+  //     dispatch(setUser(user))
+  //   })
+  // }).catch((e) => {
+  //   if (e.response) {
+  //     onError(e.response)
+  //   }
+  // })
+  // }
 }

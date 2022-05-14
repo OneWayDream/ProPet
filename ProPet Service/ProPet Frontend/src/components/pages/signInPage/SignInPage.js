@@ -47,19 +47,6 @@ const SignInPage = (props) => {
           break;
       }
     }
-
-    //Add enter key press listener
-    // const listener = (e) => {
-    //   if (e.code === "Enter") {
-    //     e.preventDefault();
-    //     console.log(username)
-    //     handleLogin();
-    //   }
-    // };
-    // document.addEventListener("keydown", listener);
-    // return () => {
-    //   document.removeEventListener("keydown", listener);
-    // };
   }, [])
 
   const forwardToProfile = () => {
@@ -69,7 +56,8 @@ const SignInPage = (props) => {
   //actions for click sign in button
   const handleLogin = () => {
     if (validate()) {
-      dispatch(authenticate(username, password, handleErrorFromServer, forwardToProfile))
+      // dispatch(authenticate(username, password, handleErrorFromServer, forwardToProfile))
+      authenticate(username, password, handleErrorFromServer, forwardToProfile)
     }
   }
 

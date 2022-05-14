@@ -23,12 +23,18 @@ const ProfilePage = () => {
       navigate(paths.SIGN_IN)
     } else {
       const credentials = JSON.parse(localStorage.getItem('user'))
-      getUser(credentials.mail, credentials.accessToken).then((response) => {
-        setUser(response.data)
-        setLoading(false)
-      })
+      getUser(credentials.mail, credentials.accessToken, handleError, handleSuccess)
     }
   }, [])
+
+  const handleSuccess = (response) => {
+    setUser(response.data)
+    setLoading(false)
+  }
+
+  const handleError = (error) => {
+    console.log(error)
+  }
 
   const logOut = () => {
     dispatch(logout())

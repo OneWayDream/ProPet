@@ -8,57 +8,150 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import paths from "../../../configs/paths";
 import { useEffect, useState } from "react";
-import { getUser } from "../../../services/user.service";
+import { changeCredentials, changeSitterInto, changeUserInfo, getAccessToken, getFullUserInfo, getSitterInfo, getUser, getUserCredentials, isAuthenticated } from "../../../services/user.service";
 import api from "../../../configs/api";
 import axios from "axios";
 import Input from "../../atoms/input";
+import { aboutInfoRegex, ageRegex, cityRegex, emailRegex, nameRegex, surnameRegex, telephoneNumberRegex } from "../../../configs/regexp";
 
 const ProfileEditPage = () => {
+  //some usefull hooks
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
+  //const for user that server gave
+  const [originalUser, setOriginalUser] = useState()
+  const [originalSitter, setOriginalSitter] = useState()
+
+  //const for changing user info
   const [user, setUser] = useState()
+  const [sitter, setSitter] = useState()
+
+  //const for waiting server response
   const [loading, setLoading] = useState(true)
 
+  //const for local errors
+  const [errorMessage, setErrorMessage] = useState({})
+
+  //const for errors from server
+  const [errorServerMessage, setErrorServerMessage] = useState()
+
+  //Redirect in not authenticate and get full information about user
   useEffect(() => {
-    if (!localStorage.getItem('user')) {
+    if (!isAuthenticated()) {
       navigate(paths.SIGN_IN)
     } else {
-      const credentials = JSON.parse(localStorage.getItem('user'))
-      getUser(credentials.mail, credentials.accessToken).then((response) => {
-        setUser(response.data)
-        console.log(user)
-        setLoading(false)
-      })
-
+      const credentials = getUserCredentials()
+      getFullUserInfo(credentials.mail, credentials.accessToken, handleError, handleSuccessFullInfo)
     }
   }, [])
 
-  const logOut = () => {
-    dispatch(logout())
-    navigate(paths.WELCOME)
+  //Handle some errors from server
+  const handleError = (error) => {
+    alert('Что-то пошло не так')
+    console.log("Error: " + JSON.stringify(error))
+    setLoading(false)
   }
 
-  const handleInput = (e) => {
-    // console.log(e.target.name, " : ", e.target.value);
+  //Callback for Successfully get full user info
+  const handleSuccessFullInfo = (response) => {
+    setOriginalUser(response.user)
+    setUser(response.user)
+
+    setOriginalSitter(response.sitter)
+    setSitter(response.sitter)
+
+    setLoading(false)
+  }
+
+  //Changing user info
+  const handleUserInput = (e) => {
     if (e.target.type === 'checkbox') {
-      setUser({ ...user, [e.target.name]: e.target.checked})
+      setUser({ ...user, [e.target.name]: e.target.checked })
     } else {
-      setUser({ ...user, [e.target.name]: e.target.value });
+      setUser({ ...user, [e.target.name]: (e.target.value === "" ? null : e.target.value) });
     }
   };
 
-  const handleInputSitter = (e) => {
-      
+  //Changeing sitter info
+  const handleSitterInput = (e) => {
+    setSitter({ ...sitter, [e.target.name]: (e.target.value === "" ? null : e.target.value) })
   }
 
+  //Handle update request
+  const handleChangeRequest = () => {
+    const userIsChanged = !(JSON.stringify(user) === JSON.stringify(originalUser));
+    const sitterIsChanged = !(JSON.stringify(sitter) === JSON.stringify(originalSitter))
 
-  const handleSitter = () => {
+    if ((userIsChanged || sitterIsChanged) && validate()) {
+      setLoading(true)
+      if (userIsChanged) {
+        changeUserInfo(user, getAccessToken(), handleError, handleSuccesUserChanged)
+        setOriginalUser(user)
+        if (user.mail !== originalUser.mail) {
+          changeCredentials(user.mail)
+        }
+      }
+      if (sitterIsChanged) {
+        changeSitterInto(sitter, getAccessToken(), handleError, handleSuccesUserChanged)
+        setOriginalSitter(sitter)
+      }
+    }
+  }
 
+  const test = () => {
+    const user = JSON.parse(localStorage.getItem('user'))
+    const newUser = {}
+    newUser.mail = 'test@wsfas.s'
+    console.log(Object.assign(user,newUser))
+  }
+
+  //Validate data
+  const validate = () => {
+    let errors = {}
+
+    if (user.name !== originalUser.name && !nameRegex.test(user.name)) {
+      errors.name = 'Имя может содержать только русские и английские буквы'
+    }
+
+    if (user.surname !== originalUser.surname && !surnameRegex.test(user.surname)) {
+      errors.surname = 'Имя может содержать только русские и английские буквы'
+    }
+
+    if (user.mail !== originalUser.mail && !emailRegex.test(user.mail)) {
+      errors.mail = 'Неверная почта'
+    }
+
+    if (user.city !== originalUser.city && !cityRegex.test(user.city)) {
+      errors.city = 'Некорректный город'
+    }
+
+    if (user.telephone !== originalUser.telephone && !telephoneNumberRegex.test(user.telephone)) {
+      errors.telephone = 'Некорректный телефон'
+    }
+
+    if (user.age !== originalUser.age && !ageRegex.test(user.age)) {
+      errors.telephone = 'Некорректный возраст'
+    }
+
+    if (sitter.aboutInfo !== originalSitter.aboutInfo && !aboutInfoRegex) {
+      errors.aboutInfo = 'Некорректно заполнено поле "о себе"'
+    }
+
+    setErrorMessage(errors)
+    return Object.keys(errors).length == 0
+  }
+
+  //Callback for user successfully changed
+  const handleSuccesUserChanged = (response) => {
+    setLoading(false)
+    alert('Изменения успешно применены')
   }
 
   const body = loading === false ?
     <div className="profileEditContainer">
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
+        <div>Errors: {errorMessage ? JSON.stringify(errorMessage) : ''}</div>
         <div style={{ fontSize: '2.5vw' }}>Общая информация</div>
         <div className="profileEditContainerInner">
           <div style={{ marginRight: '5vw' }}>
@@ -67,46 +160,48 @@ const ProfileEditPage = () => {
           </div>
           <div>
             Имя:
-            <Input placeholder='Имя' value={user.name || ''} onChange={handleInput} name='name' />
+            <Input placeholder='Имя' value={user.name || ''} onChange={handleUserInput} name='name' />
             Фамилия:
-            <Input placeholder='Фамилия' value={user.surname || ''} onChange={handleInput} name='surname' />
+            <Input placeholder='Фамилия' value={user.surname || ''} onChange={handleUserInput} name='surname' />
             Электронная почта:
-            <Input placeholder='Электронная почта' value={user.mail || ''} onChange={handleInput} name='mail' />
+            <Input placeholder='Электронная почта' value={user.mail || ''} onChange={handleUserInput} name='mail' />
           </div>
         </div>
-        <button onClick={(e) => { console.log(user) }}>Сохранить</button>
+        <button onClick={handleChangeRequest}>Сохранить</button>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div style={{ fontSize: '2.5vw' }}>Информация сиделки</div>
+        <div style={{ fontSize: '2.5vw', paddingTop: '2vw' }}>Информация сиделки</div>
         <div className="profileEditContainerInner">
-          <div>
+          <div style={{ display: 'flex', flexDirection: 'column' }} >
+            <div>
             Статус сиделки:
-            <input type='checkbox' onChange={handleInput} name='sitterStatus' />
+            <input type='checkbox' onChange={handleUserInput} checked={user.sitterStatus} name='sitterStatus' />
+            </div>
             {user.sitterStatus ? <>
               Город:
-              <Input placeholder='Город' onChange={handleInput} name='city' />
+              <Input placeholder='Город' onChange={handleUserInput} name='city' />
               Телефон:
-              <Input placeholder='Телефон' onChange={handleInput} name='mail' />
+              <Input placeholder='Телефон' onChange={handleUserInput} name='telephone' />
+              Возраст
+              <Input placeholder='Возраст' onChange={handleSitterInput} name='age' />
               О себе:
-              <Input placeholder='О себе' onChange={handleInput} name='sitterInfoDto' />
+              <Input placeholder='О себе' onChange={handleSitterInput} name='infoAbout' />
             </>
-              : ''}
-            <button onClick={handleSitter}>Сохранить</button>
+              :   ''}
+            <button onClick={(e) => { console.log(sitter) }}>Сохранить</button>
           </div>
         </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ fontSize: '2.5vw' }}>Безопасность</div>
         <div className="profileEditContainerInner">
-          <div>
+          <div style={{ disply: 'flex', flexDirection: 'column' }} >
             Новый пароль:
-            <Input placeholder='Новый пароль' onChange={handleInput} name='password' />
+            <Input placeholder='Новый пароль' onChange={handleUserInput} name='password' />
             Старый пароль:
-            <Input placeholder='Старый пароль' />
+            <Input placeholder='Старый па роль' />
 
             <button>Сохранить</button>
-
-
             <button>Удалить аккаунт</button>
           </div>
         </div>
