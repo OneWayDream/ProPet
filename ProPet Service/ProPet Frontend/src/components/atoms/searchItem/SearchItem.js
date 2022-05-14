@@ -10,11 +10,11 @@ const SearchItem = (props) => {
         <Image image={profilePic} width='10vw'/>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
-        <div>sitter.name {sitter.surname}</div>
-        <div>Город: {sitter.city}</div>
-        <div>Возраст: {sitter.age}</div>
-        <div>Количество отзывов: {reviewCount}</div>
-        <div>Рейтинг: {sitter.rating}</div>
+        <div>{sitter.name} {sitter.surname}</div>
+        <div>Город: {sitter.city ? sitter.city : 'Не указан'}</div>
+        <div>Возраст: {sitter.age ? sitter.age : 'Не указан'}</div>
+        <div>Количество отзывов: {reviewCount ? reviewCount : 'Нет данных'}</div>
+        <div>Рейтинг: {sitter.rating ? sitter.rating + '/5' : 'Нет даных'}</div>
       </div>
     </div>
   </>)

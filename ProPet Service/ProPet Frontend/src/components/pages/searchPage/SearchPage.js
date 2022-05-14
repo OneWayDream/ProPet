@@ -1,10 +1,10 @@
-import Image from "../../atoms/image";
 import Template from "../template";
-import FilterLogo from "../../../img/filter.png"
 import SearchItem from "../../atoms/searchItem/";
 import { useState } from "react";
 import { searchSitters } from "../../../services/search.service";
 import { getAccessToken } from "../../../services/user.service";
+import { Link } from "react-router-dom";
+import paths from "../../../configs/paths";
 
 const SearchPage = () => {
 
@@ -38,7 +38,7 @@ const SearchPage = () => {
       <div>
         {sitters ? 
         sitters.map(sitter => {
-          return (<SearchItem sitter={sitter} />)
+          return (<Link to={paths.SITTER+sitter.id} style={{ color: 'black', textDecoration: 'none' }}><SearchItem sitter={sitter}/></Link>)
         }) 
         :
         <div style={{ paddingTop: '2vw' }}>Ничего не найдено</div> 
