@@ -8,22 +8,18 @@ import { getAccessToken } from "../../../services/user.service";
 
 const SearchPage = () => {
 
-  const [sitters, setSitters] = useState({})
-
-  const showFilter = () => {
-    console.log("AAA");
-  }
+  const [sitters, setSitters] = useState([])
 
   const handleSearch = () => {
-    const JWT = getAccessToken()
-    searchSitters(0, 10, "rating", "asc", JWT, handleError, handleSuccess)
+    searchSitters(0, 10, "rating", "asc", getAccessToken(), handleError, handleSuccess)
   }
 
   const handleSuccess = (response) => {
-    console.log("Success: " + JSON.stringify(response))
+    setSitters(response)
   }
 
   const handleError = (response) => {
+    alert("Что-то пошло не так")
     console.log("Error: " + response)
   }
 
@@ -40,15 +36,14 @@ const SearchPage = () => {
         </div>
       </div>
       <div>
-        <SearchItem user={{ name: "name" }} />
+        {sitters ? 
+        sitters.map(sitter => {
+          return (<SearchItem sitter={sitter} />)
+        }) 
+        :
+        <div style={{ paddingTop: '2vw' }}>Ничего не найдено</div> 
+       }
       </div>
-      {/* <div className="filter">
-        <div onClick={showFilter}>
-          <Image image={FilterLogo} width='4vw'/>
-        </div>
-        <div style={{ backgroundColor: 'red', }}>
-        </div>
-      </div> */}
     </div>
   return <Template body={body} />
 }
