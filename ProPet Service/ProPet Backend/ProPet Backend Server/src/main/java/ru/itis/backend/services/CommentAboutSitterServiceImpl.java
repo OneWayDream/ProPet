@@ -1,10 +1,8 @@
 package ru.itis.backend.services;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.itis.backend.dto.CommentAboutSitterDto;
-import ru.itis.backend.dto.SitterInfoDto;
+import ru.itis.backend.dto.app.CommentAboutSitterDto;
 import ru.itis.backend.exceptions.EntityNotExistsException;
 import ru.itis.backend.exceptions.EntityNotFoundException;
 import ru.itis.backend.models.CommentAboutSitter;

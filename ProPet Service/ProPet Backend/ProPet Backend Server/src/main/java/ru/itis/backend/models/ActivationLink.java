@@ -29,6 +29,7 @@ public class ActivationLink {
     protected String linkValue;
 
     @Column(name = "is_deleted", nullable = false)
+    @Builder.Default
     protected Boolean isDeleted = false;
 
 }

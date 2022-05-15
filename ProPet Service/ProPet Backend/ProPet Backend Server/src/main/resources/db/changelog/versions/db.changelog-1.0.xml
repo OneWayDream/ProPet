@@ -39,7 +39,159 @@
                 <constraints nullable="false"/>
             </column>
             <column name="city" type="varchar"/>
+            <column name="phone" type="varchar"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="OneWayDream">
+        <comment>Creating an activation links table</comment>
+        <createTable tableName="activation_link">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint">
+                <constraints nullable="false" unique="true" foreignKeyName="fk_account_id"
+                             referencedTableName="account" referencedColumnNames="id"/>
+            </column>
+            <column name="link_value" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="is_deleted" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="OneWayDream">
+        <comment>Adding a user's pets table</comment>
+        <createTable tableName="pet_info">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_account_id" referencedTableName="account"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="nickname" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_deleted" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="OneWayDream">
+        <comment>Adding a sitter's cards table</comment>
+        <createTable tableName="sitter_info">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint">
+                <constraints nullable="false" unique="true" foreignKeyName="fk_account_id" referencedTableName="account"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="age" type="int"/>
+            <column name="info_about" type="varchar"/>
+            <column name="animals" type="varchar"/>
+            <column name="services" type="varchar"/>
+            <column name="rate_1" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rate_2" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rate_3" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rate_4" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rate_5" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rating" type="float" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_deleted" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
             <column name="sitter_status" type="boolean" defaultValue="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="5" author="OneWayDream">
+        <comment>Creating a table for sitter's comments</comment>
+        <createTable tableName="comment_about_sitter">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="sitter_info_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_sitter_info_id" referencedTableName="sitter_info"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="account_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_account_id" referencedTableName="account"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="rate" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="review" type="varchar"/>
+            <column name="is_deleted" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="6" author="OneWayDream">
+        <comment>Creating a table for user's support appeals</comment>
+        <createTable tableName="user_appeal">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_account_id" referencedTableName="account"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="send_date" type="timestamptz">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_closed" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_deleted" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="7" author="OneWayDream">
+        <comment>Creating a support answers table</comment>
+        <createTable tableName="appeal_answer">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="appeal_id" type="bigint">
+                <constraints nullable="false" unique="true" foreignKeyName="fk_appeal_id"
+                             referencedTableName="user_appeal" referencedColumnNames="id"/>
+            </column>
+            <column name="send_date" type="timestamptz">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_author_id"
+                             referencedTableName="account" referencedColumnNames="id"/>
+            </column>
+            <column name="text" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_deleted" type="boolean" defaultValue="false">
                 <constraints nullable="false"/>
             </column>
         </createTable>

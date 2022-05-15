@@ -38,6 +38,7 @@ public class CommentAboutSitter {
     protected String review;
 
     @Column(name = "is_deleted", nullable = false)
+    @Builder.Default
     protected Boolean isDeleted = false;
 
 }

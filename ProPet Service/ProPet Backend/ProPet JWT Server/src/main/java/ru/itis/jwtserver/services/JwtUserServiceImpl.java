@@ -1,6 +1,5 @@
 package ru.itis.jwtserver.services;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.itis.jwtserver.dto.JwtUserDto;
@@ -18,8 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtUserServiceImpl implements JwtUserService {
 
-    @NonNull
-    protected JwtUserRepository repository;
+    protected final JwtUserRepository repository;
 
     @Override
     public List<JwtUserDto> findAll() {
@@ -78,5 +76,20 @@ public class JwtUserServiceImpl implements JwtUserService {
         return JwtUserDto.from(repository.findByMail(mail)
                 .filter(entry -> !entry.getIsDeleted())
                 .orElseThrow(EntityNotFoundException::new));
+    }
+
+    @Override
+    public JwtUserDto findByAccountId(Long accountId) {
+        return JwtUserDto.from(repository.findByAccountId(accountId)
+                .filter(entry -> !entry.getIsDeleted())
+                .orElseThrow(EntityNotFoundException::new));
+    }
+
+    @Override
+    public JwtUserDto updateByAccountId(JwtUserDto jwtUserDto) {
+        JwtUserDto entity = findByAccountId(jwtUserDto.getAccountId());
+        PropertiesUtils.copyNonNullProperties(jwtUserDto, entity);
+        JwtUser updatedEntity = repository.save(JwtUserDto.to(entity));
+        return JwtUserDto.from(updatedEntity);
     }
 }

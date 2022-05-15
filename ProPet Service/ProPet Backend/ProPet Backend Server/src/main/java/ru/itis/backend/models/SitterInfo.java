@@ -35,23 +35,28 @@ public class SitterInfo {
     protected String services;
 
     @Column(name = "rate_1", nullable = false)
-    protected Integer rateOne = 0;
+    protected Integer rateOne;
 
     @Column(name = "rate_2", nullable = false)
-    protected Integer rateTwo = 0;
+    protected Integer rateTwo;
 
     @Column(name = "rate_3", nullable = false)
-    protected Integer rateThree = 0;
+    protected Integer rateThree;
 
     @Column(name = "rate_4", nullable = false)
-    protected Integer rateFour = 0;
+    protected Integer rateFour;
 
     @Column(name = "rate_5", nullable = false)
-    protected Integer rateFive = 0;
+    protected Integer rateFive;
 
     @Column(name = "rating", nullable = false)
-    protected Double rating = 0.0;
+    protected Double rating;
 
     @Column(name = "is_deleted", nullable = false)
+    @Builder.Default
     protected Boolean isDeleted = false;
+
+    @Column(name = "sitter_status", nullable = false)
+    @Builder.Default
+    protected Boolean sitterStatus = true;
 }

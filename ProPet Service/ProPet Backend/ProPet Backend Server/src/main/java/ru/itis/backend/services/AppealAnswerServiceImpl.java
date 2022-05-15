@@ -3,7 +3,7 @@ package ru.itis.backend.services;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.itis.backend.dto.AppealAnswerDto;
+import ru.itis.backend.dto.rest.AppealAnswerDto;
 import ru.itis.backend.exceptions.EntityNotExistsException;
 import ru.itis.backend.exceptions.EntityNotFoundException;
 import ru.itis.backend.models.AppealAnswer;

@@ -45,10 +45,10 @@ public class Account {
 
     protected String city;
 
-    @Column(name = "sitter_status", nullable = false)
-    protected Boolean sitterStatus = true;
+    protected String phone;
 
     @Column(name = "is_deleted", nullable = false)
+    @Builder.Default
     protected Boolean isDeleted = false;
 
     @Column(name = "registration_date", nullable = false)

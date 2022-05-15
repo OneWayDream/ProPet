@@ -1,6 +1,6 @@
 package ru.itis.backend.services;
 
-import ru.itis.backend.dto.UserAppealDto;
+import ru.itis.backend.dto.app.UserAppealDto;
 
 import java.util.List;
 

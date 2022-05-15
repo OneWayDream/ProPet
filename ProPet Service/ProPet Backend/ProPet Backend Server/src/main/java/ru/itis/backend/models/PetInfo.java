@@ -28,6 +28,7 @@ public class PetInfo {
     protected String nickname;
 
     @Column(name = "is_deleted", nullable = false)
-    protected Boolean isDeleted;
+    @Builder.Default
+    protected Boolean isDeleted = false;
 
 }

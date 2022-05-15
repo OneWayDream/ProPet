@@ -1,25 +1,30 @@
 package ru.itis.backend.exceptions.handlers;
 
+import lombok.NonNull;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.itis.backend.exceptions.*;
-import ru.itis.backend.utils.ImageLoader;
 
 import javax.persistence.PersistenceException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(RegistrationException.class)
     public ResponseEntity<?> handleRegistrationException(RegistrationException exception){
-        if (exception instanceof DifferentPasswordsException){
-            return ResponseEntity.status(HttpErrorStatus.DIFFERENT_PASSWORDS.value()).body(exception.getMessage());
-        }
-        else if (exception instanceof LoginAlreadyInUseException){
+        if (exception instanceof LoginAlreadyInUseException){
             return ResponseEntity.status(HttpErrorStatus.EXISTED_LOGIN.value()).body("This login is already in use");
         }
         else if (exception instanceof MailAlreadyInUseException){
@@ -85,6 +90,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         }
         else if (exception instanceof JwtRegistrationException){
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Something went wrong.");
+        } else if (exception instanceof JwtUpdateException){
+            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Something went wrong.");
         }
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Something went wrong.");
     }
@@ -99,7 +106,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         if (exception instanceof IncorrectOrderException){
             return ResponseEntity.status(HttpErrorStatus.INCORRECT_SEARCH_ORDER.value()).build();
         }
-        else if (exception instanceof IncorrectVariableException){
+        else if (exception instanceof IncorrectSortingVariableException){
+            return ResponseEntity.status(HttpErrorStatus.INCORRECT_SORTING_VARIABLE.value()).build();
+        }
+        else if (exception instanceof IncorrectSearchVariableException){
             return ResponseEntity.status(HttpErrorStatus.INCORRECT_SEARCH_VARIABLE.value()).build();
         }
         else {
@@ -125,6 +135,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         else {
             return ResponseEntity.badRequest().body("Something went wrong");
         }
+    }
+
+    @Override
+    protected @NonNull ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                           @NonNull HttpHeaders headers,
+                                                                           @NonNull HttpStatus status,
+                                                                           @NonNull WebRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            if (Objects.requireNonNull(error.getCodes())[0].equals("ValidPasswords.registrationForm")){
+                errors.put("Passwords", error.getDefaultMessage());
+            } else {
+                String fieldName = ((FieldError) error).getField();
+                String errorMessage = error.getDefaultMessage();
+                errors.put(fieldName, errorMessage);
+            }
+        });
+        return new ResponseEntity<>(errors, status);
     }
 
     @ExceptionHandler(Exception.class)
