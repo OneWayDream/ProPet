@@ -41,7 +41,7 @@ const SignUpPage = () => {
 
   const handleRegister = () => {
     if (validate()) {
-      registration(login, mail, password, repeatedPassword, '', handleErrorRegister, handleSuccessRegister)
+      registration(login, mail, password, repeatedPassword, 'Казань', handleErrorRegister, handleSuccessRegister)
       // const response = await registration(username, mail, password, repeatedPassword, '').then((response) => {
       //   navigate(paths.SIGN_IN, {
       //     state: {

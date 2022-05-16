@@ -2,11 +2,6 @@ import axios from "axios"
 import api from "../configs/api"
 
 export const getUser = (mail, token, onError, onSuccess) => {
-  // return await axios.get(api.GET_USER_BY_MAIL + mail, {
-  // headers: {
-  // "JWT": token
-  // }
-  // })
 
   axios.get(api.GET_USER_BY_MAIL + mail, {
     headers: {
@@ -17,21 +12,6 @@ export const getUser = (mail, token, onError, onSuccess) => {
   }).catch((error) => {
     onError(error.response)
   })
-
-
-  // axios.get(api.GET_USER_BY_MAIL + mail).then((response) => {
-  // console.log("AAA " + response)
-  // })
-  // axios.get(api.GET_USER_BY_MAIL + mail, {
-  //   headers: {
-  //     "JWT": token
-  //   }
-  // }).then((response) => {
-  //   console.log(response)
-  //   return response.data
-  // }).catch((e) => {
-  //   console.log(e)
-  // });
 }
 
 export const getSitterInfo = (userId, JWT, onError, onSuccess) => {
@@ -46,7 +26,7 @@ export const getSitterInfo = (userId, JWT, onError, onSuccess) => {
   })
 }
 
-export const getFullUserInfo = (id, JWT, onError, onSuccess, by='mail') => {
+export const getFullUserInfo = (id, JWT, onError, onSuccess, by = 'mail') => {
   let url;
   switch (by) {
     case 'id':
@@ -62,10 +42,10 @@ export const getFullUserInfo = (id, JWT, onError, onSuccess, by='mail') => {
       url = api.GET_USER_BY_MAIL
   }
 
-  const header = JWT ? {headers: {JWT}} : {}
+  const header = JWT ? { headers: { JWT } } : {}
 
-  axios.get(url + id, 
-    header 
+  axios.get(url + id,
+    header
   ).then((userResponse) => {
     axios.get(api.GET_SITTER_INFO + userResponse.data.id,
       header
@@ -118,6 +98,17 @@ export const getUserCredentials = () => {
   return isAuthenticated() ? JSON.parse(localStorage.getItem('user')) : null
 }
 
+export const setUserCredentials = (credentials) => {
+  localStorage.setItem('user', JSON.stringify(credentials))
+}
+
 export const changeCredentials = (newUserCredentials) => {
-  localStorage.setItem('user', JSON.stringify(Object.assign(JSON.parse(localStorage.getItem('user')), newUserCredentials)))
+  if (isAuthenticated()) {
+    newUserCredentials = { ...getUserCredentials(), ...newUserCredentials}
+    localStorage.setItem('user', JSON.stringify(newUserCredentials))
+  }
+}
+
+export const removeUserCredentials = () => {
+  localStorage.removeItem('user')
 }

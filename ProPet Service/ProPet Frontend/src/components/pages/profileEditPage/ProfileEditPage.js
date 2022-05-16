@@ -13,6 +13,7 @@ import api from "../../../configs/api";
 import axios from "axios";
 import Input from "../../atoms/input";
 import { aboutInfoRegex, ageRegex, cityRegex, emailRegex, nameRegex, surnameRegex, telephoneNumberRegex } from "../../../configs/regexp";
+import Button from "../../atoms/button";
 
 const ProfileEditPage = () => {
   //some usefull hooks
@@ -42,7 +43,7 @@ const ProfileEditPage = () => {
       navigate(paths.SIGN_IN)
     } else {
       const credentials = getUserCredentials()
-      getFullUserInfo(credentials.mail, credentials.accessToken, handleError, handleSuccessFullInfo)
+      getUser(credentials.mail, credentials.accessToken, handleError, handleSuccessUserInfo)
     }
   }, [])
 
@@ -50,6 +51,16 @@ const ProfileEditPage = () => {
   const handleError = (error) => {
     alert('Что-то пошло не так')
     console.log("Error: " + JSON.stringify(error))
+    setLoading(false)
+  }
+
+  const handleSuccessUserInfo = (response) => {
+    setOriginalUser(response.data)
+    setUser(response.data)
+
+    setOriginalSitter(response.data.sitterInfoDto)
+    setSitter(response.data.sitterInfoDto)
+
     setLoading(false)
   }
 
@@ -75,7 +86,11 @@ const ProfileEditPage = () => {
 
   //Changeing sitter info
   const handleSitterInput = (e) => {
-    setSitter({ ...sitter, [e.target.name]: (e.target.value === "" ? null : e.target.value) })
+    if (e.target.type === 'checkbox') {
+      setSitter({ ...sitter, [e.target.name]: e.target.checked })
+    } else {
+      setSitter({ ...sitter, [e.target.name]: (e.target.value === "" ? null : e.target.value) })
+    }
   }
 
   //Handle update request
@@ -85,25 +100,11 @@ const ProfileEditPage = () => {
 
     if ((userIsChanged || sitterIsChanged) && validate()) {
       setLoading(true)
+      setUser({ ...user, [user.sitterInfoDto]: sitter })
       if (userIsChanged) {
         changeUserInfo(user, getAccessToken(), handleError, handleSuccesUserChanged)
-        setOriginalUser(user)
-        if (user.mail !== originalUser.mail) {
-          changeCredentials(user.mail)
-        }
-      }
-      if (sitterIsChanged) {
-        changeSitterInto(sitter, getAccessToken(), handleError, handleSuccesUserChanged)
-        setOriginalSitter(sitter)
       }
     }
-  }
-
-  const test = () => {
-    const user = JSON.parse(localStorage.getItem('user'))
-    const newUser = {}
-    newUser.mail = 'test@wsfas.s'
-    console.log(Object.assign(user,newUser))
   }
 
   //Validate data
@@ -135,7 +136,7 @@ const ProfileEditPage = () => {
     }
 
     if (sitter.aboutInfo !== originalSitter.aboutInfo && !aboutInfoRegex) {
-      errors.aboutInfo = 'Некорректно заполнено поле "о себе"'
+      errors.aboutInfo = 'Некорректно заполнено поле "О себе"'
     }
 
     setErrorMessage(errors)
@@ -144,6 +145,10 @@ const ProfileEditPage = () => {
 
   //Callback for user successfully changed
   const handleSuccesUserChanged = (response) => {
+    if (user.mail !== originalUser.mail) {
+      changeCredentials({ mail: user.mail })
+    }
+    setOriginalUser(user)
     setLoading(false)
     alert('Изменения успешно применены')
   }
@@ -167,28 +172,29 @@ const ProfileEditPage = () => {
             <Input placeholder='Электронная почта' value={user.mail || ''} onChange={handleUserInput} name='mail' />
           </div>
         </div>
-        <button onClick={handleChangeRequest}>Сохранить</button>
+        <Button fontSize='1.2vw' style='orange' width='10vw' onClick={handleChangeRequest}>Изменить</Button>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ fontSize: '2.5vw', paddingTop: '2vw' }}>Информация сиделки</div>
         <div className="profileEditContainerInner">
-          <div style={{ display: 'flex', flexDirection: 'column' }} >
-            <div>
-            Статус сиделки:
-            <input type='checkbox' onChange={handleUserInput} checked={user.sitterStatus} name='sitterStatus' />
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
+            <div style={{ paddingBottom: '1.5vw' }}>
+              Статус сиделки:
+              <input type='checkbox' onChange={handleSitterInput} checked={sitter.sitterStatus} name='sitterStatus' />
             </div>
-            {user.sitterStatus ? <>
+            {sitter.sitterStatus ? <>
+              <div></div>
               Город:
               <Input placeholder='Город' onChange={handleUserInput} name='city' />
               Телефон:
-              <Input placeholder='Телефон' onChange={handleUserInput} name='telephone' />
+              <Input placeholder='Телефон' onChange={handleUserInput} name='phone' />
               Возраст
               <Input placeholder='Возраст' onChange={handleSitterInput} name='age' />
               О себе:
               <Input placeholder='О себе' onChange={handleSitterInput} name='infoAbout' />
             </>
-              :   ''}
-            <button onClick={(e) => { console.log(sitter) }}>Сохранить</button>
+              : ''}
+            <Button fontSize='1.2vw' style='orange' width='10vw' onClick={handleChangeRequest}>Изменить</Button>
           </div>
         </div>
       </div>
@@ -199,7 +205,7 @@ const ProfileEditPage = () => {
             Новый пароль:
             <Input placeholder='Новый пароль' onChange={handleUserInput} name='password' />
             Старый пароль:
-            <Input placeholder='Старый па роль' />
+            <Input placeholder='Старый пароль' />
 
             <button>Сохранить</button>
             <button>Удалить аккаунт</button>
@@ -207,7 +213,7 @@ const ProfileEditPage = () => {
         </div>
       </div>
 
-    </div>
+    </div >
     :
     <div>
       loading....

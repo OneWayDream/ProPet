@@ -49,7 +49,8 @@ const SignInPage = (props) => {
     }
   }, [])
 
-  const forwardToProfile = () => {
+  //success callback on authenticate()   
+  const handleSuccess = () => {
       navigate(paths.PROFILE)
   }
 
@@ -57,7 +58,7 @@ const SignInPage = (props) => {
   const handleLogin = () => {
     if (validate()) {
       // dispatch(authenticate(username, password, handleErrorFromServer, forwardToProfile))
-      authenticate(username, password, handleErrorFromServer, forwardToProfile)
+      authenticate(username, password, handleErrorFromServer, handleSuccess)
     }
   }
 

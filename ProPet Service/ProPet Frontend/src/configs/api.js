@@ -22,6 +22,6 @@ export default {
   CHANGE_SITTER_INFO: BASE_URL + '/sitter-info',
 
   //Search
-  SEARCH_SITTERS: BASE_URL + '/sitter-info/search'
+  SEARCH_SITTERS: BASE_URL + '/sitter-search'
 
 }

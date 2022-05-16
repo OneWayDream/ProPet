@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
-const StyledBytton = styled.button(({color, background, width}) => `
+const StyledBytton = styled.button(({color, background, width, fontSize}) => `
   color: ${color};
   background: ${background};
   width: ${width};
   padding: 1.3vw;
   border-radius: 60px;
-  font-size: 1.6vw;
+  font-size: ${fontSize ? fontSize : '1.6vw'};
   border: 1px solid black;
   margin-top: 2vw;
 
@@ -20,7 +20,7 @@ const StyledBytton = styled.button(({color, background, width}) => `
 
 const Button = (props) => {
   if (props.style === 'orange') {
-    return <StyledBytton color="black" background="linear-gradient(90deg, rgba(255,175,35,1) 15%, rgba(255,255,255,0.2) 100%)" width={props.width} onClick={props.onClick}>{props.children}</StyledBytton>
+    return <StyledBytton color="black" background="linear-gradient(90deg, rgba(255,175,35,1) 15%, rgba(255,255,255,0.2) 100%)" width={props.width} onClick={props.onClick} fontSize={props.fontSize}>{props.children}</StyledBytton>
   }
   return <StyledBytton props>{props.children}</StyledBytton>
 }

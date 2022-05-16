@@ -1,6 +1,7 @@
 import axios from "axios"
 import api from "../configs/api"
 import { setUser } from "../reducers/userReducer"
+import { removeUserCredentials, setUserCredentials } from "./user.service"
 
 // axios.interceptors.request.use(request => {
 //   console.log('Starting Request', JSON.stringify(request, null, 2))
@@ -39,7 +40,7 @@ export const authenticate = (mail, password, onError, onSuccess) => {
       // const user = { user: { mail: mail, refreshToken: response.data.token, accessToken: resp.data.token } }
       // setUser(user)
       const user = {mail: mail, refreshToken: response.data.token, accessToken: resp.data.token }
-      localStorage.setItem('user', JSON.stringify(user))
+      setUserCredentials(user)
       onSuccess(resp)
     }).catch((e) => {
       onError(e.response)
@@ -67,4 +68,8 @@ export const authenticate = (mail, password, onError, onSuccess) => {
   //   }
   // })
   // }
+}
+
+export const logout = () => {
+  removeUserCredentials()
 }
