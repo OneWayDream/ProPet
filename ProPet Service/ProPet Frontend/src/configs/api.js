@@ -24,5 +24,4 @@ export default {
 
   //Search
   SEARCH_SITTERS: BASE_URL + '/sitter-search'
-
 }

@@ -5,11 +5,11 @@ const SearchItem = (props) => {
   const sitter = props.sitter
   const reviewCount = sitter.rateFive + sitter.rateFour + sitter.rateThree + sitter.rateTwo + sitter.rateOne
   return (<>
-    <div className="searchItem" style={{ display: 'flex', fontSize: '1.5vw'}}>
+    <div className="searchItem" style={{ display: 'flex', fontSize: '1.5vw' }}>
       <div>
-        <Image image={profilePic} width='10vw'/>
+        <Image image={profilePic} width='10vw' />
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
         <div>{sitter.name} {sitter.surname}</div>
         <div>Город: {sitter.city ? sitter.city : 'Не указан'}</div>
         <div>Возраст: {sitter.age ? sitter.age : 'Не указан'}</div>

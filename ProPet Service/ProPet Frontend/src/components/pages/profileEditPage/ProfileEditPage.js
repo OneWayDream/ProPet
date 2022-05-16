@@ -1,16 +1,11 @@
 import Template from "../template";
 import Image from "../../atoms/image";
 import profilePic from "../../../img/profile_pic.png";
-import settingPic from "../../../img/settings_picture.png";
-import OutputItem from "../../atoms/outputItem";
-import { logout } from "../../../reducers/userReducer";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import paths from "../../../configs/paths";
 import { useEffect, useState } from "react";
-import { changeCredentials, changeSitterInto, changeUserInfo, getAccessToken, getFullUserInfo, getSitterInfo, getUser, getUserCredentials, isAuthenticated } from "../../../services/user.service";
-import api from "../../../configs/api";
-import axios from "axios";
+import { changeCredentials, changeUserInfo, getAccessToken, getUser, getUserCredentials, isAuthenticated } from "../../../services/user.service";
 import Input from "../../atoms/input";
 import { aboutInfoRegex, ageRegex, cityRegex, emailRegex, nameRegex, surnameRegex, telephoneNumberRegex } from "../../../configs/regexp";
 import Button from "../../atoms/button";
@@ -140,7 +135,7 @@ const ProfileEditPage = () => {
     }
 
     setErrorMessage(errors)
-    return Object.keys(errors).length == 0
+    return Object.keys(errors).length === 0
   }
 
   //Callback for user successfully changed

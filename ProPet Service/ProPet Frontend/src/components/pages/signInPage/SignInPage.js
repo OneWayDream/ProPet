@@ -51,7 +51,7 @@ const SignInPage = (props) => {
 
   //success callback on authenticate()   
   const handleSuccess = () => {
-      navigate(paths.PROFILE)
+    navigate(paths.PROFILE)
   }
 
   //actions for click sign in button
@@ -100,10 +100,10 @@ const SignInPage = (props) => {
 
   const body = <>
     <div className="signInContainer">
-      <div className='signInMessageSuccess' style={{ display: successMessage ? "block" : "none"}} >
+      <div className='signInMessageSuccess' style={{ display: successMessage ? "block" : "none" }} >
         {successMessage}
       </div>
-      
+
       <div className='signInMessageError' style={{ display: errorServerMessage ? "block" : "none" }} >
         {errorServerMessage}
       </div>

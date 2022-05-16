@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const StyledBytton = styled.button(({color, background, width, fontSize}) => `
+const StyledBytton = styled.button(({ color, background, width, fontSize }) => `
   color: ${color};
   background: ${background};
   width: ${width};

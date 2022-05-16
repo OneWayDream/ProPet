@@ -12,7 +12,7 @@ const SearchPage = () => {
 
   const handleSearch = () => {
     const JWT = getAccessToken()
-    searchSitters(0, 10, "rating", "asc", JWT ? JWT: null, handleError, handleSuccess)
+    searchSitters(0, 10, "rating", "asc", JWT ? JWT : null, handleError, handleSuccess)
   }
 
   const handleSuccess = (response) => {

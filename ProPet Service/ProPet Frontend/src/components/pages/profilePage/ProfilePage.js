@@ -9,8 +9,6 @@ import paths from "../../../configs/paths";
 import { useEffect, useState } from "react";
 import { getUser, getUserCredentials, isAuthenticated } from "../../../services/user.service";
 import { logout } from "../../../services/auth.service";
-import api from "../../../configs/api";
-import axios from "axios";
 
 const ProfilePage = () => {
   //Some usefull hooks

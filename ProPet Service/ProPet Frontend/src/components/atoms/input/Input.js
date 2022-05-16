@@ -36,7 +36,7 @@ const Input = (props) => {
   };
   return <>
     <StyledDiv>
-      {props.image && <Image image={props.image} width={props.width}></Image> }
+      {props.image && <Image image={props.image} width={props.width}></Image>}
       <StyledInput onChange={props.name ? props.onChange : handleChange} placeholder={props.placeholder} value={props.value} type={props.type} size={props.size} name={props.name} props={props} >{props.children}</StyledInput>
     </StyledDiv>
   </>

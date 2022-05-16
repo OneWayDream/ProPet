@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const StyledLogo = styled.img(({width, height, border, border_radius}) => `
+const StyledLogo = styled.img(({ width, height, border, border_radius }) => `
   display: block;
   width: ${width ? width : 'auto'};
   height: ${height ? height : 'auto'};
@@ -9,13 +9,13 @@ const StyledLogo = styled.img(({width, height, border, border_radius}) => `
 `)
 
 const Image = (props) => {
-  return <StyledLogo 
-        src={props.image} 
-        width={props.width} 
-        height={props.height}
-        border={props.border}
-        border_radius={props.border_radius}
-        />
+  return <StyledLogo
+    src={props.image}
+    width={props.width}
+    height={props.height}
+    border={props.border}
+    border_radius={props.border_radius}
+  />
 }
 
 

@@ -3,16 +3,6 @@ import api from "../configs/api"
 import { setUser } from "../reducers/userReducer"
 import { removeUserCredentials, setUserCredentials } from "./user.service"
 
-// axios.interceptors.request.use(request => {
-//   console.log('Starting Request', JSON.stringify(request, null, 2))
-//   return request
-// })
-
-// axios.interceptors.response.use(response => {
-// console.log('Response:', JSON.stringify(response, null, 2))
-// return response
-// })
-
 export const registration = (login, mail, password, repeatedPassword, city, onError, onSuccess) => {
   axios.post(api.SIGN_UP, {
     login,
@@ -37,9 +27,7 @@ export const authenticate = (mail, password, onError, onSuccess) => {
         'refresh-token': response.data.token
       }
     }).then((resp) => {
-      // const user = { user: { mail: mail, refreshToken: response.data.token, accessToken: resp.data.token } }
-      // setUser(user)
-      const user = {mail: mail, refreshToken: response.data.token, accessToken: resp.data.token }
+      const user = { mail: mail, refreshToken: response.data.token, accessToken: resp.data.token }
       setUserCredentials(user)
       onSuccess(resp)
     }).catch((e) => {

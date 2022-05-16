@@ -27,10 +27,10 @@ const Comment = (props) => {
           {comment.review}
         </div>
         <div>
-          <ReactStars size={50} 
-                    edit={false} 
-                    isHalf={true} 
-                    value={comment.rate} />
+          <ReactStars size={50}
+            edit={false}
+            isHalf={true}
+            value={comment.rate} />
         </div>
       </div>
     </StyledComment>

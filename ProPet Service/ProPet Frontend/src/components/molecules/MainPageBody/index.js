@@ -1,1 +1,1 @@
-export {default} from './MainPageBody'
+export { default } from './MainPageBody'
