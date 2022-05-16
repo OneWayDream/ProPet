@@ -1,6 +1,6 @@
 package ru.itis.backend.services;
 
-import ru.itis.backend.dto.PetInfoDto;
+import ru.itis.backend.dto.app.PetInfoDto;
 
 import java.util.List;
 

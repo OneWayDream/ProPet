@@ -35,6 +35,7 @@ public class UserAppeal {
     protected Boolean isClosed = false;
 
     @Column(name = "is_deleted", nullable = false)
+    @Builder.Default
     protected Boolean isDeleted = false;
 
     @OneToOne(targetEntity = AppealAnswer.class, mappedBy = "appeal",

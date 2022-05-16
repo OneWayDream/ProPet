@@ -8,7 +8,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet id="9" author="OneWayDream">
+    <changeSet id="8" author="OneWayDream">
         <comment>Creating a jwt table for application modules</comment>
         <createTable tableName="jwt_module">
             <column name="id" type="bigint" autoIncrement="true" incrementBy="1" startWith="1">
@@ -31,7 +31,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="10" author="OneWayDream">
+    <changeSet id="9" author="OneWayDream">
         <comment>Creating a jwt table for users</comment>
         <createTable tableName="jwt_user">
             <column name="id" type="bigint" autoIncrement="true" incrementBy="1" startWith="1">

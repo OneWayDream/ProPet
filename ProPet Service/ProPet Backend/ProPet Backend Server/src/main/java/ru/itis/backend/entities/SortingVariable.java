@@ -1,6 +1,6 @@
 package ru.itis.backend.entities;
 
-import ru.itis.backend.exceptions.IncorrectVariableException;
+import ru.itis.backend.exceptions.IncorrectSortingVariableException;
 
 import java.util.Arrays;
 
@@ -22,7 +22,7 @@ public enum SortingVariable {
     public static SortingVariable get(String value) {
         return Arrays.stream(SortingVariable.values())
                 .filter(env -> env.value.equals(value))
-                .findFirst().orElseThrow(IncorrectVariableException::new);
+                .findFirst().orElseThrow(IncorrectSortingVariableException::new);
     }
 
 }

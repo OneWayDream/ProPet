@@ -1,19 +1,14 @@
 package ru.itis.backend.services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.itis.backend.dto.ActivationLinkDto;
-import ru.itis.backend.dto.RegistrationForm;
-import ru.itis.backend.dto.AccountDto;
-import ru.itis.backend.dto.SitterInfoDto;
+import ru.itis.backend.dto.forms.RegistrationForm;
+import ru.itis.backend.dto.app.AccountDto;
+import ru.itis.backend.dto.app.SitterInfoDto;
+import ru.itis.backend.dto.rest.ActivationLinkDto;
 import ru.itis.backend.exceptions.*;
-import ru.itis.backend.models.ActivationLink;
-import ru.itis.backend.models.Account;
 import ru.itis.backend.models.UserRole;
 import ru.itis.backend.models.UserState;
-import ru.itis.backend.repositories.ActivationLinkRepository;
-import ru.itis.backend.repositories.AccountRepository;
 import ru.itis.backend.security.managers.TokenManager;
 
 import java.util.Date;
@@ -23,7 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RegistrationServiceImpl implements RegistrationService {
 
-    protected final ActivationLinksService activationLinksService;
+    protected final ActivationLinkService activationLinksService;
     protected final AccountService accountService;
     protected final SitterInfoService sitterInfoService;
     protected final TokenManager tokenManager;
@@ -31,9 +26,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public AccountDto registerNewAccount(RegistrationForm registrationForm) {
-        if (!registrationForm.getPassword().equals(registrationForm.getRepeatedPassword())){
-            throw new DifferentPasswordsException("The passwords are different");
-        }
         try {
             AccountDto newAccount = AccountDto.builder()
                     .login(registrationForm.getLogin())
@@ -43,20 +35,24 @@ public class RegistrationServiceImpl implements RegistrationService {
                     .role(UserRole.USER)
                     .registrationDate(new Date(System.currentTimeMillis()))
                     .city(registrationForm.getCity())
-                    .sitterStatus(false)
                     .build();
             newAccount = accountService.add(newAccount);
+
             ActivationLinkDto link = ActivationLinkDto.builder()
                     .accountId(newAccount.getId())
                     .linkValue(UUID.randomUUID().toString())
                     .build();
             activationLinksService.add(link);
+
             SitterInfoDto sitterInfo = SitterInfoDto.builder()
-                                    .accountId(newAccount.getId())
-                                    .build();
+                    .accountId(newAccount.getId())
+                    .sitterStatus(false)
+                    .build();
             sitterInfo = sitterInfoService.add(sitterInfo);
             newAccount.setSitterInfoDto(sitterInfo);
+
             accountService.activateUser(link.getLinkValue());
+
             return newAccount;
         } catch (Exception ex){
             try{

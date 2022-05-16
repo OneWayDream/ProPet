@@ -1,22 +1,14 @@
 package ru.itis.backend.services;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.itis.backend.dto.SitterInfoDto;
-import ru.itis.backend.entities.SortingOrder;
-import ru.itis.backend.entities.SortingVariable;
+import ru.itis.backend.dto.app.SitterInfoDto;
 import ru.itis.backend.exceptions.*;
 import ru.itis.backend.models.SitterInfo;
 import ru.itis.backend.repositories.SitterInfoRepository;
 import ru.itis.backend.utils.PropertiesUtils;
 
-import javax.persistence.OrderBy;
 import javax.persistence.PersistenceException;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,8 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SitterInfoServiceImpl implements SitterInfoService {
 
-    @NonNull
-    protected SitterInfoRepository repository;
+    protected final SitterInfoRepository repository;
 
     @Override
     public List<SitterInfoDto> findAll() {
@@ -51,17 +42,25 @@ public class SitterInfoServiceImpl implements SitterInfoService {
     }
 
     @Override
-    public SitterInfoDto add(SitterInfoDto sitterInfoDto) {
+    public SitterInfoDto addRest(SitterInfoDto sitterInfo){
+        return SitterInfoDto.from(addSitterInfo(SitterInfoDto.toRest(sitterInfo)));
+    }
+
+    @Override
+    public SitterInfoDto add(SitterInfoDto sitterInfo){
+        SitterInfo newInfo = SitterInfoDto.to(sitterInfo);
+        newInfo.setRateOne(0);
+        newInfo.setRateTwo(0);
+        newInfo.setRateThree(0);
+        newInfo.setRateFour(0);
+        newInfo.setRateFive(0);
+        newInfo.setRating(0.0);
+        return SitterInfoDto.from(addSitterInfo(newInfo));
+    }
+
+    protected SitterInfo addSitterInfo(SitterInfo newEntity) {
         try {
-            SitterInfo newEntity = SitterInfoDto.to(sitterInfoDto);
-            newEntity.setRateOne(0);
-            newEntity.setRateTwo(0);
-            newEntity.setRateThree(0);
-            newEntity.setRateFour(0);
-            newEntity.setRateFive(0);
-            newEntity.setRating(0.0);
-            repository.save(newEntity);
-            return SitterInfoDto.from(newEntity);
+            return repository.save(newEntity);
         } catch (Exception ex){
             try{
                 String message = ex.getCause().getCause().getMessage();
@@ -83,11 +82,21 @@ public class SitterInfoServiceImpl implements SitterInfoService {
     }
 
     @Override
-    public SitterInfoDto update(SitterInfoDto sitterInfoDto) {
-        SitterInfoDto entity = findById(sitterInfoDto.getId());
-        PropertiesUtils.copyNonNullProperties(sitterInfoDto, entity);
-        SitterInfo updatedEntity = repository.save(SitterInfoDto.to(entity));
-        return SitterInfoDto.from(updatedEntity);
+    public SitterInfoDto update(SitterInfoDto sitterInfo){
+        return SitterInfoDto.from(updateSitterInfo(SitterInfoDto.to(sitterInfo)));
+    }
+
+    @Override
+    public SitterInfoDto updateRest(SitterInfoDto sitterInfo){
+        return SitterInfoDto.from(updateSitterInfo(SitterInfoDto.toRest(sitterInfo)));
+    }
+
+    protected SitterInfo updateSitterInfo(SitterInfo sitterInfo) {
+        SitterInfo entity = repository.findById(sitterInfo.getId())
+                .filter(entry -> !entry.getIsDeleted())
+                .orElseThrow(EntityNotFoundException::new);
+        PropertiesUtils.copyNonNullProperties(sitterInfo, entity);
+        return repository.save(entity);
     }
 
     @Override
@@ -95,39 +104,6 @@ public class SitterInfoServiceImpl implements SitterInfoService {
         return SitterInfoDto.from(repository.findByAccountId(userId)
                 .filter(entry -> !entry.getIsDeleted())
                 .orElseThrow(EntityNotFoundException::new));
-    }
-
-    @Override
-    public List<SitterInfoDto> getSearchPage(Integer page, Integer size,
-                                             SortingVariable sortedBy, SortingOrder order) {
-        Sort sort = null;
-        if (sortedBy != null){
-            sort = Sort.by(sortedBy.value());
-            if (order != null){
-                if (order.equals(SortingOrder.ASCENDING)){
-                    sort.ascending();
-                } else {
-                    sort.descending();
-                }
-            }
-        }
-        Pageable pageable;
-        if (sort != null){
-            pageable = PageRequest.of(page, size, sort);
-        } else {
-            pageable = PageRequest.of(page, size);
-        }
-//        return SitterInfoDto.from(repository.findAll(pageable).toList()); syntax error :c
-        if (sortedBy == null){
-            return SitterInfoDto.from(repository.getSearchPage(size, (long) page*size));
-        } else {
-            List<SitterInfoDto> result = SitterInfoDto.from(repository.getSearchPageWithSorting(size,
-                    (long) page*size, sortedBy.value()));
-            if ((order != null) && (order.equals(SortingOrder.DESCENDING))){
-                Collections.reverse(result);
-            }
-            return result;
-        }
     }
 
 }

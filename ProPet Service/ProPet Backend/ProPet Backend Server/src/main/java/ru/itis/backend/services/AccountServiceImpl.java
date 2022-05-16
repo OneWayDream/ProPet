@@ -6,12 +6,15 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.itis.backend.dto.ActivationLinkDto;
-import ru.itis.backend.dto.AccountDto;
-import ru.itis.backend.dto.TokenRegistrationForm;
+import ru.itis.backend.dto.app.AccountDto;
+import ru.itis.backend.dto.app.SitterInfoDto;
+import ru.itis.backend.dto.forms.JwtUpdateForm;
+import ru.itis.backend.dto.rest.ActivationLinkDto;
+import ru.itis.backend.dto.rest.AccountRestDto;
+import ru.itis.backend.dto.forms.TokenRegistrationForm;
 import ru.itis.backend.exceptions.*;
 import ru.itis.backend.models.Account;
-import ru.itis.backend.models.ActivationLink;
+import ru.itis.backend.models.SitterInfo;
 import ru.itis.backend.models.UserState;
 import ru.itis.backend.repositories.AccountRepository;
 import ru.itis.backend.security.managers.TokenManager;
@@ -28,11 +31,12 @@ public class AccountServiceImpl implements AccountService {
     protected OkHttpClient client;
 
     protected final AccountRepository repository;
-    protected final ActivationLinksService activationLinksService;
+    protected final ActivationLinkService activationLinksService;
     protected final TokenManager tokenManager;
 
     protected final String TOKEN_SERVER_URL;
     protected final String REGISTRATION_URL;
+    protected final String UPDATE_URL;
 
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
@@ -40,11 +44,12 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     public AccountServiceImpl(
             AccountRepository accountRepository,
-            ActivationLinksService activationLinksService,
+            ActivationLinkService activationLinksService,
             TokenManager tokenManager,
             @Value("${security.jwt.token-server-host}") String serverHost,
             @Value("${security.jwt.token-server-port}") String serverPort,
-            @Value("${security.jwt.registration-url}") String registrationUrl
+            @Value("${security.jwt.registration-url}") String registrationUrl,
+            @Value("${security.jwt.update-url}") String updateUrl
     ){
         client = new OkHttpClient();
         this.repository = accountRepository;
@@ -52,19 +57,38 @@ public class AccountServiceImpl implements AccountService {
         this.tokenManager = tokenManager;
         TOKEN_SERVER_URL = serverHost + ":" + serverPort;
         REGISTRATION_URL = registrationUrl;
+        UPDATE_URL = updateUrl;
     }
 
     @Override
     public List<AccountDto> findAll() {
-        return AccountDto.from(repository.findAll().stream()
-                .filter(entry -> !entry.getIsDeleted())
-                .collect(Collectors.toList()));
+        return AccountDto.from(findAllAccounts());
     }
 
     @Override
-    public void delete(AccountDto userDto) {
+    public List<AccountRestDto> findAllRest() {
+        return AccountRestDto.fromRest(findAllAccounts());
+    }
+
+    protected List<Account> findAllAccounts() {
+        return repository.findAll().stream()
+                .filter(entry -> !entry.getIsDeleted())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteRest(AccountRestDto account) {
+        deleteAccount(AccountRestDto.toRest(account));
+    }
+
+    @Override
+    public void delete(AccountDto account) {
+        deleteAccount(AccountDto.to(account));
+    }
+
+    protected void deleteAccount(Account account) {
         try{
-            Account entityToDelete = repository.findById(userDto.getId())
+            Account entityToDelete = repository.findById(account.getId())
                     .filter(entry -> !entry.getIsDeleted())
                     .orElseThrow(EntityNotExistsException::new);
             entityToDelete.setIsDeleted(true);
@@ -78,29 +102,63 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto add(AccountDto userDto) {
-        Account newEntity = AccountDto.to(userDto);
-        repository.save(newEntity);
-        return AccountDto.from(newEntity);
+    public AccountDto add(AccountDto account) {
+        return AccountDto.from(addAccount(AccountDto.to(account)));
+    }
+
+    @Override
+    public AccountRestDto addRest(AccountRestDto account) {
+        return AccountRestDto.fromRest(addAccount(AccountRestDto.toRest(account)));
+    }
+
+    protected Account addAccount(Account account) {
+        return repository.save(account);
     }
 
     @Override
     public AccountDto findById(Long aLong) {
-        return AccountDto.from(repository.findById(aLong)
-                .filter(entry -> !entry.getIsDeleted())
-                .orElseThrow(EntityNotFoundException::new));
+        return AccountDto.from(findAccountById(aLong));
     }
 
     @Override
-    public AccountDto update(AccountDto accountDto) {
+    public AccountRestDto findRestById(Long aLong) {
+        return AccountRestDto.fromRest(findAccountById(aLong));
+    }
+
+    protected Account findAccountById(Long aLong) {
+        return repository.findById(aLong)
+                .filter(entry -> !entry.getIsDeleted())
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Override
+    public AccountDto update(AccountDto account){
+        return AccountDto.from(updateAccount(AccountDto.to(account)));
+    }
+
+    @Override
+    public AccountRestDto updateRest(AccountRestDto account){
+        return AccountRestDto.fromRest(updateAccount(AccountRestDto.toRest(account)));
+    }
+
+    protected Account updateAccount(Account updatedAccount) {
         try{
-            Account entity = repository.findById(accountDto.getId())
+            Account entity = repository.findById(updatedAccount.getId())
                     .filter(entry -> !entry.getIsDeleted())
                     .orElseThrow(EntityNotFoundException::new);
-            Account updatedEntity = AccountDto.to(accountDto);
-            PropertiesUtils.copyNonNullProperties(updatedEntity, entity);
-            updatedEntity = repository.save(entity);
-            return AccountDto.from(updatedEntity);
+            PropertiesUtils.copyNonNullProperties(updatedAccount.getSitterInfo(), entity.getSitterInfo());
+            updatedAccount.setSitterInfo(null);
+            PropertiesUtils.copyNonNullProperties(updatedAccount, entity);
+            entity = repository.save(entity);
+            updateUserOnAuthorizationServer(JwtUpdateForm.builder()
+                    .accountId(entity.getId())
+                    .login(entity.getLogin())
+                    .mail(entity.getMail())
+                    .hashPassword(entity.getHashPassword())
+                    .role(entity.getRole())
+                    .state(entity.getState())
+                    .build());
+            return repository.save(entity);
         } catch (Exception ex){
             try{
                 String message = ex.getCause().getCause().getMessage();
@@ -114,6 +172,31 @@ public class AccountServiceImpl implements AccountService {
             }
             throw ex;
         }
+    }
+
+    protected void updateUserOnAuthorizationServer(JwtUpdateForm form){
+        try{
+            JSONObject body = new JSONObject()
+                    .put("accountId", form.getAccountId())
+                    .put("login", form.getLogin())
+                    .put("mail", form.getMail())
+                    .put("hashPassword", form.getHashPassword())
+                    .put("state", form.getState())
+                    .put("role", form.getRole());
+            RequestBody requestBody = RequestBody.create(JSON, body.toString());
+            Request request = new Request.Builder()
+                    .url(TOKEN_SERVER_URL + UPDATE_URL)
+                    .addHeader("JWT", tokenManager.getAccessToken())
+                    .patch(requestBody)
+                    .build();
+            Response response = client.newCall(request).execute();
+            if (response.code() != 200){
+                throw new JwtUpdateException();
+            }
+        } catch (Exception ex){
+            throw new JwtUpdateException(ex);
+        }
+
     }
 
     @Override
@@ -160,9 +243,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void banUser(Long userId) {
+    public void banAccount(Long id) {
         try{
-            Account userForBan = repository.findById(userId)
+            Account userForBan = repository.findById(id)
                     .filter(entry -> entry.getIsDeleted()==null)
                     .orElseThrow(EntityNotExistsException::new);
             userForBan.setState(UserState.BANNED);
@@ -173,16 +256,34 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto findUserByLogin(String login) {
-        return AccountDto.from(repository.findByLogin(login)
-                .filter(entry -> !entry.getIsDeleted())
-                .orElseThrow(EntityNotFoundException::new));
+    public AccountDto findByLogin(String login) {
+        return AccountDto.from(findAccountByLogin(login));
     }
 
     @Override
-    public AccountDto findUserByMail(String mail) {
-        return AccountDto.from(repository.findByMail(mail)
+    public AccountRestDto findRestByLogin(String login) {
+        return AccountRestDto.fromRest(findAccountByLogin(login));
+    }
+
+    protected Account findAccountByLogin(String login) {
+        return repository.findByLogin(login)
                 .filter(entry -> !entry.getIsDeleted())
-                .orElseThrow(EntityNotFoundException::new));
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Override
+    public AccountDto findByMail(String mail) {
+        return AccountDto.from(findAccountByMail(mail));
+    }
+
+    @Override
+    public AccountRestDto findRestByMail(String mail) {
+        return AccountRestDto.fromRest(findAccountByMail(mail));
+    }
+
+    protected Account findAccountByMail(String mail) {
+        return repository.findByMail(mail)
+                .filter(entry -> !entry.getIsDeleted())
+                .orElseThrow(EntityNotFoundException::new);
     }
 }

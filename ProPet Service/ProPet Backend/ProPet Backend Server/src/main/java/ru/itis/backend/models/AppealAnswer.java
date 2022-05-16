@@ -41,6 +41,7 @@ public class AppealAnswer {
     protected String text;
 
     @Column(name = "is_deleted", nullable = false)
+    @Builder.Default
     protected Boolean isDeleted = false;
 
 }

@@ -1,6 +1,6 @@
 package ru.itis.backend.services;
 
-import ru.itis.backend.dto.CommentAboutSitterDto;
+import ru.itis.backend.dto.app.CommentAboutSitterDto;
 
 import java.util.List;
 

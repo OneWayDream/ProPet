@@ -3,7 +3,7 @@ package ru.itis.backend.services;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.itis.backend.dto.UserAppealDto;
+import ru.itis.backend.dto.app.UserAppealDto;
 import ru.itis.backend.exceptions.EntityNotExistsException;
 import ru.itis.backend.exceptions.EntityNotFoundException;
 import ru.itis.backend.models.UserAppeal;
@@ -46,6 +46,8 @@ public class UserAppealServiceImpl implements UserAppealService {
 
     @Override
     public UserAppealDto add(UserAppealDto userAppealDto) {
+        userAppealDto.setIsClosed(false);
+        userAppealDto.setSendDate(java.util.Calendar.getInstance().getTime());
         UserAppeal newEntity = UserAppealDto.to(userAppealDto);
         repository.save(newEntity);
         return UserAppealDto.from(newEntity);
