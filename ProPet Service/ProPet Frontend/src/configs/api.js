@@ -12,6 +12,8 @@ export default {
 
   //Get user info urls
   GET_USER_BY_MAIL: BASE_URL + '/user/by-mail/',
+  GET_USER_BY_ID: BASE_URL + '/user/by-id/',
+  GET_USER_BY_LOGIN: BASE_URL + '/user/by-login/',
   GET_ACCESS_TOKEN: JWT_URL + '/auth-user',
   GET_SITTER_INFO: BASE_URL + '/sitter-info/by-user-id/',
 

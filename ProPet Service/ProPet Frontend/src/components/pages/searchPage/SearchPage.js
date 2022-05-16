@@ -11,7 +11,8 @@ const SearchPage = () => {
   const [sitters, setSitters] = useState([])
 
   const handleSearch = () => {
-    searchSitters(0, 10, "rating", "asc", getAccessToken(), handleError, handleSuccess)
+    const JWT = getAccessToken()
+    searchSitters(0, 10, "rating", "asc", JWT ? JWT: null, handleError, handleSuccess)
   }
 
   const handleSuccess = (response) => {
@@ -36,13 +37,13 @@ const SearchPage = () => {
         </div>
       </div>
       <div>
-        {sitters ? 
-        sitters.map(sitter => {
-          return (<Link to={paths.SITTER+sitter.id} style={{ color: 'black', textDecoration: 'none' }}><SearchItem sitter={sitter}/></Link>)
-        }) 
-        :
-        <div style={{ paddingTop: '2vw' }}>Ничего не найдено</div> 
-       }
+        {sitters ?
+          sitters.map(sitter => {
+            return (<Link to={paths.SITTER_PROFILE + '/' + sitter.id} style={{ color: 'black', textDecoration: 'none' }}><SearchItem sitter={sitter} /></Link>)
+          })
+          :
+          <div style={{ paddingTop: '2vw' }}>Ничего не найдено</div>
+        }
       </div>
     </div>
   return <Template body={body} />
