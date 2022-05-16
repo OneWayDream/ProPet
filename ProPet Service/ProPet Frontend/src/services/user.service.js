@@ -1,9 +1,23 @@
 import axios from "axios"
 import api from "../configs/api"
 
-export const getUser = (mail, token, onError, onSuccess) => {
+export const getUser = (id, token, onError, onSuccess, by = 'mail') => {
+  let url;
+  switch (by) {
+    case 'id':
+      url = api.GET_USER_BY_ID;
+      break;
 
-  axios.get(api.GET_USER_BY_MAIL + mail, {
+    case 'login':
+      url = api.GET_USER_BY_LOGIN;
+      break;
+
+    case 'mail':
+    default:
+      url = api.GET_USER_BY_MAIL
+  }
+
+  axios.get(url + id, {
     headers: {
       "JWT": token
     }
@@ -44,13 +58,15 @@ export const getFullUserInfo = (id, JWT, onError, onSuccess, by = 'mail') => {
 
   const header = JWT ? { headers: { JWT } } : {}
 
+  //Get base user info
   axios.get(url + id,
     header
   ).then((userResponse) => {
-    axios.get(api.GET_SITTER_INFO + userResponse.data.id,
+    //Get comments
+    axios.get(api.GET_COMMENTS_BY_ID + userResponse.data.id,
       header
-    ).then((sitterResponse) => {
-      onSuccess({ user: userResponse.data, sitter: sitterResponse.data })
+    ).then((commentResponse) => {
+      onSuccess({ sitter: userResponse.data, comments: commentResponse.data })
     }).catch((error) => {
       onError(error.response)
     })
@@ -104,7 +120,7 @@ export const setUserCredentials = (credentials) => {
 
 export const changeCredentials = (newUserCredentials) => {
   if (isAuthenticated()) {
-    newUserCredentials = { ...getUserCredentials(), ...newUserCredentials}
+    newUserCredentials = { ...getUserCredentials(), ...newUserCredentials }
     localStorage.setItem('user', JSON.stringify(newUserCredentials))
   }
 }

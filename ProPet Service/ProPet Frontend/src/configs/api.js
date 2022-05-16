@@ -16,6 +16,7 @@ export default {
   GET_USER_BY_LOGIN: BASE_URL + '/user/by-login/',
   GET_ACCESS_TOKEN: JWT_URL + '/auth-user',
   GET_SITTER_INFO: BASE_URL + '/sitter-info/by-user-id/',
+  GET_COMMENTS_BY_ID: BASE_URL + '/comment-about-sitter/by-user-id/',
 
   //Change user urls
   CHANGE_USER_INFO: BASE_URL + '/user',
