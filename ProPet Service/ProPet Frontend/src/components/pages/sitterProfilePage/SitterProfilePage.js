@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { getAccessToken, getFullUserInfo, getUser } from "../../../services/user.service"
 import Image from "../../atoms/image"
 import OutputItem from "../../atoms/outputItem/OutputItem"
@@ -8,8 +8,10 @@ import profilePic from "../../../img/profile_pic.png";
 import ReactStars from "react-rating-stars-component";
 import TextArea from "../../atoms/textArea/TextArea"
 import Comment from "../../molecules/comment/Comment"
+import paths from "../../../configs/paths"
 
 const SitterProfilePate = (props) => {
+  const navigate = useNavigate()
   const { sitterId } = useParams()
   const [sitter, setSitter] = useState({})
   const [isLoading, setIsLoading] = useState(true)
@@ -18,20 +20,24 @@ const SitterProfilePate = (props) => {
 
   useEffect(() => {
     getFullUserInfo(sitterId, getAccessToken(), handleError, handleSuccessGetUser, "id")
-    // getUser(sitterId, getAccessToken(), handleError, handleSuccessGetUser, "id")
   }, [])
 
   const handleError = (error) => {
-    alert('Что-то пошло не так')
-    console.log("Error: " + error)
-    setIsLoading(false)
+    if (error.status) {
+      navigate(paths.NOT_FOUND)
+    } else {
+      alert('Что-то пошло не так')
+      console.log("Error: " + JSON.stringify(error))
+      setIsLoading(false)
+    }
+
   }
 
   let rowsFotAboutTextarea
   const handleSuccessGetUser = (response) => {
     setSitter(response.sitter)
     setComments(response.comments)
-    rowsFotAboutTextarea = response.sitter.sitterInfoDto.infoAbout ? Math.ceil(response.sitter.sitterInfoDto.infoAbout.length/80) : 0
+    rowsFotAboutTextarea = response.sitter.sitterInfoDto.infoAbout ? Math.ceil(response.sitter.sitterInfoDto.infoAbout.length / 80) : 0
     setIsLoading(false)
   }
 
@@ -66,15 +72,15 @@ const SitterProfilePate = (props) => {
         <div style={{ paddingBottom: '1vw', fontSize: '1.5vw' }}>О себе:</div>
         <TextArea readOnly={true} cols={"80"} rows={rowsFotAboutTextarea}>{sitter.sitterInfoDto.infoAbout}</TextArea>
       </div>
-      {comments.length > 0 ? 
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
-        <div>Комменарии:</div>
-        {comments.map(comment => {
-          return (<Comment comment={comment} key={comment.id}/>)
-        })}
-      </div>
-      :
-      ''}
+      {comments.length > 0 ?
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
+          <div>Комменарии:</div>
+          {comments.map(comment => {
+            return (<Comment comment={comment} key={comment.id} />)
+          })}
+        </div>
+        :
+        ''}
     </div>
     :
     <div>

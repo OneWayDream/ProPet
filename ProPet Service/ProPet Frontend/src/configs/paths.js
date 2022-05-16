@@ -8,5 +8,6 @@ export default {
   ABOUT: '/about',
   CONTACTS: '/contacts',
   PROFILE_EDIT: '/profile/edit',
-  SITTER_PROFILE: '/sitter'
+  SITTER_PROFILE: '/sitter',
+  NOT_FOUND: '/not_found',
 }
