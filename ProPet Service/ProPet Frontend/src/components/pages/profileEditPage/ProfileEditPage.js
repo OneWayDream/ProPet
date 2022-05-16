@@ -100,10 +100,10 @@ const ProfileEditPage = () => {
 
     if ((userIsChanged || sitterIsChanged) && validate()) {
       setLoading(true)
-      setUser({ ...user, [user.sitterInfoDto]: sitter })
-      if (userIsChanged) {
-        changeUserInfo(user, getAccessToken(), handleError, handleSuccesUserChanged)
-      }
+      let changedUser = user
+      changedUser.sitterInfoDto = sitter
+      setUser({ changedUser })
+      changeUserInfo(user, getAccessToken(), handleError, handleSuccesUserChanged)
     }
   }
 
