@@ -128,3 +128,12 @@ export const changeCredentials = (newUserCredentials) => {
 export const removeUserCredentials = () => {
   localStorage.removeItem('user')
 }
+
+export const deleteAccount = (id, token) => {
+  console.log(token)
+  return axios.delete(api.DELETE_ACCOUNT + id,{
+    headers: {
+      "JWT": token
+    }
+  })
+}

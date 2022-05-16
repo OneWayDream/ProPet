@@ -49,6 +49,13 @@ const SignInPage = (props) => {
           )
           setUsername(location.state.mail)
           break;
+        case 'afterDeleteAccount':
+          setSuccessMessage(
+            <div>
+              Аккаунт удален
+            </div>
+          )
+          break
       }
     }
   }, [])

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const StyledBytton = styled.button(({ color, background, width, fontSize }) => `
+const StyledBytton = styled.button(({ color, background, width, fontSize, hoverBackgroundColor }) => `
   color: ${color};
   background: ${background};
   width: ${width};
@@ -12,7 +12,7 @@ const StyledBytton = styled.button(({ color, background, width, fontSize }) => `
 
   &:hover {
     cursor: pointer;
-    background-color: rgb(255,175,35);		
+    background-color: ${hoverBackgroundColor};		
     transition: all .15s;
   }
 `)
@@ -20,7 +20,20 @@ const StyledBytton = styled.button(({ color, background, width, fontSize }) => `
 
 const Button = (props) => {
   if (props.style === 'orange') {
-    return <StyledBytton color="black" background="linear-gradient(90deg, rgba(255,175,35,1) 15%, rgba(255,255,255,0.2) 100%)" width={props.width} onClick={props.onClick} fontSize={props.fontSize}>{props.children}</StyledBytton>
+    return <StyledBytton color="black" 
+                    background="linear-gradient(90deg, rgba(255,175,35,1) 15%, rgba(255,255,255,0.2) 100%)" 
+                    width={props.width} 
+                    onClick={props.onClick} 
+                    fontSize={props.fontSize}
+                    hoverBackgroundColor='rgb(255,175,35)'>{props.children}</StyledBytton>
+  }
+  if (props.style === 'red') {
+    return <StyledBytton color="black" 
+                    background="linear-gradient(90deg, rgba(255,0,0,1) 15%, rgba(249,179,179,0.2) 100%);" 
+                    width={props.width} 
+                    onClick={props.onClick} 
+                    fontSize={props.fontSize} 
+                    hoverBackgroundColor='red'>{props.children}</StyledBytton>
   }
   return <StyledBytton props>{props.children}</StyledBytton>
 }

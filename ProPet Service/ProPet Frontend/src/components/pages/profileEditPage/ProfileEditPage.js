@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import paths from "../../../configs/paths";
 import { useEffect, useState } from "react";
-import { changeCredentials, changeUserInfo, getAccessToken, getUser, getUserCredentials, isAuthenticated } from "../../../services/user.service";
+import { changeCredentials, changeUserInfo, deleteAccount, getAccessToken, getUser, getUserCredentials, isAuthenticated } from "../../../services/user.service";
 import Input from "../../atoms/input";
 import { regexs } from "../../../configs/regexp";
 import Button from "../../atoms/button";
@@ -153,6 +153,18 @@ const ProfileEditPage = () => {
 
   //Deleting account
   const handleDeleteAccount = () => {
+    if (window.confirm(`Вы действительно хотите покинуть наш замечательный сайт и остаться без аккаунта?`)) {
+      deleteAccount(user.id, getAccessToken()).then(() => {
+        navigate(paths.SIGN_IN, {
+          state: {
+            action: 'afterDeleteAccount'
+          }
+        })
+      }).catch((error) => {
+        alert('Что-то пошло не так')
+        console.log(error)
+      })
+    }
   }
 
   const body = loading === false ?
@@ -202,14 +214,14 @@ const ProfileEditPage = () => {
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{ fontSize: '2.5vw' }}>Безопасность</div>
         <div className="profileEditContainerInner">
-          <div>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
             Новый пароль:
             <Input placeholder='Новый пароль' onChange={handleUserInput} name='password' />
             Старый пароль:
             <Input placeholder='Старый пароль' />
 
-            <button>Сохранить</button>
-            <Button fontSize='1.2vw' style='orange' width='10vw' onClick={handleDeleteAccount}>Удалить аккаунт</Button>
+            <Button fontSize='1.2vw' style='orange' width='15vw' onClick={handleDeleteAccount}>Изменить пароль</Button>
+            <Button fontSize='1.2vw' style='red' width='15vw' onClick={handleDeleteAccount}>Удалить аккаунт</Button>
           </div>
         </div>
       </div>

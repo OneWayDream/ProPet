@@ -22,6 +22,9 @@ export default {
   CHANGE_USER_INFO: BASE_URL + '/user',
   CHANGE_SITTER_INFO: BASE_URL + '/sitter-info',
 
+  //Delete
+  DELETE_ACCOUNT: BASE_URL + '/user/',
+
   //Search
-  SEARCH_SITTERS: BASE_URL + '/sitter-search'
+  SEARCH_SITTERS: BASE_URL + '/sitter-search',
 }
