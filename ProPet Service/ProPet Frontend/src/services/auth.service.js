@@ -13,7 +13,11 @@ export const registration = (login, mail, password, repeatedPassword, city, onEr
   }).then((response) => {
     onSuccess(response)
   }).catch((error) => {
-    onError(error.response)
+    if (error.response) {
+      onError(error.response)
+    } else {
+      alert('Нет соединения с сервером')
+    }
   })
 }
 
@@ -31,10 +35,18 @@ export const authenticate = (mail, password, onError, onSuccess) => {
       setUserCredentials(user)
       onSuccess(resp)
     }).catch((e) => {
-      onError(e.response)
+      if (e.response) {
+        onError(e.response)
+      } else {
+        alert('Нет соединения с сервером')
+      }
     })
   }).catch((e) => {
-    onError(e.response)
+    if (e.response) {
+      onError(e.response)
+    } else {
+      alert('Нет соединения с сервером')
+    }
   })
 
   // return async dispatch => {

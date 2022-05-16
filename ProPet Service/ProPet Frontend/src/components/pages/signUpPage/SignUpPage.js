@@ -9,7 +9,7 @@ import Checkbox from "../../atoms/checkbox/";
 import { Link, useNavigate } from "react-router-dom";
 import { registration } from "../../../services/auth.service";
 import paths from "../../../configs/paths";
-import { emailRegex } from "../../../configs/regexp";
+import { regexs } from "../../../configs/regexp";
 
 const SignUpPage = () => {
   //Some usefull hooks
@@ -41,20 +41,8 @@ const SignUpPage = () => {
 
   const handleRegister = () => {
     if (validate()) {
+      setIsLoading(true)
       registration(login, mail, password, repeatedPassword, 'Казань', handleErrorRegister, handleSuccessRegister)
-      // const response = await registration(username, mail, password, repeatedPassword, '').then((response) => {
-      //   navigate(paths.SIGN_IN, {
-      //     state: {
-      //       action: 'afterRegistration',
-      //       mail: mail
-      //     }
-      //   })
-      // }).catch(e => {
-      //   if (e.response) {
-      //   }
-      // }).finally(() => {
-      //   isLoading = false;
-      // });
     }
   }
 
@@ -93,12 +81,11 @@ const SignUpPage = () => {
   //validate date before send to server
   const validate = () => {
     let errors = {}
-    if (login.length < 5) {
+    if (!regexs.loginRegex.test(login)) {
       errors.login = 'Неверный логин'
     }
 
-    const mailRegex = emailRegex
-    if (!mailRegex.test(mail)) {
+    if (!regexs.emailRegex.test(mail)) {
       errors.mail = 'Неправильная почта'
     }
 

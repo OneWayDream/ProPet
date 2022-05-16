@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import Button from "../../atoms/button";
 import Input from "../../atoms/input";
 import Template from "../template";
-import ProfilePic from "../../../img/profile_pic.png"
+import MailPic from "../../../img/mail.png"
 import Key from "../../../img/key.png"
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import paths from "../../../configs/paths";
 import { authenticate } from "../../../services/auth.service";
 import { useDispatch } from "react-redux";
+import { regexs } from "../../../configs/regexp";
 
 const SignInPage = (props) => {
   //usefull hooks
@@ -27,6 +28,9 @@ const SignInPage = (props) => {
 
   //const for errors from server(no user with received login etc)
   const [errorServerMessage, setErrorServerMessage] = useState('')
+
+  //const for waiting server response
+  const [isLoadint, setIsLoading] = useState(false)
 
   //set on startup
   useEffect(() => {
@@ -57,6 +61,7 @@ const SignInPage = (props) => {
   //actions for click sign in button
   const handleLogin = () => {
     if (validate()) {
+      setIsLoading(true)
       // dispatch(authenticate(username, password, handleErrorFromServer, forwardToProfile))
       authenticate(username, password, handleErrorFromServer, handleSuccess)
     }
@@ -75,17 +80,17 @@ const SignInPage = (props) => {
         console.log(response)
         break
     }
+    setIsLoading(false)
   }
 
   //validate date
   const validate = () => {
     let errors = {}
-    if (password.length < 5) {
+    if (!regexs.passwordRegex.test(password)) {
       errors.password = 'Пароль слишком короткий'
     }
 
-    const usernameRegex = RegExp('^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$')
-    if (!usernameRegex.test(username)) {
+    if (!regexs.emailRegex.test(username)) {
       errors.username = 'Неправильная почта'
     }
     setErrorMessage(errors)
@@ -114,7 +119,7 @@ const SignInPage = (props) => {
       <div className='signInMessageError' style={{ display: errorMessage.username ? "block" : "none" }} >
         {errorMessage.username}
       </div>
-      <Input image={ProfilePic} width='2vw' placeholder='Логин' value={username} onChange={setUsername} />
+      <Input image={MailPic} width='2vw' placeholder='Почта' value={username} onChange={setUsername} />
       <div className='signInMessageError' style={{ display: errorMessage.password ? "block" : "none" }} >
         {errorMessage.password}
       </div>
