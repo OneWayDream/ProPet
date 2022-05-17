@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.itis.backend.exceptions.BannedTokenException;
-import ru.itis.backend.exceptions.ExpiredJwtException;
-import ru.itis.backend.exceptions.IncorrectJwtException;
+import ru.itis.backend.exceptions.token.BannedTokenException;
+import ru.itis.backend.exceptions.token.ExpiredJwtException;
+import ru.itis.backend.exceptions.token.IncorrectJwtException;
 import ru.itis.backend.services.JwtBlacklistService;
 
 import javax.servlet.FilterChain;

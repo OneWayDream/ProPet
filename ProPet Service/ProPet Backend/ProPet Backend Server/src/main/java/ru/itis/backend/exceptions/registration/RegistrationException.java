@@ -1,4 +1,4 @@
-package ru.itis.backend.exceptions;
+package ru.itis.backend.exceptions.registration;
 
 public abstract class RegistrationException extends RuntimeException{
 

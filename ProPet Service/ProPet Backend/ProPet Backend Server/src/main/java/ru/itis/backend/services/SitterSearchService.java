@@ -9,7 +9,7 @@ import ru.itis.backend.dto.app.SitterSearchDto;
 import ru.itis.backend.entities.SearchVariable;
 import ru.itis.backend.entities.SortingOrder;
 import ru.itis.backend.entities.SortingVariable;
-import ru.itis.backend.exceptions.IncorrectSearchVariableException;
+import ru.itis.backend.exceptions.search.IncorrectSearchVariableException;
 import ru.itis.backend.repositories.SitterInfoRepository;
 
 import java.util.Collections;

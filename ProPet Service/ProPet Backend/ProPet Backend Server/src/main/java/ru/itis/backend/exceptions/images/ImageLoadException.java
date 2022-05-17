@@ -1,4 +1,4 @@
-package ru.itis.backend.exceptions;
+package ru.itis.backend.exceptions.images;
 
 public class ImageLoadException extends ImageException {
     public ImageLoadException() {

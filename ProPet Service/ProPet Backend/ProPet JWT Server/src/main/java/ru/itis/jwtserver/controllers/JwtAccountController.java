@@ -61,4 +61,22 @@ public class JwtAccountController {
         return ResponseEntity.ok(service.updateByAccountId(jwtUserDto));
     }
 
+    @Operation(summary = "Deleting jwt user by id.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success deleting"),
+            @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
+            @ApiResponse(responseCode = "404", description = "Entity does not exists"),
+            @ApiResponse(responseCode = "418", description = "Unexpected exception"),
+            @ApiResponse(responseCode = "458", description = "Access denied")
+    })
+    @DeleteMapping(
+            value = "/{id}",
+            headers = {"JWT"}
+    )
+    @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
+    public ResponseEntity<?> deleteByAccountId(@PathVariable Long id){
+        service.deleteByAccountId(id);
+        return ResponseEntity.ok().build();
+    }
+
 }

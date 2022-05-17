@@ -15,7 +15,9 @@ public enum HttpErrorStatus {
     IMAGE_LOAD_ERROR(463),
     IMAGE_STORE_ERROR(464),
     INCORRECT_IMAGE_TYPE(465),
-    INCORRECT_SEARCH_VARIABLE(466);
+    INCORRECT_SEARCH_VARIABLE(466),
+    SELF_COMMENT(467),
+    EXISTED_COMMENT(468);
 
     private final int value;
 

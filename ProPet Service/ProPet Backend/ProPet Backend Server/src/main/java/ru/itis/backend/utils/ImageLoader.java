@@ -7,8 +7,8 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-import ru.itis.backend.exceptions.ImageLoadException;
-import ru.itis.backend.exceptions.ImageStoreException;
+import ru.itis.backend.exceptions.images.ImageLoadException;
+import ru.itis.backend.exceptions.images.ImageStoreException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

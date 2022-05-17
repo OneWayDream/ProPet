@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.itis.backend.entities.AccessToken;
 import ru.itis.backend.models.UserRole;
-import ru.itis.backend.exceptions.IncorrectJwtException;
+import ru.itis.backend.exceptions.token.IncorrectJwtException;
 import ru.itis.backend.models.UserState;
 
 import java.util.ArrayList;

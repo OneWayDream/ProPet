@@ -1,4 +1,4 @@
-package ru.itis.backend.exceptions;
+package ru.itis.backend.exceptions.jwtserver;
 
 public class JwtRegistrationException extends JwtServerException {
     public JwtRegistrationException() {

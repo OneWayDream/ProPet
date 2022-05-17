@@ -1,4 +1,4 @@
-package ru.itis.backend.exceptions;
+package ru.itis.backend.exceptions.persistence;
 
 import javax.persistence.PersistenceException;
 

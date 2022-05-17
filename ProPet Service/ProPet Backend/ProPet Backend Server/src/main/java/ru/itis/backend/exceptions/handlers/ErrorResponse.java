@@ -3,9 +3,9 @@ package ru.itis.backend.exceptions.handlers;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
-import ru.itis.backend.exceptions.BannedTokenException;
-import ru.itis.backend.exceptions.ExpiredJwtException;
-import ru.itis.backend.exceptions.IncorrectJwtException;
+import ru.itis.backend.exceptions.token.BannedTokenException;
+import ru.itis.backend.exceptions.token.ExpiredJwtException;
+import ru.itis.backend.exceptions.token.IncorrectJwtException;
 
 @Getter
 @Setter

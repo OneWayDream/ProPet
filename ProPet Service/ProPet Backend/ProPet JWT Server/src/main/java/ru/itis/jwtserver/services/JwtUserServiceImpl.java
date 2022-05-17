@@ -92,4 +92,20 @@ public class JwtUserServiceImpl implements JwtUserService {
         JwtUser updatedEntity = repository.save(JwtUserDto.to(entity));
         return JwtUserDto.from(updatedEntity);
     }
+
+    @Override
+    public void deleteByAccountId(Long accountId) {
+        try{
+            JwtUser entityToDelete = repository.findByAccountId(accountId)
+                    .filter(entry -> !entry.getIsDeleted())
+                    .orElseThrow(EntityNotExistsException::new);
+            entityToDelete.setIsDeleted(true);
+            repository.save(entityToDelete);
+        } catch (Exception ex){
+            if (ex instanceof EntityNotExistsException){
+                throw ex;
+            }
+            throw new PersistenceException(ex);
+        }
+    }
 }
