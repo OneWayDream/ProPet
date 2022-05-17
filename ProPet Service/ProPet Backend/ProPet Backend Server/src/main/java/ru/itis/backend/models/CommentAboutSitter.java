@@ -25,7 +25,7 @@ public class CommentAboutSitter {
     @Column(name = "sitter_info_id")
     protected Long sitterInfoId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     protected Account account;
 

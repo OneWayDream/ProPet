@@ -2,9 +2,11 @@ package ru.itis.backend.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.itis.backend.dto.app.CommentAboutSitterDto;
-import ru.itis.backend.exceptions.EntityNotExistsException;
-import ru.itis.backend.exceptions.EntityNotFoundException;
+import ru.itis.backend.dto.rest.CommentAboutSitterRestDto;
+import ru.itis.backend.exceptions.comment.ExistedCommentException;
+import ru.itis.backend.exceptions.comment.SelfCommentException;
+import ru.itis.backend.exceptions.persistence.EntityNotExistsException;
+import ru.itis.backend.exceptions.persistence.EntityNotFoundException;
 import ru.itis.backend.models.CommentAboutSitter;
 import ru.itis.backend.models.SitterInfo;
 import ru.itis.backend.repositories.CommentAboutSitterRepository;
@@ -23,14 +25,14 @@ public class CommentAboutSitterServiceImpl implements CommentAboutSitterService 
     protected final SitterInfoRepository sitterInfoRepository;
 
     @Override
-    public List<CommentAboutSitterDto> findAll() {
-        return CommentAboutSitterDto.from(repository.findAll().stream()
+    public List<CommentAboutSitterRestDto> findAll() {
+        return CommentAboutSitterRestDto.fromRest(repository.findAll().stream()
                 .filter(entry -> !entry.getIsDeleted())
                 .collect(Collectors.toList()));
     }
 
     @Override
-    public void delete(CommentAboutSitterDto commentAboutSitterDto) {
+    public void delete(CommentAboutSitterRestDto commentAboutSitterDto) {
         try{
             CommentAboutSitter entityToDelete = repository.findById(commentAboutSitterDto.getId())
                     .filter(entry -> !entry.getIsDeleted())
@@ -47,32 +49,40 @@ public class CommentAboutSitterServiceImpl implements CommentAboutSitterService 
     }
 
     @Override
-    public CommentAboutSitterDto add(CommentAboutSitterDto commentAboutSitterDto) {
-        CommentAboutSitter newEntity = CommentAboutSitterDto.to(commentAboutSitterDto);
+    public CommentAboutSitterRestDto add(CommentAboutSitterRestDto commentAboutSitterDto) {
+        CommentAboutSitter newEntity = CommentAboutSitterRestDto.toRest(commentAboutSitterDto);
+        SitterInfo sitterInfo = sitterInfoRepository.getById(commentAboutSitterDto.getSitterInfoId());
+        if (sitterInfo.getAccountId().equals(commentAboutSitterDto.getAccountId())){
+            throw new SelfCommentException();
+        }
+        if (repository.findByAccountIdAndSitterInfoId(commentAboutSitterDto.getAccountId(),
+                commentAboutSitterDto.getSitterInfoId()).isPresent()){
+            throw new ExistedCommentException();
+        }
         repository.save(newEntity);
         updateRating(newEntity, +1);
-        return CommentAboutSitterDto.from(newEntity);
+        return CommentAboutSitterRestDto.fromRest(newEntity);
     }
 
     @Override
-    public CommentAboutSitterDto findById(Long aLong) {
-        return CommentAboutSitterDto.from(repository.findById(aLong)
+    public CommentAboutSitterRestDto findById(Long aLong) {
+        return CommentAboutSitterRestDto.fromRest(repository.findById(aLong)
                 .filter(entry -> !entry.getIsDeleted())
                 .orElseThrow(EntityNotFoundException::new));
     }
 
     @Override
-    public CommentAboutSitterDto update(CommentAboutSitterDto commentAboutSitterDto) {
-        CommentAboutSitterDto entity = findById(commentAboutSitterDto.getId());
-        PropertiesUtils.copyNonNullProperties(commentAboutSitterDto, entity);
-        CommentAboutSitter updatedEntity = repository.save(CommentAboutSitterDto.to(entity));
+    public CommentAboutSitterRestDto update(CommentAboutSitterRestDto commentAboutSitterRestDto) {
+        CommentAboutSitterRestDto entity = findById(commentAboutSitterRestDto.getId());
+        PropertiesUtils.copyNonNullProperties(commentAboutSitterRestDto, entity);
+        CommentAboutSitter updatedEntity = repository.save(CommentAboutSitterRestDto.toRest(entity));
         updateRating(updatedEntity, +1);
-        return CommentAboutSitterDto.from(updatedEntity);
+        return CommentAboutSitterRestDto.fromRest(updatedEntity);
     }
 
     @Override
-    public List<CommentAboutSitterDto> findAllByUserId(Long userId) {
-        return CommentAboutSitterDto.from(repository.findAllByAccountId(userId).stream()
+    public List<CommentAboutSitterRestDto> findAllByUserId(Long userId) {
+        return CommentAboutSitterRestDto.fromRest(repository.findAllByAccountId(userId).stream()
                 .filter(entry -> !entry.getIsDeleted())
                 .collect(Collectors.toList()));
     }

@@ -8,5 +8,6 @@ public interface JwtUserService extends CrudService<JwtUserDto, Long> {
     JwtUserDto findByMail(String mail);
     JwtUserDto findByAccountId(Long accountId);
     JwtUserDto updateByAccountId(JwtUserDto jwtUserDto);
+    void deleteByAccountId(Long accountId);
 
 }

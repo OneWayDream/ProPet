@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.itis.backend.exceptions.JwtAuthorizationFaultException;
+import ru.itis.backend.exceptions.jwtserver.JwtAuthorizationFaultException;
 
 import java.util.Date;
 

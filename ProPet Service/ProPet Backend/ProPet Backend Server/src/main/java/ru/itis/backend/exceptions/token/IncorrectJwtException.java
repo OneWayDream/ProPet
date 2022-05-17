@@ -1,4 +1,4 @@
-package ru.itis.backend.exceptions;
+package ru.itis.backend.exceptions.token;
 
 public class IncorrectJwtException extends TokenAuthenticationException {
 

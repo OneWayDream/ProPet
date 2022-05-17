@@ -9,10 +9,33 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.itis.backend.exceptions.*;
+import ru.itis.backend.exceptions.comment.CommentAboutSitterException;
+import ru.itis.backend.exceptions.comment.ExistedCommentException;
+import ru.itis.backend.exceptions.comment.SelfCommentException;
+import ru.itis.backend.exceptions.images.ImageException;
+import ru.itis.backend.exceptions.images.ImageLoadException;
+import ru.itis.backend.exceptions.images.ImageStoreException;
+import ru.itis.backend.exceptions.images.IncorrectImageTypeException;
+import ru.itis.backend.exceptions.jwtserver.JwtAuthorizationFaultException;
+import ru.itis.backend.exceptions.jwtserver.JwtRegistrationException;
+import ru.itis.backend.exceptions.jwtserver.JwtServerException;
+import ru.itis.backend.exceptions.jwtserver.JwtUpdateException;
+import ru.itis.backend.exceptions.persistence.EntityNotExistsException;
+import ru.itis.backend.exceptions.persistence.EntityNotFoundException;
+import ru.itis.backend.exceptions.persistence.LinkNotExistsException;
+import ru.itis.backend.exceptions.persistence.SitterInfoAlreadyExistsException;
+import ru.itis.backend.exceptions.registration.LoginAlreadyInUseException;
+import ru.itis.backend.exceptions.registration.MailAlreadyInUseException;
+import ru.itis.backend.exceptions.registration.RegistrationException;
+import ru.itis.backend.exceptions.search.IncorrectOrderException;
+import ru.itis.backend.exceptions.search.IncorrectSearchVariableException;
+import ru.itis.backend.exceptions.search.IncorrectSortingVariableException;
+import ru.itis.backend.exceptions.search.SearchException;
+import ru.itis.backend.exceptions.token.ExpiredJwtException;
+import ru.itis.backend.exceptions.token.IncorrectJwtException;
+import ru.itis.backend.exceptions.token.TokenAuthenticationException;
 
 import javax.persistence.PersistenceException;
 import java.util.HashMap;
@@ -98,6 +121,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException exception){
+        exception.printStackTrace();
         return ResponseEntity.status(HttpErrorStatus.ACCESS_DENIED.value()).body("Access denied");
     }
 
@@ -131,6 +155,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         else if (exception instanceof IncorrectImageTypeException){
             return ResponseEntity.status(HttpErrorStatus.INCORRECT_IMAGE_TYPE.value())
                     .body("Incorrect image type");
+        }
+        else {
+            return ResponseEntity.badRequest().body("Something went wrong");
+        }
+    }
+
+    @ExceptionHandler(CommentAboutSitterException.class)
+    public ResponseEntity<?> handleCommentAboutSitterException(CommentAboutSitterException ex){
+        if (ex instanceof SelfCommentException){
+            return ResponseEntity.status(HttpErrorStatus.SELF_COMMENT.value())
+                    .body("You can't add comment to your own sitter info!");
+        }
+        else if (ex instanceof ExistedCommentException){
+            return ResponseEntity.status(HttpErrorStatus.EXISTED_COMMENT.value())
+                    .body("You've already commented this sitter");
         }
         else {
             return ResponseEntity.badRequest().body("Something went wrong");

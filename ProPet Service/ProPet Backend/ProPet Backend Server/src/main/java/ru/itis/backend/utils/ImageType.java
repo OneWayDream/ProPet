@@ -1,6 +1,6 @@
 package ru.itis.backend.utils;
 
-import ru.itis.backend.exceptions.IncorrectImageTypeException;
+import ru.itis.backend.exceptions.images.IncorrectImageTypeException;
 
 import java.util.Arrays;
 

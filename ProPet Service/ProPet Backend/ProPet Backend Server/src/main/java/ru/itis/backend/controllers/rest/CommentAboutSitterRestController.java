@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.itis.backend.dto.app.CommentAboutSitterDto;
+import ru.itis.backend.dto.rest.CommentAboutSitterRestDto;
 import ru.itis.backend.services.CommentAboutSitterService;
 
 import javax.validation.Valid;
@@ -28,7 +28,7 @@ public class CommentAboutSitterRestController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success getting", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = CommentAboutSitterDto.class)
+                            schema = @Schema(implementation = CommentAboutSitterRestDto.class)
                     ))
             }),
             @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
@@ -38,7 +38,7 @@ public class CommentAboutSitterRestController {
             headers = {"JWT"}
     )
     @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
-    public ResponseEntity<List<CommentAboutSitterDto>> getAll() {
+    public ResponseEntity<List<CommentAboutSitterRestDto>> getAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
@@ -46,7 +46,7 @@ public class CommentAboutSitterRestController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success getting", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = CommentAboutSitterDto.class)
+                            schema = @Schema(implementation = CommentAboutSitterRestDto.class)
                     ))
             }),
             @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
@@ -58,7 +58,7 @@ public class CommentAboutSitterRestController {
             headers = {"JWT"}
     )
     @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
-    public ResponseEntity<CommentAboutSitterDto> getById(@PathVariable Long id){
+    public ResponseEntity<CommentAboutSitterRestDto> getById(@PathVariable Long id){
         return ResponseEntity.ok(service.findById(id));
     }
 
@@ -66,7 +66,7 @@ public class CommentAboutSitterRestController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success getting", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = CommentAboutSitterDto.class)
+                            schema = @Schema(implementation = CommentAboutSitterRestDto.class)
                     ))
             }),
             @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
@@ -79,7 +79,7 @@ public class CommentAboutSitterRestController {
             headers = {"JWT"}
     )
     @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
-    public ResponseEntity<List<CommentAboutSitterDto>> getByUserId(@PathVariable Long id){
+    public ResponseEntity<List<CommentAboutSitterRestDto>> getByUserId(@PathVariable Long id){
         return ResponseEntity.ok(service.findAllByUserId(id));
     }
 
@@ -87,7 +87,7 @@ public class CommentAboutSitterRestController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success adding", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = CommentAboutSitterDto.class)
+                            schema = @Schema(implementation = CommentAboutSitterRestDto.class)
                     ))
             }),
             @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
@@ -99,7 +99,7 @@ public class CommentAboutSitterRestController {
             headers = {"JWT"}
     )
     @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
-    public ResponseEntity<CommentAboutSitterDto> add(@Valid @RequestBody CommentAboutSitterDto commentAboutSitterDto){
+    public ResponseEntity<CommentAboutSitterRestDto> add(@Valid @RequestBody CommentAboutSitterRestDto commentAboutSitterDto){
         return ResponseEntity.ok(service.add(commentAboutSitterDto));
     }
 
@@ -107,7 +107,7 @@ public class CommentAboutSitterRestController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success updating", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(
-                            schema = @Schema(implementation = CommentAboutSitterDto.class)
+                            schema = @Schema(implementation = CommentAboutSitterRestDto.class)
                     ))
             }),
             @ApiResponse(responseCode = "403", description = "Unexpected exception in the branch being handled"),
@@ -119,8 +119,8 @@ public class CommentAboutSitterRestController {
             headers = {"JWT"}
     )
     @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
-    public ResponseEntity<CommentAboutSitterDto> updateById(
-            @Valid @RequestBody CommentAboutSitterDto commentAboutSitterDto){
+    public ResponseEntity<CommentAboutSitterRestDto> updateById(
+            @Valid @RequestBody CommentAboutSitterRestDto commentAboutSitterDto){
         return ResponseEntity.ok(service.update(commentAboutSitterDto));
     }
 
@@ -138,7 +138,7 @@ public class CommentAboutSitterRestController {
     )
     @PreAuthorize("hasAnyAuthority('MODER', 'ADMIN')")
     public ResponseEntity<?> deleteById(@PathVariable Long id){
-        service.delete(CommentAboutSitterDto.builder().id(id).build());
+        service.delete(CommentAboutSitterRestDto.builder().id(id).build());
         return ResponseEntity.ok().build();
     }
 

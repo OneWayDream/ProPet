@@ -1,4 +1,4 @@
-package ru.itis.backend.exceptions;
+package ru.itis.backend.exceptions.jwtserver;
 
 public abstract class JwtServerException extends RuntimeException{
 

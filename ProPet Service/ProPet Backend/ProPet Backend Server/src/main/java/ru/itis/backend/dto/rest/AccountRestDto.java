@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import ru.itis.backend.dto.app.CommentAboutSitterDto;
 import ru.itis.backend.dto.app.PetInfoDto;
 import ru.itis.backend.dto.app.SitterInfoDto;
 import ru.itis.backend.dto.app.UserAppealDto;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 @SuperBuilder
 public class AccountRestDto extends AccountDto {
 
-    protected List<CommentAboutSitterDto> comments;
+    protected List<CommentAboutSitterRestDto> comments;
     protected List<UserAppealDto> appeals;
     protected ActivationLinkDto activationLinkDto;
 
@@ -43,7 +42,7 @@ public class AccountRestDto extends AccountDto {
                 .pets((account.getPets() == null || account.getPets().isEmpty()) ? null
                         : PetInfoDto.from(account.getPets()))
                 .comments((account.getComments() == null || account.getComments().isEmpty()) ? null
-                        : CommentAboutSitterDto.from(account.getComments()))
+                        : CommentAboutSitterRestDto.fromRest(account.getComments()))
                 .appeals((account.getAppeals() == null || account.getAppeals().isEmpty()) ? null
                         : UserAppealDto.from(account.getAppeals()))
                 .sitterInfoDto((account.getSitterInfo() == null) ? null : SitterInfoDto.from(account.getSitterInfo()))
@@ -68,7 +67,7 @@ public class AccountRestDto extends AccountDto {
                 .city(account.getCity())
                 .phone(account.getPhone())
                 .pets((account.getPets() == null) ? null : PetInfoDto.to(account.getPets()))
-                .comments((account.getComments() == null) ? null : CommentAboutSitterDto.to(account.getComments()))
+                .comments((account.getComments() == null) ? null : CommentAboutSitterRestDto.toRest(account.getComments()))
                 .appeals((account.getAppeals() == null) ? null : UserAppealDto.to(account.getAppeals()))
                 .sitterInfo((account.getSitterInfoDto() == null) ? null : SitterInfoDto.toRest(account.getSitterInfoDto()))
                 .activationLink((account.getActivationLinkDto() == null) ? null

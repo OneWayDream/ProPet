@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import ru.itis.backend.annotations.JwtAccessConstraint;
-import ru.itis.backend.exceptions.IncorrectJwtException;
+import ru.itis.backend.exceptions.token.IncorrectJwtException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

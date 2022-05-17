@@ -1,7 +1,6 @@
 package ru.itis.backend.entities;
 
-import ru.itis.backend.exceptions.IncorrectSearchVariableException;
-import ru.itis.backend.exceptions.IncorrectSortingVariableException;
+import ru.itis.backend.exceptions.search.IncorrectSearchVariableException;
 
 import java.util.Arrays;
 

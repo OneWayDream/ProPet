@@ -1,4 +1,4 @@
-package ru.itis.backend.exceptions;
+package ru.itis.backend.exceptions.search;
 
 public abstract class SearchException extends RuntimeException {
 

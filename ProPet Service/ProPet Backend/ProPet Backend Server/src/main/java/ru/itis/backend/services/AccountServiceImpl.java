@@ -7,14 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.itis.backend.dto.app.AccountDto;
-import ru.itis.backend.dto.app.SitterInfoDto;
 import ru.itis.backend.dto.forms.JwtUpdateForm;
 import ru.itis.backend.dto.rest.ActivationLinkDto;
 import ru.itis.backend.dto.rest.AccountRestDto;
 import ru.itis.backend.dto.forms.TokenRegistrationForm;
-import ru.itis.backend.exceptions.*;
+import ru.itis.backend.exceptions.jwtserver.JwtRegistrationException;
+import ru.itis.backend.exceptions.jwtserver.JwtUpdateException;
+import ru.itis.backend.exceptions.persistence.EntityNotExistsException;
+import ru.itis.backend.exceptions.persistence.EntityNotFoundException;
+import ru.itis.backend.exceptions.registration.LoginAlreadyInUseException;
+import ru.itis.backend.exceptions.registration.MailAlreadyInUseException;
 import ru.itis.backend.models.Account;
-import ru.itis.backend.models.SitterInfo;
 import ru.itis.backend.models.UserState;
 import ru.itis.backend.repositories.AccountRepository;
 import ru.itis.backend.security.managers.TokenManager;
@@ -97,11 +100,28 @@ public class AccountServiceImpl implements AccountService {
             entityToDelete.getPets().forEach(pet -> pet.setIsDeleted(true));
             entityToDelete.getAppeals().forEach(appeal -> appeal.setIsDeleted(true));
             repository.save(entityToDelete);
+            deleteUserOnAuthorizationServer(entityToDelete.getId());
         } catch (Exception ex){
             if (ex instanceof EntityNotExistsException){
                 throw ex;
             }
             throw new PersistenceException(ex);
+        }
+    }
+
+    protected void deleteUserOnAuthorizationServer(Long id){
+        try{
+            Request request = new Request.Builder()
+                    .url(TOKEN_SERVER_URL + UPDATE_URL + "/" + id)
+                    .addHeader("JWT", tokenManager.getAccessToken())
+                    .delete()
+                    .build();
+            Response response = client.newCall(request).execute();
+            if (response.code() != 200){
+                throw new JwtUpdateException();
+            }
+        } catch (Exception ex){
+            throw new JwtUpdateException(ex);
         }
     }
 
