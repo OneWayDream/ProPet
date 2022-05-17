@@ -92,6 +92,10 @@ public class AccountServiceImpl implements AccountService {
                     .filter(entry -> !entry.getIsDeleted())
                     .orElseThrow(EntityNotExistsException::new);
             entityToDelete.setIsDeleted(true);
+            entityToDelete.getActivationLink().setIsDeleted(true);
+            entityToDelete.getSitterInfo().setIsDeleted(true);
+            entityToDelete.getPets().forEach(pet -> pet.setIsDeleted(true));
+            entityToDelete.getAppeals().forEach(appeal -> appeal.setIsDeleted(true));
             repository.save(entityToDelete);
         } catch (Exception ex){
             if (ex instanceof EntityNotExistsException){

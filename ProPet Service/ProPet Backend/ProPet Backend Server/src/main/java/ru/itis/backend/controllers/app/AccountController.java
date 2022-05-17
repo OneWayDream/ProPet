@@ -134,7 +134,7 @@ public class AccountController {
             jwtFieldName = "account_id",
             argName = "id"
     )
-    public ResponseEntity<?> deleteById(@PathVariable Long id){
+    public ResponseEntity<?> deleteById(@PathVariable Long id, @RequestHeader("JWT") String token){
         service.delete(AccountDto.builder().id(id).build());
         return ResponseEntity.ok().build();
     }
