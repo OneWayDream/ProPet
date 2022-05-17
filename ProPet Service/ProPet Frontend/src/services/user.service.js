@@ -1,6 +1,17 @@
 import axios from "axios"
 import api from "../configs/api"
 
+axios.interceptors.request.use(request => {
+  console.log('Starting Request', JSON.stringify(request, null, 1))
+  return request
+})
+
+axios.interceptors.response.use(response => {
+  console.log('Response:', JSON.stringify(response, null, 1))
+  
+  return response
+})
+
 export const getUser = (id, token, onError, onSuccess, by = 'mail') => {
   let url;
   switch (by) {
@@ -92,16 +103,6 @@ export const changeSitterInto = (sitter, JWT, onError, onSuccess) => {
   })
 }
 
-axios.interceptors.request.use(request => {
-  console.log('Starting Request', JSON.stringify(request, null, 1))
-  return request
-})
-
-axios.interceptors.response.use(response => {
-  console.log('Response:', JSON.stringify(response, null, 1))
-  return response
-})
-
 export const isAuthenticated = () => {
   return localStorage.getItem('user') ? true : false
 }
@@ -129,11 +130,20 @@ export const removeUserCredentials = () => {
   localStorage.removeItem('user')
 }
 
-export const deleteAccount = (id, token) => {
-  console.log(token)
-  return axios.delete(api.DELETE_ACCOUNT + id,{
+export const deleteAccount = (id, token, onError, onSuccess) => {
+  // return axios.delete(api.DELETE_ACCOUNT + id, {
+  //   headers: {
+  //     "JWT": token
+  //   }
+  // })
+  axios.delete(api.DELETE_ACCOUNT + id,{
     headers: {
       "JWT": token
     }
+  }).then((response) => {
+    removeUserCredentials()
+    onSuccess(response)
+  }).catch((error) => {
+    onError(error) 
   })
 }

@@ -9,6 +9,7 @@ import { changeCredentials, changeUserInfo, deleteAccount, getAccessToken, getUs
 import Input from "../../atoms/input";
 import { regexs } from "../../../configs/regexp";
 import Button from "../../atoms/button";
+import TextArea from "../../atoms/textArea/TextArea";
 
 const ProfileEditPage = () => {
   //some usefull hooks
@@ -81,10 +82,14 @@ const ProfileEditPage = () => {
 
   //Changeing sitter info
   const handleSitterInput = (e) => {
-    if (e.target.type === 'checkbox') {
-      setSitter({ ...sitter, [e.target.name]: e.target.checked })
+    if (e.target) {
+      if (e.target.type === 'checkbox') {
+        setSitter({ ...sitter, [e.target.name]: e.target.checked })
+      } else {
+        setSitter({ ...sitter, [e.target.name]: (e.target.value === "" ? null : e.target.value) })
+      }
     } else {
-      setSitter({ ...sitter, [e.target.name]: (e.target.value === "" ? null : e.target.value) })
+      setSitter({ ...sitter, 'infoAbout': (e === "" ? null : e) })
     }
   }
 
@@ -92,12 +97,11 @@ const ProfileEditPage = () => {
   const handleChangeRequest = () => {
     const userIsChanged = !(JSON.stringify(user) === JSON.stringify(originalUser));
     const sitterIsChanged = !(JSON.stringify(sitter) === JSON.stringify(originalSitter))
-
     if ((userIsChanged || sitterIsChanged) && validate()) {
       setLoading(true)
       let changedUser = user
       changedUser.sitterInfoDto = sitter
-      setUser({ changedUser })
+      console.log(changedUser)
       changeUserInfo(changedUser, getAccessToken(), handleError, handleSuccesUserChanged)
     }
   }
@@ -105,35 +109,36 @@ const ProfileEditPage = () => {
   //Validate data
   const validate = () => {
     let errors = {}
+    //Check if user want to be sitter and filled every sitter input field
+    if (sitter.sitterStatus) {
+      if (!user.city || !regexs.cityRegex.test(user.city)) {
+        errors.city = 'Некорректный город'
+      }
+
+      if (!user.phone || user.phone.length !== 11 || !regexs.telephoneNumberRegex.test(user.phone)) {
+        errors.phone = 'Некорректный телефон'
+      }
+
+      if (!sitter.age || sitter.age < 16 || sitter.age > 99 || !regexs.ageRegex.test(sitter.age)) {
+        errors.age = 'Некорректный возраст'
+      }
+
+      if (!sitter.infoAbout || sitter.infoAbout.length < 50 || !regexs.aboutInfoRegex.test(sitter.infoAbout)) {
+        errors.infoAbout = 'Некорректно заполнено поле "О себе". Нужно заполнить больше информации'
+      }
+    }
 
     if (user.name !== originalUser.name && !regexs.nameRegex.test(user.name)) {
-      errors.name = 'Имя может содержать только русские и английские буквы'
+      errors.name = 'Имя может содержать только русские и английские буквы, длина от 2 до 10 символов'
     }
 
     if (user.surname !== originalUser.surname && !regexs.surnameRegex.test(user.surname)) {
-      errors.surname = 'Имя может содержать только русские и английские буквы'
+      errors.surname = 'Фамилия может содержать только русские и английские буквы, длина от 2 до 10 символов'
     }
 
     if (user.mail !== originalUser.mail && !regexs.emailRegex.test(user.mail)) {
       errors.mail = 'Неверная почта'
     }
-
-    if (user.city !== originalUser.city && !regexs.cityRegex.test(user.city)) {
-      errors.city = 'Некорректный город'
-    }
-
-    if (user.telephone !== originalUser.telephone && !regexs.telephoneNumberRegex.test(user.telephone)) {
-      errors.telephone = 'Некорректный телефон'
-    }
-
-    if (user.age !== originalUser.age && !regexs.ageRegex.test(user.age)) {
-      errors.telephone = 'Некорректный возраст'
-    }
-
-    if (sitter.aboutInfo !== originalSitter.aboutInfo && !regexs.aboutInfoRegex.test(sitter.aboutInfo)) {
-      errors.aboutInfo = 'Некорректно заполнено поле "О себе"'
-    }
-
     setErrorMessage(errors)
     return Object.keys(errors).length === 0
   }
@@ -147,6 +152,9 @@ const ProfileEditPage = () => {
     changedUser.sitterInfoDto = sitter
     setOriginalUser(changedUser)
     setUser(changedUser)
+
+    setOriginalSitter(sitter)
+
     setLoading(false)
     alert('Изменения успешно применены')
   }
@@ -154,15 +162,12 @@ const ProfileEditPage = () => {
   //Deleting account
   const handleDeleteAccount = () => {
     if (window.confirm(`Вы действительно хотите покинуть наш замечательный сайт и остаться без аккаунта?`)) {
-      deleteAccount(user.id, getAccessToken()).then(() => {
+      deleteAccount(user.id, getAccessToken(), handleError, onSuccess => {
         navigate(paths.SIGN_IN, {
           state: {
             action: 'afterDeleteAccount'
           }
         })
-      }).catch((error) => {
-        alert('Что-то пошло не так')
-        console.log(error)
       })
     }
   }
@@ -179,10 +184,18 @@ const ProfileEditPage = () => {
           </div>
           <div>
             Имя:
+            <div className='signInMessageError' style={{ marginLeft: '0.5vw', maxWidth: '27vw', display: errorMessage.name ? "block" : "none" }} >
+              {errorMessage.name}
+            </div>
             <Input placeholder='Иван' value={user.name || ''} onChange={handleUserInput} name='name' />
             Фамилия:
-            <Input placeholder='Иванов' value={user.surname || ''} onChange={handleUserInput} name='surname' />
+            <div className='signInMessageError' style={{ marginLeft: '0.5vw', maxWidth: '27vw', display: errorMessage.surname ? "block" : "none" }} >
+              {errorMessage.surname}
+            </div><Input placeholder='Иванов' value={user.surname || ''} onChange={handleUserInput} name='surname' />
             Электронная почта:
+            <div className='signInMessageError' style={{ marginLeft: '0.5vw', maxWidth: '27vw', display: errorMessage.mail ? "block" : "none" }} >
+              {errorMessage.mail}
+            </div>
             <Input placeholder='ivan_ivanov@mail.ru' value={user.mail || ''} onChange={handleUserInput} name='mail' />
           </div>
         </div>
@@ -198,13 +211,26 @@ const ProfileEditPage = () => {
             </div>
             {sitter.sitterStatus ? <>
               Город:
-              <Input placeholder='Казань' onChange={handleUserInput} name='city' />
+              <div className='signInMessageError' style={{ marginLeft: '0.5vw', maxWidth: '27vw', display: errorMessage.city ? "block" : "none" }} >
+                {errorMessage.city}
+              </div>
+              <Input placeholder='Казань' onChange={handleUserInput} name='city' value={user.city || ''} />
               Телефон:
-              <Input placeholder='88005553535' onChange={handleUserInput} name='phone' />
+              <div className='signInMessageError' style={{ marginLeft: '0.5vw', maxWidth: '27vw', display: errorMessage.phone ? "block" : "none" }} >
+                {errorMessage.phone}
+              </div>
+              <Input placeholder='88005553535' onChange={handleUserInput} name='phone' value={user.phone || ''} />
               Возраст:
-              <Input placeholder='20' onChange={handleSitterInput} name='age' />
+              <div className='signInMessageError' style={{ marginLeft: '0.5vw', maxWidth: '27vw', display: errorMessage.age ? "block" : "none" }} >
+                {errorMessage.age}
+              </div>
+              <Input placeholder='20' onChange={handleSitterInput} name='age' value={sitter.age || ''} />
               О себе:
-              <Input placeholder='Очень люблю животных' onChange={handleSitterInput} name='infoAbout' />
+              <div className='signInMessageError' style={{ marginLeft: '0.5vw', maxWidth: '27vw', display: errorMessage.infoAbout ? "block" : "none" }} >
+                {errorMessage.infoAbout}
+              </div>
+              <TextArea readOnly={false} cols={"80"} rows={"20"} onChange={handleSitterInput} name='infoAbout'>{sitter.infoAbout}</TextArea>
+              {/* <Input placeholder='Очень люблю животных' onChange={handleSitterInput} name='infoAbout' value={sitter.infoAbout || ''} /> */}
             </>
               : ''}
             <Button fontSize='1.2vw' style='orange' width='10vw' onClick={handleChangeRequest}>Изменить</Button>

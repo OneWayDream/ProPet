@@ -16,7 +16,15 @@ const StyledTextArea = styled.textarea(() => `
 `)
 
 const TextArea = (props) => {
-  return <StyledTextArea readOnly={props.readOnly} cols={props.cols} rows={props.rows} defaultValue={props.children} />
+  const handleChange = (ev) => {
+    props.onChange(ev.target.value);
+  };
+  return <StyledTextArea readOnly={props.readOnly} 
+                      cols={props.cols} 
+                      rows={props.rows} 
+                      defaultValue={props.children} 
+                      onChange={handleChange}
+                      name={props.name}/>
 }
 
 export default TextArea

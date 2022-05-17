@@ -5,7 +5,7 @@ export const regexs = {
   nameRegex: RegExp('[A-Za-zА-ЯЁа-яё]{2,10}'),
   surnameRegex: RegExp('[A-Za-zА-ЯЁа-яё]{2,10}'),
   cityRegex: RegExp('[A-Za-zА-ЯЁа-яё]{2,20}'),
-  telephoneNumberRegex: RegExp('^(\\+7|8)(\d{10})'),
-  ageRegex: RegExp('^a'),
-  aboutInfoRegex: RegExp('.{50,1000}'),
+  telephoneNumberRegex: RegExp('(^$|[0-9{10}])'),
+  ageRegex: RegExp('([0-9]{2})'),
+  aboutInfoRegex: RegExp('\.{50,1000}'),
 }
