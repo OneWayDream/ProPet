@@ -1,90 +1,135 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import Button from "../../atoms/button";
 import Input from "../../atoms/input";
 import Template from "../template";
-import ProfilePic from "../../../img/profile_pic.png"
+import MailPic from "../../../img/mail.png"
 import Key from "../../../img/key.png"
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import paths from "../../../configs/paths";
 import { authenticate } from "../../../services/auth.service";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { regexs } from "../../../configs/regexp";
 
 const SignInPage = (props) => {
+  //usefull hooks
   const location = useLocation()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-  // if (localStorage.getItem('user')) {
-  // navigate(paths.PROFILE)
+  //const for auth
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-  // }
+  //const for success messages
+  const [successMessage, setSuccessMessage] = useState('')
 
+  //const for errors messages on input(invalid email or password) 
+  const [errorMessage, setErrorMessage] = useState({})
+
+  //const for errors from server(no user with received login etc)
+  const [errorServerMessage, setErrorServerMessage] = useState('')
+
+  //const for waiting server response
+  const [isLoadint, setIsLoading] = useState(false)
+
+  //set on startup
   useEffect(() => {
+    //check if user is authenticated
     if (localStorage.getItem('user')) {
       navigate(paths.PROFILE)
     }
-  }, [])
-
-  let message = '';
-  let showSuccessMessage = false;
-  let mail = '';
-  if (location.state != null) {
-    switch (location.state.action) {
-      case 'afterRegistration':
-        showSuccessMessage = true;
-        mail = location.state.mail;
-        console.log(mail)
-        message =
-          <>
+    //check if user after registration to show success register message
+    if (location.state != null) {
+      switch (location.state.action) {
+        case 'afterRegistration':
+          setSuccessMessage(
             <div>
               Регистрация прошла успешно
             </div>
-          </>
+          )
+          setUsername(location.state.mail)
+          break;
+        case 'afterDeleteAccount':
+          setSuccessMessage(
+            <div>
+              Аккаунт удален
+            </div>
+          )
+          break
+      }
     }
+  }, [])
+
+  //success callback on authenticate()   
+  const handleSuccess = () => {
+    navigate(paths.PROFILE)
   }
 
-  const [username, setUsername] = useState(mail);
-  const [password, setPassword] = useState('');
-
-  const [showMessage, setShowMessage] = useState(showSuccessMessage)
-
-  const dispatch = useDispatch()
-
-
+  //actions for click sign in button
   const handleLogin = () => {
-    dispatch(authenticate(username, password))
-    if (localStorage.getItem('user')) {
-      navigate(paths.PROFILE)
+    if (validate()) {
+      setIsLoading(true)
+      // dispatch(authenticate(username, password, handleErrorFromServer, forwardToProfile))
+      authenticate(username, password, handleErrorFromServer, handleSuccess)
     }
   }
 
-  const handleKeypress = (e) => {
-    console.log(e.keyCode)
+  //catch errors from server, callback on authenticate()
+  const handleErrorFromServer = (response) => {
+    switch (response.status) {
+      case 456:
+        setErrorServerMessage('Неверная почта или пароль')
+        break
+      case 418:
+      case 403:
+      default:
+        setErrorServerMessage('Что-то пошло не так')
+        console.log(response)
+        break
+    }
+    setIsLoading(false)
   }
 
-  // useEffect(() => {
-  //   const listener = event => {
-  //     if (event.code === "Enter" || event.code === "NumpadEnter") {
-  //       console.log("Enter key was pressed. Run your function.");
-  //       event.preventDefault();
-  //       // callMyFunction();
-  //     }
-  //   };
-  //   document.addEventListener("keydown", listener);
-  //   return () => {
-  //     document.removeEventListener("keydown", listener);
-  //   };
-  // }, []);
+  //validate date
+  const validate = () => {
+    let errors = {}
+    if (!regexs.passwordRegex.test(password)) {
+      errors.password = 'Пароль слишком короткий'
+    }
+
+    if (!regexs.emailRegex.test(username)) {
+      errors.username = 'Неправильная почта'
+    }
+    setErrorMessage(errors)
+    return isEmpty(errors)
+  }
+
+  //check if object is empty
+  const isEmpty = (object) => {
+    return Object.keys(object).length == 0
+  }
+
 
   const body = <>
     <div className="signInContainer">
-      <div className="signInMessageSuccess" style={{ display: showMessage ? "block" : "none" }}>
-        {message}
+      <div className='signInMessageSuccess' style={{ display: successMessage ? "block" : "none" }} >
+        {successMessage}
       </div>
+
+      <div className='signInMessageError' style={{ display: errorServerMessage ? "block" : "none" }} >
+        {errorServerMessage}
+      </div>
+
       <div style={{ fontSize: '2vw', paddingBottom: '5px' }}>
         Войдите в аккаунт
       </div>
-      <Input image={ProfilePic} width='2vw' placeholder='Логин' value={username} onChange={setUsername} />
+      <div className='signInMessageError' style={{ display: errorMessage.username ? "block" : "none" }} >
+        {errorMessage.username}
+      </div>
+      <Input image={MailPic} width='2vw' placeholder='Почта' value={username} onChange={setUsername} />
+      <div className='signInMessageError' style={{ display: errorMessage.password ? "block" : "none" }} >
+        {errorMessage.password}
+      </div>
       <Input image={Key} width='2vw' placeholder='Пароль' type='password' onChange={setPassword} />
       <Link to="/forgot" style={{ color: 'black', fontSize: '1.5vw' }}>Я забыл пароль</Link>
       <Button style='orange' width='20vw' onClick={handleLogin}>Войти</Button>

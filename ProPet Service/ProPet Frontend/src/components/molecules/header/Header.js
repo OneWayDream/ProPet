@@ -26,16 +26,15 @@ const Header = () => {
 	return (
 		<StyledHeader>
 			<StyledMenu>
-				<Link to={paths.DEFAULT}><Image image={logo} height={height} border={border} border_radius={border_radius}/></Link>
+				<Link to={paths.DEFAULT}><Image image={logo} height={height} border={border} border_radius={border_radius} /></Link>
 				<MenuItem href={paths.DEFAULT}>Главная</MenuItem>
 				<MenuItem href={paths.SEARCH}>Поиск зооняни</MenuItem>
 				<MenuItem href={paths.ABOUT}>О сервисе</MenuItem>
 				<MenuItem href={paths.CONTACTS}>Контакты</MenuItem>
-				<Link to={paths.SIGN_IN}><Image image={profile_logo} height={height} border={border} border_radius={border_radius}/></Link>
+				<Link to={paths.SIGN_IN}><Image image={profile_logo} height={height} border={border} border_radius={border_radius} /></Link>
 			</StyledMenu>
 		</StyledHeader>
 	);
 }
 
 export default Header;
-

@@ -28,7 +28,7 @@ const userReducer = (state = defultState, action) => {
 }
 
 
-export const setUser = user => ({ type: SET_USER, payload: user })
+export const setUser = (user) => ({ type: SET_USER, payload: user })
 export const logout = () => ({ type: LOGOUT })
 
 export default userReducer

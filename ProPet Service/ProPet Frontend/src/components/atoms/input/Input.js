@@ -6,10 +6,9 @@ const StyledDiv = styled.div((props) => `
   border: 1px solid black;
   border-radius: 15px;
   padding: 20px;
-  margin: 15px;
+  margin: 5px 7px 15px 7px;
+  // margin-bottom: 20px;
   width: 27vw;
-  // min-width: 40%
-  // width: 70%;
   display: flex;
 `)
 
@@ -28,6 +27,7 @@ const StyledInput = styled.input((props) => `
   
   &::placeholder {
     color: white;
+    opacity: 0.65;
   };
 `)
 
@@ -37,8 +37,8 @@ const Input = (props) => {
   };
   return <>
     <StyledDiv>
-      <Image image={props.image} width={props.width}></Image>
-      <StyledInput onChange={handleChange} placeholder={props.placeholder} pattern={props.validate} value={props.value} type={props.type} props={props}>{props.children}</StyledInput>
+      {props.image && <Image image={props.image} width={props.width}></Image>}
+      <StyledInput onChange={props.name ? props.onChange : handleChange} placeholder={props.placeholder} value={props.value} type={props.type} size={props.size} name={props.name} props={props} >{props.children}</StyledInput>
     </StyledDiv>
   </>
 
