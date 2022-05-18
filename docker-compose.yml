@@ -57,6 +57,7 @@ services:
     depends_on:
       - db-postgres
       - db-redis
+      - backend
     networks:
       - propet-network
     environment:

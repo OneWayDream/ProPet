@@ -2,6 +2,7 @@ package ru.itis.backend.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.UrlResource;
@@ -23,19 +24,17 @@ public class ImageLoader {
     protected final Path usersImagesFolder;
     protected final Path petsImagesFolder;
     protected final String defaultImage;
-    protected final String classPath;
 
     @Autowired
     public ImageLoader(
             @Value("${images.users-images-folder}") String usersImagesFolder,
             @Value("${images.pets-images-folder}") String petsImagesFolder,
-            @Value("${images.default-image}") String defaultImage,
-            ResourceLoader resourceLoader
-    ) throws IOException {
-        Resource resource = resourceLoader.getResource("classpath:");
-        classPath = resource.getFile().getPath();
-        this.usersImagesFolder = Paths.get(classPath + usersImagesFolder);
-        this.petsImagesFolder = Paths.get(classPath + petsImagesFolder);
+            @Value("${images.default-image}") String defaultImage
+    ) throws Exception {
+        this.usersImagesFolder = Paths.get(new ClassPathResource(usersImagesFolder).getURL().toExternalForm()
+                .substring(6).replace("%20", " "));
+        this.petsImagesFolder = Paths.get(new ClassPathResource(petsImagesFolder).getURL().toExternalForm()
+                .substring(6).replace("%20", " "));
         this.defaultImage = defaultImage;
     }
 
@@ -73,6 +72,7 @@ public class ImageLoader {
         }
 
         filePath = folderPath.resolve(defaultImage).normalize();
+        System.out.println(filePath);
 
         try{
             Resource resource = new UrlResource(filePath.toUri());
