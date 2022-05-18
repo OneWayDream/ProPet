@@ -33,7 +33,7 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - jwt-server
+      - db-redis
       - db-postgres
     networks:
       - propet-network
