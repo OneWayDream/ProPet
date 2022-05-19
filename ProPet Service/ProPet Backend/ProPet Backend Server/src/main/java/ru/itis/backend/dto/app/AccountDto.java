@@ -48,7 +48,7 @@ public class AccountDto {
     @Size(min = 1, max = 30)
     protected String city;
 
-    @Pattern(regexp="(^$|[0-9]{10})")
+    @Pattern(regexp="(^$|[0-9]{11})")
     protected String phone;
 
     protected List<PetInfoDto> pets;
