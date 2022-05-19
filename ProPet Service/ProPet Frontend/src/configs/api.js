@@ -1,5 +1,5 @@
-const BASE_URL = 'http://localhost:8080/backend'
-const JWT_URL = 'http://localhost:8081/jwt'
+const BASE_URL = process.env.REACT_APP_BACKEND_SERVER_URL || 'http://localhost:8080/backend'
+const JWT_URL = process.env.REACT_APP_JWT_SERVER_URL || 'http://localhost:8081/jwt'
 
 export default {
   //Base servers URL

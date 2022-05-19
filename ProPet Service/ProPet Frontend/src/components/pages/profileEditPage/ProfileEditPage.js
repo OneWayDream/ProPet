@@ -46,6 +46,7 @@ const ProfileEditPage = () => {
   //Handle some errors from server
   const handleError = (error) => {
     alert('Что-то пошло не так')
+    setErrorServerMessage(error.description)
     console.log("Error: " + JSON.stringify(error))
     setLoading(false)
   }
@@ -120,7 +121,7 @@ const ProfileEditPage = () => {
       }
 
       if (!sitter.age || sitter.age < 16 || sitter.age > 99 || !regexs.ageRegex.test(sitter.age)) {
-        errors.age = 'Некорректный возраст'
+        errors.age = 'Некорректный возраст, Вам должно быть не менее 16 лет'
       }
 
       if (!sitter.infoAbout || sitter.infoAbout.length < 50 || !regexs.aboutInfoRegex.test(sitter.infoAbout)) {
@@ -175,7 +176,9 @@ const ProfileEditPage = () => {
   const body = loading === false ?
     <div className="profileEditContainer">
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
-        <div>Errors: {errorMessage ? JSON.stringify(errorMessage) : ''}</div>
+        <div className='signInMessageError' style={{ display: errorServerMessage ? "block" : "none" }} >
+          {errorServerMessage}
+        </div>
         <div style={{ fontSize: '2.5vw' }}>Общая информация</div>
         <div className="profileEditContainerInner">
           <div style={{ marginRight: '5vw' }}>
