@@ -170,8 +170,10 @@ public class AccountServiceImpl implements AccountService {
             Account entity = repository.findById(updatedAccount.getId())
                     .filter(entry -> !entry.getIsDeleted())
                     .orElseThrow(EntityNotFoundException::new);
-            PropertiesUtils.copyNonNullProperties(updatedAccount.getSitterInfo(), entity.getSitterInfo());
-            updatedAccount.setSitterInfo(null);
+            if (updatedAccount.getSitterInfo() != null){
+                PropertiesUtils.copyNonNullProperties(updatedAccount.getSitterInfo(), entity.getSitterInfo());
+                updatedAccount.setSitterInfo(null);
+            }
             PropertiesUtils.copyNonNullProperties(updatedAccount, entity);
             entity = repository.save(entity);
             updateUserOnAuthorizationServer(JwtUpdateForm.builder()
