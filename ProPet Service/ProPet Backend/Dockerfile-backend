@@ -12,5 +12,7 @@ RUN mvn -f /home/ProPet/backend/pom.xml clean package -Dmaven.test.skip
 #package
 FROM openjdk:18-alpine
 COPY --from=build /home/ProPet/backend/target/backend-server-0.1.jar /ProPet/backend.jar
+RUN mkdir -p "/ProPet/images/user"
+RUN mkdir -p "/ProPet/images/pet"
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/ProPet/backend.jar"]

@@ -45,6 +45,7 @@ services:
       - SPRING_JWT_SERVER_PORT=8081
       - REDIS_HOST=db-redis
       - REDIS_PORT=6379
+      - IMAGES_ROOT=/ProPet
 
   jwt-server:
     build:

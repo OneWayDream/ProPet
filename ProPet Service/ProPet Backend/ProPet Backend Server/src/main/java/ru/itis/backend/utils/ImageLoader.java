@@ -29,12 +29,18 @@ public class ImageLoader {
     public ImageLoader(
             @Value("${images.users-images-folder}") String usersImagesFolder,
             @Value("${images.pets-images-folder}") String petsImagesFolder,
-            @Value("${images.default-image}") String defaultImage
+            @Value("${images.default-image}") String defaultImage,
+            @Value("${images.root}") String imagesRoot
     ) throws Exception {
-        this.usersImagesFolder = Paths.get(new ClassPathResource(usersImagesFolder).getURL().toExternalForm()
-                .substring(6).replace("%20", " "));
-        this.petsImagesFolder = Paths.get(new ClassPathResource(petsImagesFolder).getURL().toExternalForm()
-                .substring(6).replace("%20", " "));
+        if (imagesRoot.equals("null")){
+            this.usersImagesFolder = Paths.get(new ClassPathResource(usersImagesFolder).getURL().toExternalForm()
+                    .substring(6).replace("%20", " "));
+            this.petsImagesFolder = Paths.get(new ClassPathResource(petsImagesFolder).getURL().toExternalForm()
+                    .substring(6).replace("%20", " "));
+        } else {
+            this.usersImagesFolder = Paths.get(imagesRoot + usersImagesFolder);
+            this.petsImagesFolder = Paths.get(imagesRoot + petsImagesFolder);
+        }
         this.defaultImage = defaultImage;
     }
 
