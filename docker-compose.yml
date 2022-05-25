@@ -1,0 +1,96 @@
+version: "3"
+
+networks:
+  propet-network:
+
+volumes:
+  propet-volume:
+
+services:
+  frontend:
+    build:
+      context:
+        ./ProPet Service/ProPet Frontend/
+      dockerfile:
+        Dockerfile
+    container_name:
+      ProPet-Frontend
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+    networks:
+      - propet-network
+
+  backend:
+    build:
+      context:
+        ./ProPet Service/ProPet Backend/
+      dockerfile:
+        Dockerfile-backend
+    container_name:
+      ProPet-Backend
+    ports:
+      - 8080:8080
+    depends_on:
+      - db-redis
+      - db-postgres
+    networks:
+      - propet-network
+    environment:
+      - JDBC_DATABASE_URL=jdbc:postgresql://db-postgres:5432/ProPet
+      - JDBC_DATABASE_USERNAME=ProPet
+      - JDBC_DATABASE_PASSWORD=ProPet
+      - SPRING_JWT_SERVER_HOST=http://jwt-server
+      - SPRING_JWT_SERVER_PORT=8081
+      - REDIS_HOST=db-redis
+      - REDIS_PORT=6379
+
+  jwt-server:
+    build:
+      context:
+        ./ProPet Service/ProPet Backend/
+      dockerfile:
+        Dockerfile-jwt-server
+    container_name:
+      ProPet-JWT-Server
+    ports:
+      - 8081:8081
+    depends_on:
+      - db-postgres
+      - db-redis
+      - backend
+    networks:
+      - propet-network
+    environment:
+      - JDBC_DATABASE_URL=jdbc:postgresql://db-postgres:5432/ProPet
+      - JDBC_DATABASE_USERNAME=ProPet
+      - JDBC_DATABASE_PASSWORD=ProPet
+      - REDIS_HOST=db-redis
+      - REDIS_PORT=6379
+
+  db-postgres:
+    image:
+      postgres
+    container_name:
+      ProPet-Postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - propet-network
+    environment:
+      - POSTGRES_DB=ProPet
+      - POSTGRES_USER=ProPet
+      - POSTGRES_PASSWORD=ProPet
+
+  db-redis:
+    image:
+      "redis:alpine"
+    container_name:
+      ProPet-Redis
+    hostname:
+      redis
+    ports:
+      - "6379:6379"
+    networks:
+      - propet-network
