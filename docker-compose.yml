@@ -37,6 +37,8 @@ services:
       - db-postgres
     networks:
       - propet-network
+    volumes:
+      - ./images:/ProPet/images
     environment:
       - JDBC_DATABASE_URL=jdbc:postgresql://db-postgres:5432/ProPet
       - JDBC_DATABASE_USERNAME=ProPet
