@@ -30,13 +30,14 @@ public class ImageLoader {
             @Value("${images.users-images-folder}") String usersImagesFolder,
             @Value("${images.pets-images-folder}") String petsImagesFolder,
             @Value("${images.default-image}") String defaultImage,
-            @Value("${images.root}") String imagesRoot
+            @Value("${images.root}") String imagesRoot,
+            @Value("${images.folder}") String imagesFolder
     ) throws Exception {
         if (imagesRoot.equals("null")){
-            this.usersImagesFolder = Paths.get(new ClassPathResource(usersImagesFolder).getURL().toExternalForm()
-                    .substring(6).replace("%20", " "));
-            this.petsImagesFolder = Paths.get(new ClassPathResource(petsImagesFolder).getURL().toExternalForm()
-                    .substring(6).replace("%20", " "));
+            this.usersImagesFolder = Paths.get(new ClassPathResource(imagesFolder + usersImagesFolder)
+                    .getURL().toExternalForm().substring(6).replace("%20", " "));
+            this.petsImagesFolder = Paths.get(new ClassPathResource(imagesFolder + petsImagesFolder)
+                    .getURL().toExternalForm().substring(6).replace("%20", " "));
         } else {
             this.usersImagesFolder = Paths.get(imagesRoot + usersImagesFolder);
             this.petsImagesFolder = Paths.get(imagesRoot + petsImagesFolder);
@@ -62,22 +63,12 @@ public class ImageLoader {
 
     protected Resource loadImage(Path folderPath, String fileName){
 
-        Path filePath;
-
-        for (ImageType type: ImageType.values()){
-            try{
-                filePath = folderPath.resolve(fileName + "." + type.value()).normalize();
-                Resource resource = new UrlResource(filePath.toUri());
-                if (resource.exists()) {
-                    return resource;
-                }
-            } catch (MalformedURLException ex){
-                //ignore
-            }
-
+        Resource result = checkImageByName(folderPath, fileName);
+        if (result != null){
+            return result;
         }
 
-        filePath = folderPath.resolve(defaultImage).normalize();
+        Path filePath = folderPath.resolve(defaultImage).normalize();
         System.out.println(filePath);
 
         try{
@@ -94,6 +85,18 @@ public class ImageLoader {
 
     protected void saveImage(Path folderPath, String fileName, MultipartFile file){
 
+        Resource result = checkImageByName(folderPath, fileName);
+        if (result != null){
+            try{
+                boolean b = result.getFile().delete();
+                if (!b){
+                    throw new ImageStoreException();
+                }
+            } catch (IOException ex){
+                throw new ImageStoreException(ex);
+            }
+        }
+
         String contentType = file.getContentType();
 
         try {
@@ -105,6 +108,25 @@ public class ImageLoader {
         } catch (IOException ex) {
             throw new ImageStoreException(ex);
         }
+    }
+
+    protected Resource checkImageByName(Path folderPath, String fileName){
+
+        Path filePath;
+
+        for (ImageType type: ImageType.values()){
+            try{
+                filePath = folderPath.resolve(fileName + "." + type.value()).normalize();
+                Resource resource = new UrlResource(filePath.toUri());
+                if (resource.exists()) {
+                    return resource;
+                }
+            } catch (MalformedURLException ex){
+                //ignore
+            }
+
+        }
+        return null;
     }
 
 
