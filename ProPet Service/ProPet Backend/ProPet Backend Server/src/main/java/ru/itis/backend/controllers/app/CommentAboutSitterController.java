@@ -45,7 +45,7 @@ public class CommentAboutSitterController {
             headers = {"JWT"}
     )
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<CommentAboutSitterDto>> getByUserId(@PathVariable Long id,
+    public ResponseEntity<List<CommentAboutSitterDto>> getByAccountId(@PathVariable Long id,
                                                                    @RequestParam int page,
                                                                    @RequestParam int size){
         return ResponseEntity.ok(paginationService.getCommentsPage(id, page, size));

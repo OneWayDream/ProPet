@@ -14,7 +14,7 @@ public interface CommentAboutSitterRepository extends JpaRepository<CommentAbout
 
     @Query(value = "select * from comment_about_sitter INNER JOIN account " +
             "on account.id = comment_about_sitter.account_id " +
-            "where comment_about_sitter.is_deleted=false and comment_about_sitter.account_id=:id " +
+            "where comment_about_sitter.is_deleted=false and comment_about_sitter.sitter_info_id=:id " +
             "limit :limit offset :offset",
             nativeQuery = true)
     List<CommentAboutSitter> getSearchPage(@Param("id") Long id, @Param("limit") Integer limit,
