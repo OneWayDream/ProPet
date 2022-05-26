@@ -60,11 +60,8 @@ public class AccountDto {
                 .mail(account.getMail())
                 .login(account.getLogin())
                 .lastLogin(account.getLastLogin())
-                .state(account.getState())
-                .role(account.getRole())
                 .name(account.getName())
                 .surname(account.getSurname())
-                .registrationDate(account.getRegistrationDate())
                 .city(account.getCity())
                 .phone(account.getPhone())
                 .pets((account.getPets() == null || account.getPets().isEmpty()) ? null
