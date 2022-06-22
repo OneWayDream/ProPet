@@ -1,8 +1,9 @@
 ### Custom folders
 logs/
+images/
 
 ### Custom files
-config.pЬфшroperties
+config.properties
 
 ### Maven template
 target/
