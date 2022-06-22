@@ -1,0 +1,17 @@
+#build project
+FROM maven:3.8.5-openjdk-18-slim AS build
+ARG src="ProPet Pdf Generator/src"
+COPY $src /home/ProPet/pdf-generator/src
+##parent pom
+COPY pom.xml /home/ProPet
+##child pom
+ARG child_pom="ProPet Pdf Generator/pom.xml"
+COPY $child_pom /home/ProPet/pdf-generator
+RUN mvn -f /home/ProPet/pdf-generator/pom.xml clean package -Dmaven.test.skip
+
+#package
+FROM openjdk:18-alpine
+COPY --from=build /home/ProPet/pdf-generator/target/pdf-generator-0.1.jar /ProPet/pdf-generator.jar
+RUN mkdir -p "/ProPet/mount-directory/pdf/pet-transfer"
+EXPOSE 8084
+ENTRYPOINT ["java","-jar","/ProPet/pdf-generator.jar"]

@@ -12,8 +12,12 @@ import ru.itis.jwtserver.dto.AccessTokenResponse;
 import ru.itis.jwtserver.dto.JwtModuleDto;
 import ru.itis.jwtserver.dto.ModuleAuthorizationForm;
 import ru.itis.jwtserver.dto.RefreshTokenResponse;
-import ru.itis.jwtserver.exceptions.*;
 import ru.itis.jwtserver.entities.JwtState;
+import ru.itis.jwtserver.exceptions.auth.BannedUserException;
+import ru.itis.jwtserver.exceptions.auth.IncorrectUserDataException;
+import ru.itis.jwtserver.exceptions.persistence.EntityNotFoundException;
+import ru.itis.jwtserver.exceptions.token.ExpiredJwtException;
+import ru.itis.jwtserver.exceptions.token.IncorrectJwtException;
 
 import java.util.Date;
 

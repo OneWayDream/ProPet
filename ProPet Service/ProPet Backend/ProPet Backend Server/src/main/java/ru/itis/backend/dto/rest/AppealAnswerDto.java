@@ -8,6 +8,7 @@ import ru.itis.backend.models.AppealAnswer;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +21,7 @@ public class AppealAnswerDto {
 
     protected Long id;
     protected Long appealId;
-    protected Date sendDate;
+    protected LocalDate sendDate;
     protected Long authorId;
 
     @NotBlank

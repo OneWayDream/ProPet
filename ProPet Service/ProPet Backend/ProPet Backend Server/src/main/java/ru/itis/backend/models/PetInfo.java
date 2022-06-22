@@ -3,6 +3,8 @@ package ru.itis.backend.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -26,6 +28,15 @@ public class PetInfo {
 
     @Column(nullable = false)
     protected String nickname;
+
+    @Column(nullable = false)
+    protected String kind;
+
+    @Column(nullable = false)
+    protected String breed;
+
+    @Column(nullable = false)
+    protected LocalDate birthDate;
 
     @Column(name = "is_deleted", nullable = false)
     @Builder.Default

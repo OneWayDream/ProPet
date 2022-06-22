@@ -8,7 +8,7 @@ import ru.itis.backend.models.SitterInfo;
 import java.util.List;
 import java.util.Optional;
 
-public interface SitterInfoRepository extends JpaRepository<SitterInfo, Long> {
+public interface SitterInfoRepository extends CustomRepository<SitterInfo, Long> {
 
     Optional<SitterInfo> findByAccountId(Long accountId);
 

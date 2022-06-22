@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import ru.itis.backend.models.PetInfo;
 
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,11 +24,18 @@ public class PetInfoDto {
     @Size(min = 1, max = 30)
     protected String nickname;
 
+    protected String kind;
+    protected String breed;
+    protected LocalDate birthDate;
+
     public static PetInfoDto from(PetInfo info){
         return (info == null) ? null : PetInfoDto.builder()
                 .id(info.getId())
                 .accountId(info.getAccountId())
                 .nickname(info.getNickname())
+                .kind(info.getKind())
+                .breed(info.getBreed())
+                .birthDate(info.getBirthDate())
                 .build();
     }
 
@@ -35,6 +44,9 @@ public class PetInfoDto {
                 .id(infoDto.getId())
                 .nickname(infoDto.getNickname())
                 .accountId(infoDto.getAccountId())
+                .kind(infoDto.getKind())
+                .breed(infoDto.getBreed())
+                .birthDate(infoDto.getBirthDate())
                 .build();
     }
 

@@ -1,0 +1,18 @@
+#build project
+FROM maven:3.8.5-openjdk-18-slim AS build
+ARG src="ProPet Images Server/src"
+COPY $src /home/ProPet/images-server/src
+##parent pom
+COPY pom.xml /home/ProPet
+##child pom
+ARG child_pom="ProPet Images Server/pom.xml"
+COPY $child_pom /home/ProPet/images-server
+RUN mvn -f /home/ProPet/images-server/pom.xml clean package -Dmaven.test.skip
+
+#package
+FROM openjdk:18-alpine
+COPY --from=build /home/ProPet/images-server/target/images-server-0.1.jar /ProPet/images-server.jar
+RUN mkdir -p "/ProPet/mount-directory/images/user"
+RUN mkdir -p "/ProPet/mount-directory/images/pet"
+EXPOSE 8082
+ENTRYPOINT ["java","-jar","/ProPet/images-server.jar"]

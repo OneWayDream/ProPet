@@ -5,7 +5,7 @@ import ru.itis.backend.models.Account;
 
 import java.util.Optional;
 
-public interface AccountRepository extends JpaRepository<Account, Long> {
+public interface AccountRepository extends CustomRepository<Account, Long> {
 
     Optional<Account> findByLogin(String login);
     Optional<Account> findByMail(String mail);

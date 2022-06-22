@@ -33,7 +33,7 @@ public class AppealAnswerServiceImpl implements AppealAnswerService {
         try{
             AppealAnswer entityToDelete = repository.findById(appealAnswerDto.getId())
                     .filter(entry -> !entry.getIsDeleted())
-                    .orElseThrow(EntityNotExistsException::new);
+                    .orElseThrow(() -> new EntityNotExistsException(" appeal answer."));
             entityToDelete.setIsDeleted(true);
             repository.save(entityToDelete);
         } catch (Exception ex){
@@ -55,7 +55,7 @@ public class AppealAnswerServiceImpl implements AppealAnswerService {
     public AppealAnswerDto findById(Long aLong) {
         return AppealAnswerDto.from(repository.findById(aLong)
                 .filter(entry -> !entry.getIsDeleted())
-                .orElseThrow(EntityNotFoundException::new));
+                .orElseThrow(() -> new EntityNotFoundException(" appeal answer.")));
     }
 
     @Override

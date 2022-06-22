@@ -4,11 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import ru.itis.jwtserver.dto.JwtModuleDto;
-import ru.itis.jwtserver.dto.JwtUserDto;
-import ru.itis.jwtserver.exceptions.EntityNotExistsException;
-import ru.itis.jwtserver.exceptions.EntityNotFoundException;
+import ru.itis.jwtserver.exceptions.persistence.EntityNotExistsException;
+import ru.itis.jwtserver.exceptions.persistence.EntityNotFoundException;
 import ru.itis.jwtserver.models.JwtModule;
-import ru.itis.jwtserver.models.JwtUser;
 import ru.itis.jwtserver.repositories.JwtModuleRepository;
 import ru.itis.jwtserver.utils.PropertiesUtils;
 

@@ -151,7 +151,7 @@ public class AccountController {
             @ApiResponse(responseCode = "418", description = "Unexpected exception"),
             @ApiResponse(responseCode = "502", description = "Something wrong with jwt server connection")
     })
-    @PostMapping(
+    @GetMapping(
             value = "/activate/{linkValue}"
     )
     public ResponseEntity<AccountDto> activateAccount(@PathVariable String linkValue){

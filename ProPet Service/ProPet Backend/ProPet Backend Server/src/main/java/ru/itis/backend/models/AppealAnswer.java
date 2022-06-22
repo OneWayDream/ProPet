@@ -3,6 +3,7 @@ package ru.itis.backend.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -27,7 +28,7 @@ public class AppealAnswer {
     protected Long appealId;
 
     @Column(name = "send_date", nullable = false)
-    protected Date sendDate;
+    protected LocalDate sendDate;
 
     @ManyToOne
     @JoinColumn(name = "author_id", referencedColumnName = "id",

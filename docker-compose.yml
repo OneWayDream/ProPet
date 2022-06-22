@@ -27,7 +27,7 @@ services:
       context:
         ./ProPet Service/ProPet Backend/
       dockerfile:
-        Dockerfile-backend
+        Dockerfile-backend-server
     container_name:
       ProPet-Backend
     ports:
@@ -35,10 +35,12 @@ services:
     depends_on:
       - db-redis
       - db-postgres
+      - rabbitmq
+      - mail-sender
     networks:
       - propet-network
     volumes:
-      - ./images:/ProPet/images
+      - ./Mounted/logs/backend-server-logs:/logs/backend-server-logs
     environment:
       - JDBC_DATABASE_URL=jdbc:postgresql://db-postgres:5432/ProPet
       - JDBC_DATABASE_USERNAME=ProPet
@@ -48,6 +50,39 @@ services:
       - REDIS_HOST=db-redis
       - REDIS_PORT=6379
       - IMAGES_ROOT=/ProPet/images
+      - SPRING_RABBIT_HOST=rabbitmq
+      - SPRING_RABBIT_PORT=5672
+      - SPRING_MAIL_SENDER_HOST=http://mail-sender
+      - SPRING_MAIL_SENDER_PORT=8084
+
+  images-server:
+    build:
+      context:
+        ./ProPet Service/ProPet Backend
+      dockerfile:
+        Dockerfile-images-server
+    container_name:
+      ProPet-Images-Server
+    ports:
+      - 8082:8082
+    depends_on:
+      - db-redis
+      - db-postgres
+      - backend
+    networks:
+      - propet-network
+    volumes:
+      - ./Mounted/images:/ProPet/mount-directory/images
+      - ./Mounted/logs/images-server-logs:/logs/images-server-logs
+    environment:
+      - JDBC_DATABASE_URL=jdbc:postgresql://db-postgres:5432/ProPet
+      - JDBC_DATABASE_USERNAME=ProPet
+      - JDBC_DATABASE_PASSWORD=ProPet
+      - SPRING_JWT_SERVER_HOST=http://jwt-server
+      - SPRING_JWT_SERVER_PORT=8081
+      - REDIS_HOST=db-redis
+      - REDIS_PORT=6379
+      - IMAGES_ROOT=/ProPet/mount-directory/images
 
   jwt-server:
     build:
@@ -65,6 +100,8 @@ services:
       - backend
     networks:
       - propet-network
+    volumes:
+      - ./Mounted/logs/jwt-server-logs:/logs/jwt-server-logs
     environment:
       - JDBC_DATABASE_URL=jdbc:postgresql://db-postgres:5432/ProPet
       - JDBC_DATABASE_USERNAME=ProPet
@@ -72,13 +109,67 @@ services:
       - REDIS_HOST=db-redis
       - REDIS_PORT=6379
 
+  mail-sender:
+    build:
+      context:
+        ./ProPet Service/ProPet Backend/
+      dockerfile:
+        Dockerfile-mail-sender
+    container_name:
+      ProPet-Mail-Sender
+    ports:
+      - 8084:8084
+    depends_on:
+      - db-postgres
+      - db-redis
+    networks:
+      - propet-network
+    volumes:
+      - ./Mounted/logs/mail-sender-logs:/logs/mail-sender-logs
+    environment:
+      - JDBC_DATABASE_URL=jdbc:postgresql://db-postgres:5432/ProPet
+      - JDBC_DATABASE_USERNAME=ProPet
+      - JDBC_DATABASE_PASSWORD=ProPet
+      - REDIS_HOST=db-redis
+      - REDIS_PORT=6379
+
+  pdf-generator:
+    build:
+      context:
+        ./ProPet Service/ProPet Backend/
+      dockerfile:
+        Dockerfile-pdf-generator
+    container_name:
+      ProPet-Pdf-Generator
+    ports:
+      - 8083:8083
+    depends_on:
+      - db-postgres
+      - db-redis
+      - rabbitmq
+      - backend
+    networks:
+      - propet-network
+    volumes:
+      - ./Mounted/logs/pdf-generator-logs:/logs/pdf-generator-logs
+      - ./Mounted/pdf/pet-transfer:/ProPet/mount-directory/pdf/pet-transfer
+    environment:
+      - JDBC_DATABASE_URL=jdbc:postgresql://db-postgres:5432/ProPet
+      - JDBC_DATABASE_USERNAME=ProPet
+      - JDBC_DATABASE_PASSWORD=ProPet
+      - REDIS_HOST=db-redis
+      - REDIS_PORT=6379
+      - SPRING_RABBIT_HOST=rabbitmq
+      - SPRING_RABBIT_PORT=5672
+      - PDF_ROOT=/ProPet/mount-directory/pdf
+
   db-postgres:
     image:
       postgres
     container_name:
       ProPet-Postgres
     ports:
-      - "5432:5432"
+      - "5433:5432"
     networks:
       - propet-network
     environment:
@@ -95,5 +186,14 @@ services:
       redis
     ports:
       - "6379:6379"
+    networks:
+      - propet-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq'
+    ports:
+      - "5672:5672"
+      - "15673:15672"
     networks:
       - propet-network

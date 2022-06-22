@@ -13,6 +13,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +35,7 @@ public class AccountDto {
 
     @Size(min = 8, max = 50)
     protected String password;
-    protected Date lastLogin;
+    protected LocalDate lastLogin;
     protected UserState state;
     protected UserRole role;
 
@@ -43,7 +44,7 @@ public class AccountDto {
 
     @Size(min = 1, max = 30)
     protected String surname;
-    protected Date registrationDate;
+    protected LocalDate registrationDate;
 
     @Size(min = 1, max = 30)
     protected String city;
@@ -64,6 +65,9 @@ public class AccountDto {
                 .surname(account.getSurname())
                 .city(account.getCity())
                 .phone(account.getPhone())
+                .registrationDate(account.getRegistrationDate())
+                .state(account.getState())
+                .role(account.getRole())
                 .pets((account.getPets() == null || account.getPets().isEmpty()) ? null
                         : PetInfoDto.from(account.getPets()))
                 .sitterInfoDto((account.getSitterInfo() == null) ? null : SitterInfoDto.from(account.getSitterInfo()))
@@ -78,11 +82,8 @@ public class AccountDto {
                 .hashPassword((account.getPassword() == null) ? null
                         : EncryptionUtils.encryptPassword(account.getPassword()))
                 .lastLogin(account.getLastLogin())
-                .state(account.getState())
-                .role(account.getRole())
                 .name(account.getName())
                 .surname(account.getSurname())
-                .registrationDate(account.getRegistrationDate())
                 .city(account.getCity())
                 .phone(account.getPhone())
                 .pets((account.getPets() == null) ? null : PetInfoDto.to(account.getPets()))

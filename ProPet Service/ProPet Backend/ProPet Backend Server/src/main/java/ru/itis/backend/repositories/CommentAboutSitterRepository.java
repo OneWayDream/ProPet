@@ -8,7 +8,7 @@ import ru.itis.backend.models.CommentAboutSitter;
 import java.util.List;
 import java.util.Optional;
 
-public interface CommentAboutSitterRepository extends JpaRepository<CommentAboutSitter, Long> {
+public interface CommentAboutSitterRepository extends CustomRepository<CommentAboutSitter, Long> {
 
     List<CommentAboutSitter> findAllByAccountId(Long accountId);
 

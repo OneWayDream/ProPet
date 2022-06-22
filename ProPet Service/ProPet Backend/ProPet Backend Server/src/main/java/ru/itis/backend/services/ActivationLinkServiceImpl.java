@@ -34,7 +34,7 @@ public class ActivationLinkServiceImpl implements ActivationLinkService {
         try{
             ActivationLink entityToDelete = repository.findById(activationLinkDto.getId())
                     .filter(entry -> !entry.getIsDeleted())
-                    .orElseThrow(EntityNotExistsException::new);
+                    .orElseThrow(() -> new EntityNotExistsException(" activation link."));
             entityToDelete.setIsDeleted(true);
             repository.save(entityToDelete);
         } catch (Exception ex){
@@ -53,7 +53,7 @@ public class ActivationLinkServiceImpl implements ActivationLinkService {
     public ActivationLinkDto findById(Long aLong) {
         return ActivationLinkDto.from(repository.findById(aLong)
                 .filter(entry -> !entry.getIsDeleted())
-                .orElseThrow(EntityNotFoundException::new));
+                .orElseThrow(() -> new EntityNotFoundException(" activation link.")));
     }
 
     @Override
