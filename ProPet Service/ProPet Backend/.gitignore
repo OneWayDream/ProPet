@@ -1,3 +1,10 @@
+### Custom folders
+logs/
+images/
+
+### Custom files
+config.properties
+
 ### Maven template
 target/
 pom.xml.tag

@@ -5,10 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import ru.itis.backend.dto.app.PetInfoDto;
-import ru.itis.backend.dto.app.SitterInfoDto;
-import ru.itis.backend.dto.app.UserAppealDto;
-import ru.itis.backend.dto.app.AccountDto;
+import ru.itis.backend.dto.app.*;
 import ru.itis.backend.models.Account;
 import ru.itis.backend.utils.EncryptionUtils;
 
@@ -25,6 +22,9 @@ public class AccountRestDto extends AccountDto {
     protected List<CommentAboutSitterRestDto> comments;
     protected List<UserAppealDto> appeals;
     protected ActivationLinkDto activationLinkDto;
+    protected List<PetTransferApplyDto> customerApplies;
+    protected List<PetTransferApplyDto> performerApplies;
+    protected TreatyInfoDto treatyInfo;
 
     public static AccountRestDto fromRest(Account account){
         return (account == null) ? null : AccountRestDto.builder()
@@ -48,6 +48,11 @@ public class AccountRestDto extends AccountDto {
                 .sitterInfoDto((account.getSitterInfo() == null) ? null : SitterInfoDto.from(account.getSitterInfo()))
                 .activationLinkDto((account.getActivationLink() == null) ? null :
                         ActivationLinkDto.from(account.getActivationLink()))
+                .customerApplies((account.getCustomerApplies() == null) ? null:
+                        PetTransferApplyDto.from(account.getCustomerApplies()))
+                .performerApplies((account.getPerformerApplies() == null) ? null:
+                        PetTransferApplyDto.from(account.getPerformerApplies()))
+                .treatyInfo((account.getTreatyInfo() == null) ? null : TreatyInfoDto.from(account.getTreatyInfo()))
                 .build();
     }
 
@@ -72,6 +77,11 @@ public class AccountRestDto extends AccountDto {
                 .sitterInfo((account.getSitterInfoDto() == null) ? null : SitterInfoDto.toRest(account.getSitterInfoDto()))
                 .activationLink((account.getActivationLinkDto() == null) ? null
                         : ActivationLinkDto.to(account.getActivationLinkDto()))
+                .customerApplies((account.getCustomerApplies() == null) ? null:
+                        PetTransferApplyDto.to(account.getCustomerApplies()))
+                .performerApplies((account.getPerformerApplies() == null) ? null:
+                        PetTransferApplyDto.to(account.getPerformerApplies()))
+                .treatyInfo((account.getTreatyInfo() == null) ? null : TreatyInfoDto.to(account.getTreatyInfo()))
                 .isDeleted(false)
                 .build();
     }

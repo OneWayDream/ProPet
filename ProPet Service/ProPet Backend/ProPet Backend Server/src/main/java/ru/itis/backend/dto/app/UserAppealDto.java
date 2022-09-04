@@ -9,6 +9,8 @@ import ru.itis.backend.models.UserAppeal;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +23,7 @@ public class UserAppealDto {
 
     protected Long id;
     protected Long accountId;
-    protected Date sendDate;
+    protected LocalDate sendDate;
 
     @NotBlank
     @Size(min = 10, max = 400)

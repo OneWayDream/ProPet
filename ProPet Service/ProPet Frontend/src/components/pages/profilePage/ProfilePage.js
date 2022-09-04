@@ -9,6 +9,7 @@ import paths from "../../../configs/paths";
 import { useEffect, useState } from "react";
 import { getUser, getUserCredentials, isAuthenticated } from "../../../services/user.service";
 import { logout } from "../../../services/auth.service";
+import Button from "../../atoms/button";
 
 const ProfilePage = () => {
   //Some usefull hooks
@@ -76,7 +77,8 @@ const ProfilePage = () => {
           <hr style={{ height: '1px', background: '#333', border: 'none', backgroundImage: 'linear-gradient(to right, #ccc, #333, #ccc)', margin: '0' }} />
         </div>
       </div>
-      <button onClick={logOut}>Logout</button>
+      {/* <button onClick={logOut}>Logout</button> */}
+      <Button fontSize='1.2vw' style='orange' width='15vw' onClick={logOut}>Выйти</Button>
     </div>
     :
     <div>

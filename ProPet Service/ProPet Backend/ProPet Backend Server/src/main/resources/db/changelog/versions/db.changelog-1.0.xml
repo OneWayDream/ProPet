@@ -25,7 +25,7 @@
             </column>
             <column name="name" type="varchar"/>
             <column name="surname" type="varchar"/>
-            <column name="last_login_date" type="timestamptz"/>
+            <column name="last_login_date" type="date"/>
             <column name="state" type="varchar">
                 <constraints nullable="false"/>
             </column>
@@ -35,7 +35,7 @@
             <column name="is_deleted" type="boolean" defaultValue="false">
                 <constraints nullable="false"/>
             </column>
-            <column name="registration_date" type="timestamptz">
+            <column name="registration_date" type="date">
                 <constraints nullable="false"/>
             </column>
             <column name="city" type="varchar"/>
@@ -73,6 +73,15 @@
                              referencedColumnNames="id"/>
             </column>
             <column name="nickname" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="kind" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="breed" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="birth_date" type="date">
                 <constraints nullable="false"/>
             </column>
             <column name="is_deleted" type="boolean" defaultValue="false">
@@ -119,6 +128,7 @@
             <column name="sitter_status" type="boolean" defaultValue="true">
                 <constraints nullable="false"/>
             </column>
+            <column name="version" type="int" defaultValue="0"/>
         </createTable>
     </changeSet>
 
@@ -156,7 +166,7 @@
                 <constraints nullable="false" foreignKeyName="fk_account_id" referencedTableName="account"
                              referencedColumnNames="id"/>
             </column>
-            <column name="send_date" type="timestamptz">
+            <column name="send_date" type="date">
                 <constraints nullable="false"/>
             </column>
             <column name="text" type="varchar">
@@ -181,7 +191,7 @@
                 <constraints nullable="false" unique="true" foreignKeyName="fk_appeal_id"
                              referencedTableName="user_appeal" referencedColumnNames="id"/>
             </column>
-            <column name="send_date" type="timestamptz">
+            <column name="send_date" type="date">
                 <constraints nullable="false"/>
             </column>
             <column name="author_id" type="bigint">
@@ -191,6 +201,64 @@
             <column name="text" type="varchar">
                 <constraints nullable="false"/>
             </column>
+            <column name="is_deleted" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="12" author="OneWayDream">
+        <comment>Creating a treaty info table</comment>
+        <createTable tableName="treaty_info">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint">
+                <constraints nullable="false" unique="true" foreignKeyName="fk_account_id" referencedTableName="account"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="patronymic" type="varchar"/>
+            <column name="passport_series" type="int"/>
+            <column name="passport_number" type="int"/>
+            <column name="passport_issuing_place" type="varchar"/>
+            <column name="place_of_residence" type="varchar"/>
+            <column name="is_deleted" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="13" author="OneWayDream">
+        <comment>Creating a table for applications to create a pet transfer treaty</comment>
+        <createTable tableName="pet_transfer_apply">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="customer_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_customer_id" referencedTableName="account"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="performer_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_performer_id" referencedTableName="account"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="pet_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_pet_id" referencedTableName="pet_info"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="customer_agreement" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="performer_agreement" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creation_date" type="date"/>
             <column name="is_deleted" type="boolean" defaultValue="false">
                 <constraints nullable="false"/>
             </column>

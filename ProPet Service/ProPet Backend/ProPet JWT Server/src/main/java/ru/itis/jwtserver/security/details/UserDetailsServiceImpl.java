@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.itis.jwtserver.entities.AccessToken;
-import ru.itis.jwtserver.exceptions.IncorrectJwtException;
+import ru.itis.jwtserver.exceptions.token.IncorrectJwtException;
 import ru.itis.jwtserver.entities.JwtRole;
 import ru.itis.jwtserver.entities.JwtState;
 

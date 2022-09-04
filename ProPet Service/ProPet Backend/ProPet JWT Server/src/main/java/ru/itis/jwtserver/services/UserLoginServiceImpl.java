@@ -10,8 +10,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.itis.jwtserver.dto.*;
-import ru.itis.jwtserver.exceptions.*;
 import ru.itis.jwtserver.entities.JwtState;
+import ru.itis.jwtserver.exceptions.auth.BannedUserException;
+import ru.itis.jwtserver.exceptions.auth.IncorrectUserDataException;
+import ru.itis.jwtserver.exceptions.persistence.EntityNotFoundException;
+import ru.itis.jwtserver.exceptions.token.BannedTokenException;
+import ru.itis.jwtserver.exceptions.token.ExpiredJwtException;
+import ru.itis.jwtserver.exceptions.token.IncorrectJwtException;
 import ru.itis.jwtserver.redis.services.RedisUsersService;
 
 import java.util.Date;

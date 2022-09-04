@@ -1,0 +1,16 @@
+#build project
+FROM maven:3.8.5-openjdk-18-slim AS build
+ARG src="ProPet Mail Sender/src"
+COPY $src /home/ProPet/mail-sender/src
+##parent pom
+COPY pom.xml /home/ProPet
+##child pom
+ARG child_pom="ProPet Mail Sender/pom.xml"
+COPY $child_pom /home/ProPet/mail-sender
+RUN mvn -f /home/ProPet/mail-sender/pom.xml clean package -Dmaven.test.skip
+
+#package
+FROM openjdk:18-alpine
+COPY --from=build /home/ProPet/mail-sender/target/mail-sender-0.1.jar /ProPet/mail-sender.jar
+EXPOSE 8083
+ENTRYPOINT ["java","-jar","/ProPet/mail-sender.jar"]

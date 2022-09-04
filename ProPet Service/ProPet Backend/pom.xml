@@ -21,14 +21,20 @@
     <modules>
         <module>ProPet Backend Server</module>
         <module>ProPet JWT Server</module>
+        <module>ProPet Images Server</module>
+        <module>ProPet Pdf Generator</module>
+        <module>ProPet Mail Sender</module>
     </modules>
 
     <properties>
         <java.version>17</java.version>
         <springdoc.openapi.ui.version>1.6.8</springdoc.openapi.ui.version>
-        <java.jwt.version>3.19.1</java.jwt.version>
+        <java.jwt.version>3.19.2</java.jwt.version>
         <okhttp.version>2.7.5</okhttp.version>
         <json.version>20200518</json.version>
+        <jackson-databind.version>2.13.0</jackson-databind.version>
+        <flying-saucer-pdf.version>9.1.22</flying-saucer-pdf.version>
+        <jackson-datatype-jsr310.version>2.13.3</jackson-datatype-jsr310.version>
     </properties>
 
     <dependencies>
@@ -112,6 +118,23 @@
                 <artifactId>json</artifactId>
                 <version>${json.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson-databind.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.xhtmlrenderer</groupId>
+                <artifactId>flying-saucer-pdf</artifactId>
+                <version>${flying-saucer-pdf.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310 -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson-datatype-jsr310.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

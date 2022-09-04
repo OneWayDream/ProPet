@@ -11,6 +11,7 @@ import ru.itis.backend.repositories.UserAppealRepository;
 import ru.itis.backend.utils.PropertiesUtils;
 
 import javax.persistence.PersistenceException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ public class UserAppealServiceImpl implements UserAppealService {
         try{
             UserAppeal entityToDelete = repository.findById(userAppealDto.getId())
                     .filter(entry -> !entry.getIsDeleted())
-                    .orElseThrow(EntityNotExistsException::new);
+                    .orElseThrow(() -> new EntityNotExistsException(" user appeal."));
             entityToDelete.setIsDeleted(true);
             repository.save(entityToDelete);
         } catch (Exception ex){
@@ -47,7 +48,7 @@ public class UserAppealServiceImpl implements UserAppealService {
     @Override
     public UserAppealDto add(UserAppealDto userAppealDto) {
         userAppealDto.setIsClosed(false);
-        userAppealDto.setSendDate(java.util.Calendar.getInstance().getTime());
+        userAppealDto.setSendDate(LocalDate.now());
         UserAppeal newEntity = UserAppealDto.to(userAppealDto);
         repository.save(newEntity);
         return UserAppealDto.from(newEntity);
@@ -57,7 +58,7 @@ public class UserAppealServiceImpl implements UserAppealService {
     public UserAppealDto findById(Long aLong) {
         return UserAppealDto.from(repository.findById(aLong)
                 .filter(entry -> !entry.getIsDeleted())
-                .orElseThrow(EntityNotFoundException::new));
+                .orElseThrow(() -> new EntityNotFoundException(" user appeal.")));
     }
 
     @Override

@@ -59,4 +59,8 @@ public class SitterInfo {
     @Column(name = "sitter_status", nullable = false)
     @Builder.Default
     protected Boolean sitterStatus = true;
+
+    @Version
+    protected Integer version;
+
 }

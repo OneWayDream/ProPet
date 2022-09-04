@@ -3,6 +3,7 @@ package ru.itis.backend.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class Account {
     protected String hashPassword;
 
     @Column(name = "last_login_date")
-    protected Date lastLogin;
+    protected LocalDate lastLogin;
 
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
@@ -52,7 +53,7 @@ public class Account {
     protected Boolean isDeleted = false;
 
     @Column(name = "registration_date", nullable = false)
-    protected Date registrationDate;
+    protected LocalDate registrationDate;
 
     @OneToMany(targetEntity = PetInfo.class, mappedBy = "account", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     protected List<PetInfo> pets;
@@ -70,5 +71,20 @@ public class Account {
 
     @OneToOne(targetEntity = ActivationLink.class, mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     protected ActivationLink activationLink;
+
+    @OneToOne(targetEntity = TreatyInfo.class, mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    protected TreatyInfo treatyInfo;
+
+    @OneToMany(targetEntity = PetTransferApply.class, mappedBy = "customer",
+            cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    protected List<PetTransferApply> customerApplies;
+
+    @OneToMany(targetEntity = PetTransferApply.class, mappedBy = "performer",
+            cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    protected List<PetTransferApply> performerApplies;
+
+    public boolean isPresent(){
+        return !isDeleted && state == UserState.ACTIVE;
+    }
 
 }

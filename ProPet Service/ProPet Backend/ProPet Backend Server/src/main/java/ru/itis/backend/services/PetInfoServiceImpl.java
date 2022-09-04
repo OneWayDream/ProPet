@@ -33,7 +33,7 @@ public class PetInfoServiceImpl implements PetInfoService {
         try{
             PetInfo entityToDelete = repository.findById(petInfoDto.getId())
                     .filter(entry -> !entry.getIsDeleted())
-                    .orElseThrow(EntityNotExistsException::new);
+                    .orElseThrow(() -> new EntityNotExistsException(" pet info."));
             entityToDelete.setIsDeleted(true);
             repository.save(entityToDelete);
         } catch (Exception ex){
@@ -55,7 +55,7 @@ public class PetInfoServiceImpl implements PetInfoService {
     public PetInfoDto findById(Long aLong) {
         return PetInfoDto.from(repository.findById(aLong)
                 .filter(entry -> !entry.getIsDeleted())
-                .orElseThrow(EntityNotFoundException::new));
+                .orElseThrow(() -> new EntityNotFoundException(" pet info.")));
     }
 
     @Override

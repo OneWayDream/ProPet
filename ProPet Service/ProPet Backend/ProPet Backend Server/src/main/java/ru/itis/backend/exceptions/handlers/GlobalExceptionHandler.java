@@ -1,6 +1,7 @@
 package ru.itis.backend.exceptions.handlers;
 
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,21 +12,13 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import ru.itis.backend.exceptions.pdf.*;
 import ru.itis.backend.exceptions.comment.CommentAboutSitterException;
 import ru.itis.backend.exceptions.comment.ExistedCommentException;
 import ru.itis.backend.exceptions.comment.SelfCommentException;
-import ru.itis.backend.exceptions.images.ImageException;
-import ru.itis.backend.exceptions.images.ImageLoadException;
-import ru.itis.backend.exceptions.images.ImageStoreException;
-import ru.itis.backend.exceptions.images.IncorrectImageTypeException;
 import ru.itis.backend.exceptions.jwtserver.JwtAuthorizationFaultException;
-import ru.itis.backend.exceptions.jwtserver.JwtRegistrationException;
 import ru.itis.backend.exceptions.jwtserver.JwtServerException;
-import ru.itis.backend.exceptions.jwtserver.JwtUpdateException;
-import ru.itis.backend.exceptions.persistence.EntityNotExistsException;
-import ru.itis.backend.exceptions.persistence.EntityNotFoundException;
-import ru.itis.backend.exceptions.persistence.LinkNotExistsException;
-import ru.itis.backend.exceptions.persistence.SitterInfoAlreadyExistsException;
+import ru.itis.backend.exceptions.persistence.*;
 import ru.itis.backend.exceptions.registration.LoginAlreadyInUseException;
 import ru.itis.backend.exceptions.registration.MailAlreadyInUseException;
 import ru.itis.backend.exceptions.registration.RegistrationException;
@@ -38,22 +31,26 @@ import ru.itis.backend.exceptions.token.IncorrectJwtException;
 import ru.itis.backend.exceptions.token.TokenAuthenticationException;
 
 import javax.persistence.PersistenceException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(RegistrationException.class)
     public ResponseEntity<?> handleRegistrationException(RegistrationException exception){
         if (exception instanceof LoginAlreadyInUseException){
-            return ResponseEntity.status(HttpErrorStatus.EXISTED_LOGIN.value()).body("This login is already in use");
+            return ResponseEntity.status(HttpErrorStatus.EXISTING_LOGIN.value()).body("This login is already in use");
         }
         else if (exception instanceof MailAlreadyInUseException){
-            return ResponseEntity.status(HttpErrorStatus.EXISTED_MAIL.value()).body("This mail is already in use");
+            return ResponseEntity.status(HttpErrorStatus.EXISTING_MAIL.value()).body("This mail is already in use");
         }
         else {
+            log.error(getStackTraceString(exception));
             return ResponseEntity.badRequest().body("Something went wrong");
         }
     }
@@ -61,14 +58,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(PersistenceException.class)
     public ResponseEntity<?> handlePersistenceException(PersistenceException exception){
         if (exception instanceof EntityNotExistsException){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    (exception.getMessage() == null) ? "This entity is not exists" : exception.getMessage()
-            );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("This entity is not exists: "
+                    +  ((exception.getMessage() == null) ? "" : exception.getMessage()));
         }
         if (exception instanceof EntityNotFoundException){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    (exception.getMessage() == null) ? "This entity is not found" : exception.getMessage()
-            );
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("This entity is not found: "
+                    +  ((exception.getMessage() == null) ? "" : exception.getMessage()));
         }
         if (exception instanceof LinkNotExistsException){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("This link is not exists");
@@ -77,7 +72,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             return ResponseEntity.status(HttpErrorStatus.ALREADY_CREATED_SITTER_INFO.value())
                     .body("This account already has a sitter info card");
         }
+        if (exception instanceof TreatyInfoAlreadyExistsException){
+            return ResponseEntity.status(HttpErrorStatus.ALREADY_CREATED_TREATY_INFO.value())
+                    .body("This account already has a treaty info");
+        }
         else {
+            log.error(getStackTraceString(exception));
             return ResponseEntity.badRequest().body("Something went wrong");
         }
     }
@@ -96,32 +96,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             );
         }
         else {
+            log.error(getStackTraceString(exception));
             return ResponseEntity.badRequest().body("Something went wrong");
         }
     }
 
     @ExceptionHandler(JwtAuthorizationFaultException.class)
     public ResponseEntity<?> handleJwtAuthorizationFaultException(JwtAuthorizationFaultException exception){
+        log.error(getStackTraceString(exception));
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Something went wrong.");
     }
 
     @ExceptionHandler(JwtServerException.class)
     public ResponseEntity<?> handleJwtServerException(JwtServerException exception){
-        exception.printStackTrace();
-        if (exception instanceof JwtAuthorizationFaultException){
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Something went wrong.");
-        }
-        else if (exception instanceof JwtRegistrationException){
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Something went wrong.");
-        } else if (exception instanceof JwtUpdateException){
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Something went wrong.");
-        }
+        log.error(getStackTraceString(exception));
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Something went wrong.");
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException exception){
-        exception.printStackTrace();
+        log.warn(getStackTraceString(exception));
         return ResponseEntity.status(HttpErrorStatus.ACCESS_DENIED.value()).body("Access denied");
     }
 
@@ -141,39 +135,43 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         }
     }
 
-    @ExceptionHandler(ImageException.class)
-    public ResponseEntity<?> handleImageException(ImageException exception){
-        exception.printStackTrace();
-        if (exception instanceof ImageLoadException){
-            return ResponseEntity.status(HttpErrorStatus.IMAGE_LOAD_ERROR.value())
-                    .body("Can't load an image");
-        }
-        else if (exception instanceof ImageStoreException){
-            return ResponseEntity.status(HttpErrorStatus.IMAGE_STORE_ERROR.value())
-                    .body("Can't save an image");
-        }
-        else if (exception instanceof IncorrectImageTypeException){
-            return ResponseEntity.status(HttpErrorStatus.INCORRECT_IMAGE_TYPE.value())
-                    .body("Incorrect image type");
-        }
-        else {
-            return ResponseEntity.badRequest().body("Something went wrong");
-        }
-    }
 
     @ExceptionHandler(CommentAboutSitterException.class)
-    public ResponseEntity<?> handleCommentAboutSitterException(CommentAboutSitterException ex){
-        if (ex instanceof SelfCommentException){
+    public ResponseEntity<?> handleCommentAboutSitterException(CommentAboutSitterException exception){
+        if (exception instanceof SelfCommentException){
             return ResponseEntity.status(HttpErrorStatus.SELF_COMMENT.value())
                     .body("You can't add comment to your own sitter info!");
         }
-        else if (ex instanceof ExistedCommentException){
+        else if (exception instanceof ExistedCommentException){
             return ResponseEntity.status(HttpErrorStatus.EXISTED_COMMENT.value())
                     .body("You've already commented this sitter");
         }
         else {
+            log.error(getStackTraceString(exception));
             return ResponseEntity.badRequest().body("Something went wrong");
         }
+    }
+
+    @ExceptionHandler(PdfGenerationException.class)
+    public ResponseEntity<?> handlePdfGenerationException(PdfGenerationException exception){
+        if (exception instanceof UnconfirmedApplyException){
+            return ResponseEntity.status(HttpErrorStatus.UNCONFIRMED_APPLY.value())
+                    .body("Not all parties have yet confirmed the agreement");
+        }
+        else if (exception instanceof NoTreatyInfoException){
+            return ResponseEntity.status(HttpErrorStatus.NO_TREATY_INFO.value())
+                    .body("You haven't personal data here to confirm any treaties :c");
+        }
+        else if (exception instanceof EmptyProfileFieldException){
+            return ResponseEntity.status(HttpErrorStatus.EMPTY_PROFILE_FIELD.value())
+                    .body("You have to fill some profile fields before: " + exception.getMessage());
+        }
+        else if (exception instanceof SelfTreatyException){
+            return ResponseEntity.status(HttpErrorStatus.SELF_TREATY.value())
+                    .body("You can't make a pact with yourself -_-");
+        }
+        log.error(getStackTraceString(exception));
+        return ResponseEntity.status(HttpErrorStatus.PDF_GENERATION_FAULT.value()).body("Something went wrong");
     }
 
     @Override
@@ -196,10 +194,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> defaultExceptionHandler(Exception exception){
-        exception.printStackTrace();
+        log.error(getStackTraceString(exception));
         return new ResponseEntity<>("HEEEEEEH?!?!? \n " +
                 "(There is no reason for this exception, so I'm real'y teapot)", HttpStatus.I_AM_A_TEAPOT);
     }
 
+    protected String getStackTraceString(Exception exception){
+        StringWriter sw = new StringWriter();
+        exception.printStackTrace(new PrintWriter(sw));
+        String exceptionAsString = sw.toString();
+        try{
+            sw.close();
+        } catch (Exception ex){
+            //ignore
+        }
+        return exceptionAsString;
+    }
 
 }

@@ -38,8 +38,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="account_id" type="bigint">
-                <constraints nullable="false" unique="true" foreignKeyName="fk_account_id"
-                             referencedTableName="account" referencedColumnNames="id"/>
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="login" type="varchar">
                 <constraints unique="true" nullable="false"/>

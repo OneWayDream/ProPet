@@ -1,6 +1,7 @@
 package ru.itis.backend.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import ru.itis.backend.dto.app.SitterInfoDto;
 import ru.itis.backend.exceptions.persistence.EntityNotExistsException;
@@ -10,6 +11,8 @@ import ru.itis.backend.models.SitterInfo;
 import ru.itis.backend.repositories.SitterInfoRepository;
 import ru.itis.backend.utils.PropertiesUtils;
 
+import javax.persistence.LockModeType;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,7 +35,7 @@ public class SitterInfoServiceImpl implements SitterInfoService {
         try{
             SitterInfo entityToDelete = repository.findById(sitterInfoDto.getId())
                     .filter(entry -> !entry.getIsDeleted())
-                    .orElseThrow(EntityNotExistsException::new);
+                    .orElseThrow(() -> new EntityNotExistsException(" sitter info."));
             entityToDelete.setIsDeleted(true);
             repository.save(entityToDelete);
         } catch (Exception ex){
@@ -80,7 +83,7 @@ public class SitterInfoServiceImpl implements SitterInfoService {
     public SitterInfoDto findById(Long aLong) {
         return SitterInfoDto.from(repository.findById(aLong)
                 .filter(entry -> !entry.getIsDeleted())
-                .orElseThrow(EntityNotFoundException::new));
+                .orElseThrow(() -> new EntityNotFoundException(" sitter info.")));
     }
 
     @Override
@@ -93,19 +96,24 @@ public class SitterInfoServiceImpl implements SitterInfoService {
         return SitterInfoDto.from(updateSitterInfo(SitterInfoDto.toRest(sitterInfo)));
     }
 
+    @Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
     protected SitterInfo updateSitterInfo(SitterInfo sitterInfo) {
-        SitterInfo entity = repository.findById(sitterInfo.getId())
-                .filter(entry -> !entry.getIsDeleted())
-                .orElseThrow(EntityNotFoundException::new);
-        PropertiesUtils.copyNonNullProperties(sitterInfo, entity);
-        return repository.save(entity);
+        try{
+            SitterInfo entity = repository.findById(sitterInfo.getId())
+                    .filter(entry -> !entry.getIsDeleted())
+                    .orElseThrow(() -> new EntityNotFoundException(" sitter info."));
+            PropertiesUtils.copyNonNullProperties(sitterInfo, entity);
+            return repository.save(entity);
+        } catch (OptimisticLockException ex){
+            return updateSitterInfo(sitterInfo);
+        }
     }
 
     @Override
     public SitterInfoDto findByUserId(Long userId) {
         return SitterInfoDto.from(repository.findByAccountId(userId)
                 .filter(entry -> !entry.getIsDeleted())
-                .orElseThrow(EntityNotFoundException::new));
+                .orElseThrow(() -> new EntityNotFoundException(" sitter info.")));
     }
 
 }

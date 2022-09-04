@@ -5,7 +5,7 @@ import ru.itis.backend.models.PetInfo;
 
 import java.util.List;
 
-public interface PetInfoRepository extends JpaRepository<PetInfo, Long> {
+public interface PetInfoRepository extends CustomRepository<PetInfo, Long> {
 
     List<PetInfo> findAllByAccountId(Long id);
 
